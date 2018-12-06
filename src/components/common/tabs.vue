@@ -15,7 +15,14 @@
                         <i class="el-icon-menu"></i>
                         <span slot="title">用户管理</span>
                     </el-menu-item>
-                    
+                    <el-menu-item index="/home/audit">
+                        <i class="el-icon-document"></i>
+                        <span slot="title">提现审核</span>
+                    </el-menu-item>
+                    <el-menu-item index="/home/merchant">
+                        <i class="el-icon-document"></i>
+                        <span slot="title">商户审核</span>
+                    </el-menu-item>
                 </el-menu>
             </el-col>
         </el-row>

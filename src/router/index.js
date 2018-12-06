@@ -6,6 +6,8 @@ import adminLogin from '@/components/adminLogin'
 
 const accountManage = resolve => require(['../components/merManagement/accountManage'], resolve);
 const accountDetail = resolve => require(['../components/merManagement/accountDetail'], resolve);
+const audit = resolve => require(['../components/merManagement/audit'], resolve);
+const merchant = resolve => require(['../components/merManagement/merchant'], resolve);
 
 Vue.use(Router)
 
@@ -18,6 +20,8 @@ export default new Router({
       children:[
         {path: 'accountManage', name: 'accountManage', component: accountManage},
         {path: 'accountDetail', name: 'accountDetail', component: accountDetail},
+        {path: 'audit', name: 'audit', component: audit},
+        {path: 'merchant', name: 'merchant', component: merchant},
       ]
     },
     {

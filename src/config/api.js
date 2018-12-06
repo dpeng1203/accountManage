@@ -11,3 +11,9 @@ export const accountRate = p => myPost('/user/settlement/charge', p);
 
 //  登出
 export const loginOut = () => myDelete('/own')
+
+//  提现审核
+export const auditList = p => myGet('/cash/list',{params: p})
+
+//  到账
+export const auditOk = p => myPost('/cash/success', p);
