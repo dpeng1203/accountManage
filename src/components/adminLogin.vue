@@ -4,7 +4,7 @@
             <img src="../assets/img/login.png" alt="">    
         </div>    
         <div class="wrapper">
-            <div class="title">知柚后台管理系统</div>
+            <div class="title">Alian后台管理系统</div>
             <div><input type="text" placeholder="账号" v-model="account"></div>
             <div><input type="text" placeholder="密码" v-model="pw"></div>
             <div class="btn" @click="login">登录</div>

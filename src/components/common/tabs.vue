@@ -19,10 +19,10 @@
                         <i class="el-icon-document"></i>
                         <span slot="title">提现审核</span>
                     </el-menu-item>
-                    <el-menu-item index="/home/merchant">
+                    <!-- <el-menu-item index="/home/merchant">
                         <i class="el-icon-document"></i>
                         <span slot="title">商户审核</span>
-                    </el-menu-item>
+                    </el-menu-item> -->
                 </el-menu>
             </el-col>
         </el-row>

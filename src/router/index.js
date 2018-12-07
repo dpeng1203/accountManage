@@ -17,6 +17,7 @@ export default new Router({
       path: '/home',
       name: 'home',
       component: home,
+      redirect: '/home/accountManage',
       children:[
         {path: 'accountManage', name: 'accountManage', component: accountManage},
         {path: 'accountDetail', name: 'accountDetail', component: accountDetail},
@@ -25,16 +26,10 @@ export default new Router({
       ]
     },
     {
-      path: '/adminLogin',
+      path: '/',
       name: 'adminLogin',
       component: adminLogin
     },
-    {
-      path: '/',
-      redirect: '/adminLogin',
-      name: 'adminLogin',
-      component: adminLogin
-    }
   ]
 })
 

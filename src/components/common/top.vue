@@ -34,9 +34,9 @@ export default {
                     type: 'success'
                 });
                 localStorage.clear()
-                this.$router.push('/adminLogin')
+                this.$router.push('/')
             }, (err) => {
-                this.$router.push('/adminLogin')
+                this.$router.push('/')
             })
         }
     },

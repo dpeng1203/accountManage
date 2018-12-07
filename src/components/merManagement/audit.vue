@@ -168,9 +168,9 @@ export default {
             .search-btn
                 display: inline-block
                 width: 100px
-                height: 40px
+                height: 35px
                 margin-top: 60px
-                line-height: 40px
+                line-height: 35px
                 text-align: center
                 color: #fff
                 background: #00BFA6;
