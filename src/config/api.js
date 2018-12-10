@@ -17,3 +17,6 @@ export const auditList = p => myGet('/cash/list',{params: p})
 
 //  到账
 export const auditOk = p => myPost('/cash/success', p);
+
+// 商户信息
+export const merList = p => myGet('/user/base',{params: p})

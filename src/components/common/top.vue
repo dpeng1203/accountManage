@@ -7,12 +7,12 @@
         </div>
         <div class="head-title">后台管理系统</div>
         <div class="userInfo">
-            <div class="user-name">{{accound}}</div>
-            <div class="user-code">商户号：<span>{{code}}</span> </div>
+            <div class="user-name">您好，{{accound}} | <span class="btn-out" @click="out">退出</span></div>
+            <!-- <div class="user-code">商户号：<span>{{code}}</span> </div> -->
         </div>
-        <div class="btn-wrapper">
+        <!-- <div class="btn-wrapper">
                <span class="btn-out" @click="out">退出</span> 
-        </div>
+        </div> -->
     </div>    
 </template>
 
@@ -69,6 +69,7 @@ export default {
             font-size: 16px
             color: #B9BAC8
             height: 80px
+            line-height: 80px
             padding-right: 30px
             border-bottom: 1px solid #EEE
             .user-name

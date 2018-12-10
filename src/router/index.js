@@ -8,7 +8,7 @@ const accountManage = resolve => require(['../components/merManagement/accountMa
 const accountDetail = resolve => require(['../components/merManagement/accountDetail'], resolve);
 const audit = resolve => require(['../components/merManagement/audit'], resolve);
 const merchant = resolve => require(['../components/merManagement/merchant'], resolve);
-
+const merManage = resolve => require(['../components/merManagement/merManage'], resolve);
 Vue.use(Router)
 
 export default new Router({
@@ -23,6 +23,8 @@ export default new Router({
         {path: 'accountDetail', name: 'accountDetail', component: accountDetail},
         {path: 'audit', name: 'audit', component: audit},
         {path: 'merchant', name: 'merchant', component: merchant},
+        {path: 'merManage', name: 'merManage', component: merManage},
+
       ]
     },
     {
