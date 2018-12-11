@@ -86,3 +86,18 @@ export function myDelete(url, params) {
     })
   })
 }
+
+export function myPut(url, params) {
+  return new Promise((resolve, reject) => {
+    axios.put(url, params).then(function (response) {
+      resolve(response.data)
+    })
+    .catch(function (error) {
+      if (error.response) {
+        Message.error(error.response.data.message);
+      } 
+      reject(error)
+    })
+  })
+}
+

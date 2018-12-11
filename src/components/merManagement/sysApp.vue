@@ -1,12 +1,12 @@
 <template>
     <div class="mer-manage">
         <div class="title">
-            <span>商户管理</span>
+            <span>系统应用</span>
         </div>  
         <div class="search">
             <div class="search-ct">
                 <div class="search-name">状态</div>
-                <el-select v-model="data.state" placeholder="请选择">
+                <el-select v-model="data.status" placeholder="请选择">
                     <el-option
                     v-for="item in options1"
                     :key="item.value"
@@ -16,26 +16,13 @@
                 </el-select>
             </div>
             <div class="search-ct">
-                <div class="search-name">商户名称</div>
-                <el-input class="inline-input" v-model="data.mch_name" placeholder="请输入内容" clearable></el-input>
-            </div>
-             <div class="search-ct">
-                <div class="search-name">商户号</div>
-                <el-input class="inline-input" v-model="data.mch_id" placeholder="请输入内容" clearable></el-input>
-            </div>
-        </div>
-        <div class="search">
-            <div class="search-ct">
-                <div class="search-name">法人姓名</div>
-                <el-input class="inline-input" v-model="data.name" placeholder="请输入内容" clearable></el-input>
-            </div>
-            <div class="search-ct">
-                <div class="search-name">法人手机号</div>
-                <el-input class="inline-input" v-model="data.phone" placeholder="请输入内容" clearable></el-input>
+                <div class="search-name">应用名称</div>
+                <el-input class="inline-input" v-model="data.app_name" placeholder="请输入内容" clearable></el-input>
                 <div class="search-btn" @click="searchBtn">搜索</div>
+                <div class="search-btn" @click="addBtn">新增</div>
             </div>
+            
         </div>
-
 
         <div class="table">
             <el-table
@@ -46,33 +33,23 @@
                     type="index"
                     width="50">
                 </el-table-column>
-                <!-- <el-table-column
-                    prop="mch_id"
-                    label="序号"
-                    width="100">
-                </el-table-column> -->
                 <el-table-column
-                    prop="mch_id"
-                    label="商户号"
+                    prop="create_time"
+                    label="创建时间"
+                    width="200">
+                </el-table-column>
+                <el-table-column
+                    prop="app_name"
+                    label="应用名称"
+                    width="200">
+                </el-table-column>
+                <el-table-column
+                    prop="rate"
+                    label="费率（%）"
                     width="150">
                 </el-table-column>
                 <el-table-column
-                    prop="mch_name"
-                    label="商户名称"
-                    width="180">
-                </el-table-column>
-                <el-table-column
-                    prop="legal_name"
-                    label="法人姓名"
-                    width="150">
-                </el-table-column>
-                <el-table-column
-                    prop="legal_phone"
-                    label="法人手机号"
-                    width="150">
-                </el-table-column>
-                <el-table-column
-                    prop="state"
+                    prop="status"
                     label="状态"
                     width="150">
                 </el-table-column>
@@ -80,7 +57,7 @@
                 label="操作"
                 >
                 <template slot-scope="scope">
-                    <el-button @click="handleClick(scope.row)" type="text" size="small">详情</el-button>
+                    <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
                 </template>
                 </el-table-column>
             </el-table>
@@ -101,7 +78,7 @@
 </template>
 
 <script>
-import { merList } from '../../config/api'
+import { sysApp } from '../../config/api'
 export default {
     name: 'accountManage',
     data() {
@@ -114,20 +91,14 @@ export default {
                 label: '请选择'
                 },{
                 value: '0',
-                label: '待审核'
+                label: '关闭'
                 }, {
                 value: '1',
-                label: '审核通过'
-                }, {
-                value: '2',
-                label: '审核拒绝'
+                label: '开启'
                 }],
             data: {
-                phone: null,
-                name: null,
-                mch_name: null,
-                state: null,
-                mch_id: null,
+                app_name: null,
+                status: null,
                 offset: 0,
                 limit: 5
             }
@@ -135,21 +106,20 @@ export default {
     },
     methods: {
         getList() {
-            for(var key in this.data) {
-                if(this.data[key] === '') {
-                    delete this.data[key]
-                }
+            if(this.data.app_name == '') {
+                delete this.data.app_name
             }
-            merList(this.data).then((res) => {
+            sysApp(this.data).then((res) => {
                 this.total = res.data.total_count
                 this.tableData = res.data.data_list
                 this.tableData.forEach( ele => {
-                    if(ele.state == 0) {
-                        ele.state = '待审核'
-                    }else if(ele.state == 1) {
-                        ele.state = '审核通过'
+                    if(ele.status) {
+                        ele.status = '开启'
                     }else {
-                        ele.state = '审核拒绝'
+                        ele.status = '关闭'
+                    }
+                    if(ele.rate) {
+                        ele.rate = ele.rate/100
                     }
                 })
                 console.log(res)
@@ -162,7 +132,7 @@ export default {
 
         handleClick(row) {
             console.log(row);
-            this.$router.push({path: '/home/merDetail',query: {detail: row}})
+            this.$router.push({path: '/home/changeSysApp',query: {detail: row}})
         },
 
         handleSizeChange(val) {
@@ -174,6 +144,9 @@ export default {
             console.log(`当前页: ${val}`);
             this.data.offset = (val - 1) * this.data.limit
             this.getList()
+        },
+        addBtn() {
+            this.$router.push('/home/addSysApp')
         }
 
     },

@@ -66,14 +66,14 @@ export default {
             padding: 0 30px
             border-bottom: 1px solid #EEE
         .userInfo
-            font-size: 16px
+            font-size: 14px
             color: #B9BAC8
             height: 80px
             line-height: 80px
             padding-right: 30px
             border-bottom: 1px solid #EEE
             .user-name
-               margin-top: 16px
+            //    margin-top: 16px
             .user-code
                 margin-top: 5px
                 font-size: 13px
