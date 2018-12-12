@@ -36,3 +36,9 @@ export const changeMerDetail = p => myPut('/user/base', p);
 //自定义费率
 export const zdyRate = p => myPost('/mch/app', p);
 
+//商户应用信息
+export const merAppRate = p => myGet('/mch/app',{params: p})
+
+// 移除商户应用信息
+export const delAppRate = p => myDelete('/mch/app',{params: p})
+

@@ -31,12 +31,12 @@
                     width="100">
                 </el-table-column> -->
                 <el-table-column
-                    prop="user_id"
+                    prop="mch_id"
                     label="商户号"
                     width="120">
                 </el-table-column>
                 <el-table-column
-                    prop="phone"
+                    prop="reserved_phone"
                     label="手机号"
                     width="150">
                 </el-table-column>
@@ -51,7 +51,7 @@
                     width="120">
                 </el-table-column>
                 <el-table-column
-                    prop="is_ok"
+                    prop="state"
                     label="是否到账"
                     width="120">
                 </el-table-column>
@@ -105,10 +105,10 @@ export default {
                     if(ele.money && ele.money != '') {
                         ele.money = ele.money/100
                     }
-                    if(ele.is_ok) {
-                        ele.is_ok = '已到账'
+                    if(ele.state == 1) {
+                        ele.state = '已到账'
                     }else{
-                        ele.is_ok = '未到账'
+                        ele.state = '未到账'
                     }
                 })
                 console.log(res)

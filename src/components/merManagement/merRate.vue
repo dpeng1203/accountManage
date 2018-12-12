@@ -118,7 +118,7 @@ export default {
                     });
                 })
             }
-            this.$router.push('/home/merDetail')
+            this.$router.push('/home/merManage')
         }
 
     },
