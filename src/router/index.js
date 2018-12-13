@@ -14,7 +14,9 @@ const sysApp = resolve => require(['../components/merManagement/sysApp'], resolv
 const addSysApp = resolve => require(['../components/merManagement/addSysApp'], resolve);
 const changeSysApp = resolve => require(['../components/merManagement/changeSysApp'], resolve);
 const merRate = resolve => require(['../components/merManagement/merRate'], resolve);
-
+const billDetail = resolve => require(['../components/merManagement/billDetail'], resolve);
+const agent = resolve => require(['../components/merManagement/agent'], resolve);
+const dataDetail = resolve => require(['../components/merManagement/dataDetail'], resolve);
 
 Vue.use(Router)
 
@@ -24,7 +26,7 @@ export default new Router({
       path: '/home',
       name: 'home',
       component: home,
-      redirect: '/home/accountManage',
+      redirect: '/home/dataDetail',
       children:[
         {path: 'accountManage', name: 'accountManage', component: accountManage},
         {path: 'accountDetail', name: 'accountDetail', component: accountDetail},
@@ -36,6 +38,9 @@ export default new Router({
         {path: 'addSysApp', name: 'addSysApp', component: addSysApp},
         {path: 'changeSysApp', name: 'changeSysApp', component: changeSysApp},
         {path: 'merRate', name: 'merRate', component: merRate},
+        {path: 'billDetail', name: 'billDetail', component: billDetail},
+        {path: 'agent', name: 'agent', component: agent},
+        {path: 'dataDetail', name: 'dataDetail', component: dataDetail},
       ]
     },
     {

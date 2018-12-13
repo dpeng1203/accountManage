@@ -11,22 +11,36 @@
                     unique-opened
                     router
                     active-text-color="#00B7AD">
-                    <el-menu-item index="/home/accountManage">
+                    <!-- <el-menu-item index="/home/accountManage">
                         <i class="el-icon-menu"></i>
                         <span slot="title">用户管理</span>
+                    </el-menu-item> -->
+                    <el-menu-item index="/home">
+                        <i class="el-icon-menu"></i>
+                        <span slot="title">主页</span>
                     </el-menu-item>
-                    <el-menu-item index="/home/audit">
-                        <i class="el-icon-document"></i>
-                        <span slot="title">提现审核</span>
-                    </el-menu-item>
-                    <el-menu-item index="/home/merManage">
-                        <i class="el-icon-document"></i>
+                     <el-menu-item index="/home/merManage">
+                        <i class="el-icon-setting"></i>
                         <span slot="title">商户管理</span>
                     </el-menu-item>
-                    <el-menu-item index="/home/sysApp">
-                        <i class="el-icon-document"></i>
-                        <span slot="title">系统应用</span>
+                    <el-menu-item index="/home/billDetail">
+                        <i class="el-icon-goods"></i>
+                        <span slot="title">交易管理</span>
                     </el-menu-item>
+                    <el-menu-item index="/home/sysApp">
+                        <i class="el-icon-picture-outline"></i>
+                        <span slot="title">产品管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/home/audit">
+                        <i class="el-icon-printer"></i>
+                        <span slot="title">提现管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/home/agent">
+                        <i class="el-icon-document"></i>
+                        <span slot="title">代理商管理</span>
+                    </el-menu-item>
+                    
+                    
                     <!-- <el-menu-item index="/home/merchant">
                         <i class="el-icon-document"></i>
                         <span slot="title">商户审核</span>

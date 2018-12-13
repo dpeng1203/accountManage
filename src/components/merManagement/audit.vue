@@ -1,7 +1,7 @@
 <template>
     <div class="account-manage">
         <div class="title">
-            <span>提现审核</span>
+            <span>提现管理</span>
         </div>  
         <div class="search">
             <div class="search-ct">
@@ -25,24 +25,29 @@
                     type="index"
                     width="50">
                 </el-table-column>
-                <!-- <el-table-column
-                    prop="mch_id"
-                    label="序号"
-                    width="100">
-                </el-table-column> -->
                 <el-table-column
-                    prop="mch_id"
-                    label="商户号"
-                    width="120">
+                    prop="create_time"
+                    label="创建时间"
+                    width="180">
+                </el-table-column>
+                <el-table-column
+                    prop="name"
+                    label="姓名"
+                    width="100">
+                </el-table-column>
+                <el-table-column
+                    prop="mch_name"
+                    label="商户全称"
+                    width="180">
                 </el-table-column>
                 <el-table-column
                     prop="reserved_phone"
                     label="手机号"
-                    width="150">
+                    width="130">
                 </el-table-column>
                 <el-table-column
-                    prop="create_time"
-                    label="创建时间"
+                    prop="bankcard_number"
+                    label="银行卡号"
                     width="180">
                 </el-table-column>
                 <el-table-column
@@ -68,7 +73,7 @@
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :current-page="currentPage"
-                    :page-sizes="[5,20,50,100, 200, 300, 400]"
+                    :page-sizes="[10,20,50,100, 200, 300, 400]"
                     :page-size="data.limit"
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="total">
@@ -92,7 +97,7 @@ export default {
                 phone: null,
                 mch_id: null,
                 offset: 0,
-                limit: 5
+                limit: 10
             }
         }
     },
@@ -111,7 +116,6 @@ export default {
                         ele.state = '未到账'
                     }
                 })
-                console.log(res)
             })
         },
 
@@ -120,13 +124,27 @@ export default {
         },
 
         handleClick(row) {
-            console.log(row);
-            let data = {
-                cash_log_id: row.id
-            }
-            auditOk(data).then(res => {
-                this.getList()
-            })
+            this.$confirm('是否确认到账?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+            type: 'warning'
+            }).then(() => {
+                let data = {
+                    cash_log_id: row.id
+                }
+                auditOk(data).then(res => {
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                    });
+                    this.getList()
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
+            }); 
         },
 
         handleSizeChange(val) {
@@ -181,7 +199,7 @@ export default {
             margin-left: 0
     .table
         margin-top: 40px
-        width: 900px
+        width: 1150px
         .block
             padding: 30px 0
             text-align: center 

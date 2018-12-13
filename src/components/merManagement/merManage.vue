@@ -89,7 +89,7 @@
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :current-page="currentPage"
-                    :page-sizes="[5,20,50,100, 200, 300, 400]"
+                    :page-sizes="[10,20,50,100, 200, 300, 400]"
                     :page-size="data.limit"
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="total">
@@ -129,7 +129,7 @@ export default {
                 state: null,
                 mch_id: null,
                 offset: 0,
-                limit: 5
+                limit: 10
             }
         }
     },

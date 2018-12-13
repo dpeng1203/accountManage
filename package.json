@@ -1,5 +1,5 @@
 {
-  "name": "platform2.0",
+  "name": "manage",
   "version": "1.0.0",
   "description": "A Vue.js project",
   "author": "dpeng <563623137@qq.com>",
@@ -10,6 +10,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@antv/g2": "^3.4.5",
     "axios": "^0.18.0",
     "element-ui": "^2.4.9",
     "vue": "^2.5.2",

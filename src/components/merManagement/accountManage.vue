@@ -98,6 +98,11 @@ export default {
     },
     methods: {
         getList() {
+            for(var key in this.data) {
+                if(this.data[key] === '') {
+                    delete this.data[key]
+                }
+            }
             accountList(this.data).then((res) => {
                 this.total = res.data.total_count
                 this.tableData = res.data.data_list

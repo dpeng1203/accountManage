@@ -1,7 +1,7 @@
 <template>
     <div class="mer-manage">
         <div class="title">
-            <span>系统应用</span>
+            <span>产品管理</span>
         </div>  
         <div class="search">
             <div class="search-ct">
@@ -21,7 +21,6 @@
                 <div class="search-btn" @click="searchBtn">搜索</div>
                 <div class="search-btn" @click="addBtn">新增</div>
             </div>
-            
         </div>
 
         <div class="table">
@@ -66,7 +65,7 @@
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :current-page="currentPage"
-                    :page-sizes="[5,20,50,100, 200, 300, 400]"
+                    :page-sizes="[10,20,50,100, 200, 300, 400]"
                     :page-size="data.limit"
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="total">
@@ -100,7 +99,7 @@ export default {
                 app_name: null,
                 status: null,
                 offset: 0,
-                limit: 5
+                limit: 10
             }
         }
     },

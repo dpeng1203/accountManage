@@ -36,4 +36,5 @@ export default {
     .content
         padding: 0 30px
         flex: 1
+        height: 100%
 </style>

@@ -42,3 +42,9 @@ export const merAppRate = p => myGet('/mch/app',{params: p})
 // 移除商户应用信息
 export const delAppRate = p => myDelete('/mch/app',{params: p})
 
+//  今日账单数据
+export const todayNum = p => myGet('/bill/today',{params: p})
+
+//  账单明细
+export const billList = p => myGet('/bill',{params: p})
+

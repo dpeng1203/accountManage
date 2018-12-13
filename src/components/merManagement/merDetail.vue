@@ -43,7 +43,7 @@
                                     <span class="name">统一社会信用代码：</span>
                                     <el-input placeholder="请输入内容" v-model="list.org_code" clearable></el-input>
                                 </div>
-                                <div class="item">
+                                <!-- <div class="item">
                                     <span class="name">状态</span>
                                     <el-select v-model="list.state" placeholder="请选择">
                                         <el-option
@@ -53,7 +53,7 @@
                                         :value="item.value">
                                         </el-option>
                                     </el-select>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         
@@ -63,19 +63,19 @@
                                 <div class="item">
                                     <span class="name">营业执照</span>
                                     <div class="img-ct">
-                                        <img :src='"http://47.99.180.135:8088/files/" + list.license_images[0]' alt="">
+                                        <img :src='`${hostName}/files/` + list.license_images[0]' alt="">
                                     </div>
                                 </div>
                                 <div class="item">
                                     <span class="name">开户许可证</span>
                                     <div class="img-ct">
-                                        <img :src='"http://47.99.180.135:8088/files/" + list.license_images[1]' alt="">
+                                        <img :src='`${hostName}/files/` + list.license_images[1]' alt="">
                                     </div>
                                 </div>
                                 <div class="item">
                                     <span class="name">手持营业执照</span>
                                     <div class="img-ct">
-                                        <img :src='"http://47.99.180.135:8088/files/" + list.license_images[2]' alt="">
+                                        <img :src='`${hostName}/files/` + list.license_images[2]' alt="">
                                     </div>
                                 </div>
                             </div>
@@ -85,32 +85,33 @@
                                 <div class="item">
                                     <span class="name">身份证（正面）</span>
                                     <div class="img-ct">
-                                        <img :src='"http://47.99.180.135:8088/files/" + list.card_images[0]' alt="">
+                                        <img :src='`${hostName}/files/` + list.card_images[0]' alt="">
                                     </div>
                                 </div>
                                 <div class="item">
                                     <span class="name">身份证（反面）</span>
                                     <div class="img-ct">
-                                        <img :src='"http://47.99.180.135:8088/files/" + list.card_images[1]' alt="">
+                                        <img :src='`${hostName}/files/` + list.card_images[1]' alt="">
                                     </div>
                                 </div>
                                 <div class="item">
                                     <span class="name">手持身份证（正面）</span>
                                     <div class="img-ct">
-                                        <img :src='"http://47.99.180.135:8088/files/" + list.card_images[2]' alt="">
+                                        <img :src='`${hostName}/files/` + list.card_images[2]' alt="">
                                     </div>
                                 </div>
                             </div>
-                            <div class="photo-wrapper" v-if="list.other_images && list.other_images != []">
+                            <div class="photo-wrapper" v-if="list.other_images && list.other_images.length != 0">
                                 <div class="item">
                                     <span class="name">其他资质照片</span>
                                     <div class="img-ct">
-                                        <img alt="" v-for="imgItem in list.other_images" :key="imgItem" :src='"http://47.99.180.135:8088/files/" + imgItem' >
+                                        <img alt="" v-for="imgItem in list.other_images" :key="imgItem" :src='`${hostName}/files/` + imgItem' >
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="btn" @click="save">提交</div>
+                        <div class="btn" @click="succ">审核通过</div>
+                        <div class="btn err" @click="fail">审核失败</div>
                     </el-tab-pane>
                     <el-tab-pane label="应用信息" name="second">
                         <div class="basic-wrapper">
@@ -123,38 +124,39 @@
                                         >
                                         <el-table-column
                                             type="index"
-                                            width="30">
+                                            width="50">
                                         </el-table-column>
                                         <el-table-column
                                             prop="mch_id"
                                             label="商户号"
-                                            width="120">
+                                            width="150">
                                         </el-table-column>
                                         <el-table-column
                                             prop="app_name"
                                             label="应用名称"
-                                            width="180">
+                                            width="200">
                                         </el-table-column>
                                         <el-table-column
                                             prop="mch_name"
                                             label="商户名称"
-                                            width="180">
+                                            width="200">
                                         </el-table-column>
                                         <el-table-column
                                             prop="is_default"
                                             label="是否默认"
-                                            width="100">
+                                            width="150">
                                         </el-table-column>
                                         <el-table-column
                                             prop="rate"
                                             label="费率（%）"
-                                            width="100">
+                                            width="150">
                                         </el-table-column>
                                         <el-table-column
                                             label="操作"
                                             >
                                             <template slot-scope="scope">
-                                                <el-button @click="handleDel(scope.row)" type="text" size="small">移除</el-button>
+                                                <el-button @click="handleDel(scope.row)" type="text" size="small">{{scope.row.is_default == '是' ? '' : '恢复默认'}}</el-button>
+                                                <el-button @click="handleChange(scope.row)" type="text" size="small">更新</el-button>
                                             </template>
                                         </el-table-column>
                                     </el-table>
@@ -162,35 +164,107 @@
                             </div>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane label="提现列表" name="third">角色管理</el-tab-pane>
+                    <el-tab-pane label="提现列表" name="third">
+                        <div class="basic-wrapper">
+                            <div class="basic-info">
+                                <h2>提现列表</h2>
+                                <div class="table">
+                                    <el-table
+                                        :data="tableData"
+                                        border
+                                        style="width: 100%">
+                                        <el-table-column
+                                            type="index"
+                                            width="50">
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="create_time"
+                                            label="创建时间"
+                                            width="180">
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="name"
+                                            label="姓名"
+                                            width="100">
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="open_bank"
+                                            label="开户行"
+                                            width="130">
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="sub_bank"
+                                            label="开户支行"
+                                            width="220">
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="bankcard_number"
+                                            label="银行卡号"
+                                            width="200">
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="money"
+                                            label="金额(元)"
+                                            width="100">
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="state"
+                                            label="是否到账"
+                                        >
+                                        </el-table-column>
+                                    </el-table>
+                                    <div class="block">
+                                        <el-pagination
+                                            @size-change="handleSizeChange"
+                                            @current-change="handleCurrentChange"
+                                            :current-page="currentPage"
+                                            :page-sizes="[10,20,50,100, 200, 300, 400]"
+                                            :page-size="data.limit"
+                                            layout="total, sizes, prev, pager, next, jumper"
+                                            :total="total">
+                                        </el-pagination>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </el-tab-pane>
                 </el-tabs>
             </div>
-            
-            
-            
             <!-- <div class="btn err" @click="save">审核失败</div> -->
         </div>
     </div>
 </template>
 
 <script>
-import { changeMerDetail,merAppRate,delAppRate } from '../../config/api'
+import hostName from '../../config/hostName'
+import { changeMerDetail,merAppRate,delAppRate,zdyRate,auditList } from '../../config/api'
 export default {
     data() {
         return{
+            hostName: hostName,
+            handle: '',
             activeName2: 'first',
             list: {},
-            options1: [{
-                value: '0',
-                label: '待审核'
-                }, {
-                value: '1',
-                label: '审核通过'
-                }, {
-                value: '2',
-                label: '审核拒绝'
-            }],
-            tableData1: []
+            // options1: [{
+            //     value: '0',
+            //     label: '待审核'
+            //     }, {
+            //     value: '1',
+            //     label: '审核通过'
+            //     }, {
+            //     value: '2',
+            //     label: '审核拒绝'
+            // }],
+            tableData1: [],
+            currentPage: 1,
+            data: {
+                app_name: null,
+                status: null,
+                offset: 0,
+                limit: 10
+            },
+            total: null,
+            tableData: [],
         }
     },
     methods: {
@@ -208,21 +282,30 @@ export default {
             if(data.other_images) {
                 delete data.other_images
             }
-            if(data.state == '待审核') {
-                data.state = 0
-            }else if(data.state == '审核通过') {
-                data.state = 1
-            }else {
-                data.state = 2
-            }
             changeMerDetail(data).then( res => {
                  this.$message({
                     message: '修改成功！',
                     type: 'success'
                 });
-                this.$router.push({path: '/home/merRate',query: {merId: this.list.mch_id}})
+                if(this.list.state == 1) {
+                    this.$router.push({path: '/home/merRate',query: {merId: this.list.mch_id}})
+                }else {
+                    this.$router.push('/home/merManage')
+                }
+                
             })
         },
+        // 审核通过
+        succ() {
+            this.list.state = 1
+            this.save()
+        },
+        // 审核失败
+        fail() {
+            this.list.state = 2
+            this.save()
+        },
+        //获得费率
         getMerAppRate() {
             let data = {
                 mch_id: this.list.mch_id
@@ -233,7 +316,7 @@ export default {
                     if(ele.rate) {
                         ele.rate = ele.rate/100
                     }
-                    if(ele.is_default == 1) {
+                    if(ele.is_default) {
                         ele.is_default = '是'
                     } else{
                         ele.is_default = '否'
@@ -241,14 +324,36 @@ export default {
                 })
             })
         },
+        //获得提现列表
+        getList() {
+            let data = {
+                mch_id: this.list.mch_id
+            }
+            auditList(data).then((res) => {
+                this.total = res.data.total_count
+                this.tableData = res.data.data_list
+                this.tableData.forEach( ele => {
+                    if(ele.money && ele.money != '') {
+                        ele.money = ele.money/100
+                    }
+                    if(ele.state == 1) {
+                        ele.state = '已到账'
+                    }else{
+                        ele.state = '未到账'
+                    }
+                })
+            })
+        },
+        //切换tab
         handleClick(tab, event) {
-            console.log(tab.index)
             if(tab.index == 1) {
                 this.getMerAppRate()
             }
+            if(tab.index == 2) {
+                this.getList()
+            }
         },
         handleDel(row) {
-            console.log(row)
             let data = {
                 app_id: row.app_id,
                 mch_id: row.mch_id
@@ -256,7 +361,45 @@ export default {
             delAppRate(data).then( res => {
                 this.getMerAppRate()
             })
-        }
+        },
+        //设置费率
+        handleChange(row) {
+            this.$prompt(`请设置${row.app_name}的费率(%)：`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+            }).then(({ value }) => {
+                let data = [{
+                    app_id: row.app_id,
+                    rate: value*100,
+                    mch_id: row.mch_id
+                }]
+                let postData = {
+                    apps: data
+                }
+                zdyRate(postData).then( res => {
+                    this.$message({
+                        message: '设置成功！',
+                        type: 'success'
+                    });
+                    this.getMerAppRate()
+                })
+            }).catch(() => {
+            this.$message({
+                type: 'info',
+                message: '取消输入'
+            });       
+            });
+        },
+        handleSizeChange(val) {
+            console.log(`每页 ${val} 条`);
+            this.data.limit = val
+            this.getList()
+        },
+        handleCurrentChange(val) {
+            console.log(`当前页: ${val}`);
+            this.data.offset = (val - 1) * this.data.limit
+            this.getList()
+        },
     },
     mounted() {
         this.list = this.$route.query.detail
@@ -267,8 +410,9 @@ export default {
 <style lang="sass" scoped>
 .mer-audit
     color: #3D4060
+    padding-bottom: 100px
     .mer-ct 
-        width: 900px
+        width: 1135px
         .title 
             text-align: left
             font-size: 24px
@@ -283,8 +427,8 @@ export default {
             .basic-wrapper
                 margin: 0 70px 0 30px
                 padding-bottom: 30px
-                width: 900px
-                border-bottom: 1px solid #ccc
+                width: 1135px
+                // border-bottom: 1px solid #ccc
                 .basic-info
                     margin-right: 70px
                     margin-top: 30px
@@ -301,11 +445,6 @@ export default {
                             width: 180px
                         .el-input
                             width: 220px
-                        .table
-                            margin-top: 10px
-                            padding-bottom: 30px
-                            border-bottom: 1px solid #ccc 
-                    
         
             .mer-info
                 margin: 30px 0 0 30px
@@ -340,5 +479,11 @@ export default {
             text-align: center
         .err
             background: red
+        .table
+            margin-top: 10px
+            padding-bottom: 30px
+        .block
+            padding: 30px 0
+            text-align: center 
     
 </style>
