@@ -82,7 +82,7 @@
                 <el-table-column
                     prop="sys_order_id"
                     label="系统订单号"
-                    width="280">
+                    width="220">
                 </el-table-column>
                 <el-table-column
                     prop="pay_type"
@@ -100,14 +100,21 @@
                     width="100">
                 </el-table-column>
                 <el-table-column
-                    prop="trade_time"
-                    label="交易时间"
+                    prop="create_time"
+                    label="创建时间"
                     width="180">
                 </el-table-column>
                 <el-table-column
                     prop="state"
                     label="状态"
-                    >
+                    width="100">
+                </el-table-column>
+                <el-table-column
+                label="操作"
+                >
+                <template slot-scope="scope">
+                    <el-button @click="handleClick(scope.row)" type="text" size="small">详情</el-button>
+                </template>
                 </el-table-column>
             </el-table>
             <div class="block">
@@ -127,6 +134,7 @@
 </template>
 
 <script>
+import changeData from '../../config/formatData'
 import { todayNum,billList } from '../../config/api'
 export default {
     name: "billDetail",
@@ -206,12 +214,17 @@ export default {
                     if(ele.mch_charge && ele.mch_charge != '') {
                         ele.mch_charge = ele.mch_charge/100
                     }
+                    if( ele.create_time ) {
+                        ele.create_time = changeData(ele.create_time)
+                    }
                 })
                 this.total_count = res.data.total_count
             })
         },
 
-
+        handleClick(row) {
+            this.$router.push({path: '/home/oneBillDetail',query: {billInfo: row}})
+        },
         
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);

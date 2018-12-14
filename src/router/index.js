@@ -15,6 +15,7 @@ const addSysApp = resolve => require(['../components/merManagement/addSysApp'], 
 const changeSysApp = resolve => require(['../components/merManagement/changeSysApp'], resolve);
 const merRate = resolve => require(['../components/merManagement/merRate'], resolve);
 const billDetail = resolve => require(['../components/merManagement/billDetail'], resolve);
+const oneBillDetail = resolve => require(['../components/merManagement/oneBillDetail'], resolve);
 const agent = resolve => require(['../components/merManagement/agent'], resolve);
 const dataDetail = resolve => require(['../components/merManagement/dataDetail'], resolve);
 
@@ -39,8 +40,10 @@ export default new Router({
         {path: 'changeSysApp', name: 'changeSysApp', component: changeSysApp},
         {path: 'merRate', name: 'merRate', component: merRate},
         {path: 'billDetail', name: 'billDetail', component: billDetail},
+        {path: 'oneBillDetail', name: 'oneBillDetail', component: oneBillDetail},
         {path: 'agent', name: 'agent', component: agent},
         {path: 'dataDetail', name: 'dataDetail', component: dataDetail},
+
       ]
     },
     {

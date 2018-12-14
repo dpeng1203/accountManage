@@ -77,6 +77,7 @@
 </template>
 
 <script>
+import changeData from '../../config/formatData'
 import { sysApp } from '../../config/api'
 export default {
     name: 'accountManage',
@@ -119,6 +120,9 @@ export default {
                     }
                     if(ele.rate) {
                         ele.rate = ele.rate/100
+                    }
+                    if( ele.create_time ) {
+                        ele.create_time = changeData(ele.create_time)
                     }
                 })
                 console.log(res)

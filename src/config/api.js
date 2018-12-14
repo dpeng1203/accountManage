@@ -48,3 +48,11 @@ export const todayNum = p => myGet('/bill/today',{params: p})
 //  账单明细
 export const billList = p => myGet('/bill',{params: p})
 
+//  图标数据
+export const chartData = p => myGet('/stats',{params: p})
+
+// 主页数据统计
+export const statsTotal = p => myGet('/stats/total',{params: p})
+
+
+

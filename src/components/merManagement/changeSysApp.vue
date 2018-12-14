@@ -15,7 +15,7 @@
             </div>
             <div class="item">
                 <span class="name">状态</span>
-                <el-select v-model="data.status" placeholder="请选择">
+                <el-select v-model="data.status" placeholder="请选择" class="state">
                     <el-option
                     v-for="item in options1"
                     :key="item.value"
@@ -95,6 +95,8 @@ export default {
                 height: 40px
                 line-height: 40px
                 padding-left: 20px 
+            .state
+                width: 240px  
     .btn
         width: 150px
         height: 40px

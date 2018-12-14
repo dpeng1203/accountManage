@@ -85,6 +85,7 @@
 </template>
 
 <script>
+import changeData from '../../config/formatData'
 import { auditList,auditOk } from '../../config/api'
 export default {
     name: 'accountManage',
@@ -114,6 +115,9 @@ export default {
                         ele.state = '已到账'
                     }else{
                         ele.state = '未到账'
+                    }
+                    if( ele.create_time ) {
+                        ele.create_time = changeData(ele.create_time)
                     }
                 })
             })

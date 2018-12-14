@@ -110,7 +110,7 @@ export default {
             let data = {
                 apps: apps
             }
-            if(apps.length > 1 || apps[0].app_id != null || apps[0].app_id != '') {
+            if(apps[0].app_id != null && apps[0].app_id != '') {
                 zdyRate(data).then( res => {
                     this.$message({
                         message: '设置成功！',

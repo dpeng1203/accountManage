@@ -73,7 +73,7 @@ export default {
     .tac 
         width: 287px
         flex-shrink: 0
-        .el-menu-vertical-demo:not(.el-menu--collapse) 
-            min-height: 100vh
-        
+    .el-menu-vertical-demo:not(.el-menu--collapse) 
+        height: 100vh
+        width: 287px
 </style>

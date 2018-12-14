@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="ct">
         <top></top>
         <div class="content-wrapper">
             <tabs></tabs>
@@ -31,10 +31,20 @@ export default {
 </script>
 
 <style lang='sass' scoped>
-.content-wrapper
-    display: flex   
-    .content
-        padding: 0 30px
-        flex: 1
-        height: 100%
+.ct
+    height: 100vh
+    overflow: hidden
+    .content-wrapper
+        // display: flex  
+        position: relative
+        .content
+            padding-bottom: 200px
+            position: absolute
+            right: 0
+            bottom: 0
+            left: 310px
+            top: 0
+            overflow: auto
+            // padding: 0 30px
+            // flex: 1
 </style>
