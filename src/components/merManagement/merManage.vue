@@ -6,7 +6,7 @@
         <div class="search">
             <div class="search-ct">
                 <div class="search-name">状态</div>
-                <el-select v-model="data.state" placeholder="请选择">
+                <el-select v-model="data.state" placeholder="请选择" class="inline-input">
                     <el-option
                     v-for="item in options1"
                     :key="item.value"
@@ -64,7 +64,7 @@
                 <el-table-column
                     prop="legal_name"
                     label="法人姓名"
-                    width="150">
+                    width="130">
                 </el-table-column>
                 <el-table-column
                     prop="legal_phone"
@@ -72,9 +72,14 @@
                     width="150">
                 </el-table-column>
                 <el-table-column
+                    prop="yuee"
+                    label="账户余额"
+                    width="150">
+                </el-table-column>
+                <el-table-column
                     prop="state"
                     label="状态"
-                    width="150">
+                    width="130">
                 </el-table-column>
                 <el-table-column
                 label="操作"
@@ -217,7 +222,7 @@ export default {
             margin-left: 0
     .table
         margin-top: 40px
-        width: 1002px
+        width: 1101px
         .block
             padding: 30px 0
             text-align: center 
