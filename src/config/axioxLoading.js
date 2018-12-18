@@ -2,7 +2,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import router from '../router'
-import {hex_md5} from '../assets/js/md5.js'
+// import {hex_md5} from '../assets/js/md5.js'
 import hostName from './hostName'
 //引入element 
 import { Loading,Message  } from 'element-ui';
@@ -24,9 +24,9 @@ axios.interceptors.request.use(
     // element ui Loading方法
     loadinginstace = Loading.service({ fullscreen: true });
     //console.log(loadinginstace)
-    config.headers.pid = '30478fdd494233eb22a0b6dabc12f41e'
-    config.headers.timestamp=Date.parse(new Date())
-    config.headers.sign=hex_md5(config.headers.timestamp+config.headers.pid+ "321652e390b5fe2b7cb1d9ce34d50e51")
+    // config.headers.pid = '30478fdd494233eb22a0b6dabc12f41e'
+    // config.headers.timestamp=Date.parse(new Date())
+    // config.headers.sign=hex_md5(config.headers.timestamp+config.headers.pid+ "321652e390b5fe2b7cb1d9ce34d50e51")
     config.baseURL = hostName
     return config
   },
@@ -53,7 +53,6 @@ export function myPost(url, params) {
     .catch(function (error) {
       if (error.response) {
         Message.error(error.response.data.message);
-        console.log(error.response.data.message == '未登录')
         if(error.response.data.message == '未登录') {
           router.push('/')
         }
@@ -71,7 +70,6 @@ export function myGet(url, params) {
     .catch(function (error) {
       if (error.response) {
         Message.error(error.response.data.message);
-        console.log(error.response.data.message == '未登录')
         if(error.response.data.message == '未登录') {
           router.push('/')
         }
@@ -89,7 +87,6 @@ export function myDelete(url, params) {
     .catch(function (error) {
       if (error.response) {
         Message.error(error.response.data.message);
-        console.log(error.response.data.message == '未登录')
         if(error.response.data.message == '未登录') {
           router.push('/')
         }
@@ -107,7 +104,6 @@ export function myPut(url, params) {
     .catch(function (error) {
       if (error.response) {
         Message.error(error.response.data.message);
-        console.log(error.response.data.message == '未登录')
         if(error.response.data.message == '未登录') {
           router.push('/')
         }

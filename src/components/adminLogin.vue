@@ -6,7 +6,7 @@
         <div class="wrapper">
             <div class="title">Alian后台管理系统</div>
             <div><input type="text" placeholder="账号" v-model="account"></div>
-            <div><input type="password" placeholder="密码" v-model="pw"></div>
+            <div><input type="password" placeholder="密码" v-model="pw" @keyup.enter="login"></div>
             <div class="btn" @click="login">登录</div>
         </div>
     </div>    

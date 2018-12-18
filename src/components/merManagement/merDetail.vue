@@ -337,9 +337,11 @@ export default {
                         ele.money = ele.money/100
                     }
                     if(ele.state == 1) {
-                        ele.state = '已到账'
-                    }else{
-                        ele.state = '未到账'
+                        ele.state = '提现成功'
+                    }else if(ele.state == 2){
+                        ele.state = '提现失败'
+                    }else {
+                        ele.state = '提现中'
                     }
                 })
             })
