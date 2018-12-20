@@ -4,8 +4,6 @@ import home from '@/components/home'
 import adminLogin from '@/components/adminLogin'
 
 
-const accountManage = resolve => require(['../components/merManagement/accountManage'], resolve);
-const accountDetail = resolve => require(['../components/merManagement/accountDetail'], resolve);
 const audit = resolve => require(['../components/merManagement/audit'], resolve);
 const merchant = resolve => require(['../components/merManagement/merchant'], resolve);
 const merManage = resolve => require(['../components/merManagement/merManage'], resolve);
@@ -18,6 +16,7 @@ const billDetail = resolve => require(['../components/merManagement/billDetail']
 const oneBillDetail = resolve => require(['../components/merManagement/oneBillDetail'], resolve);
 const agent = resolve => require(['../components/merManagement/agent'], resolve);
 const dataDetail = resolve => require(['../components/merManagement/dataDetail'], resolve);
+const channel = resolve => require(['../components/merManagement/channel'], resolve);
 
 Vue.use(Router)
 
@@ -29,8 +28,6 @@ export default new Router({
       component: home,
       redirect: '/home/dataDetail',
       children:[
-        {path: 'accountManage', name: 'accountManage', component: accountManage},
-        {path: 'accountDetail', name: 'accountDetail', component: accountDetail},
         {path: 'audit', name: 'audit', component: audit},
         {path: 'merchant', name: 'merchant', component: merchant},
         {path: 'merManage', name: 'merManage', component: merManage},
@@ -43,7 +40,7 @@ export default new Router({
         {path: 'oneBillDetail', name: 'oneBillDetail', component: oneBillDetail},
         {path: 'agent', name: 'agent', component: agent},
         {path: 'dataDetail', name: 'dataDetail', component: dataDetail},
-
+        {path: 'channel', name: 'channel', component: channel},
       ]
     },
     {

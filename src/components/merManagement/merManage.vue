@@ -5,8 +5,8 @@
         </div>  
         <div class="search">
             <div class="search-ct">
-                <div class="search-name">状态</div>
-                <el-select v-model="data.state" placeholder="请选择" class="inline-input">
+                <div class="search-name">审核状态</div>
+                <el-select v-model="data.audit_state" placeholder="请选择" class="inline-input">
                     <el-option
                     v-for="item in options1"
                     :key="item.value"
@@ -16,21 +16,28 @@
                 </el-select>
             </div>
             <div class="search-ct">
-                <div class="search-name">商户名称</div>
-                <el-input class="inline-input" v-model="data.mch_name" placeholder="请输入内容" clearable></el-input>
+                <div class="search-name">账户状态</div>
+                <el-select v-model="data.mch_state" placeholder="请选择" class="inline-input">
+                    <el-option
+                    v-for="item in options2"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                    </el-option>
+                </el-select>
             </div>
-             <div class="search-ct">
+            <div class="search-ct">
                 <div class="search-name">商户号</div>
                 <el-input class="inline-input" v-model="data.mch_id" placeholder="请输入内容" clearable></el-input>
             </div>
         </div>
         <div class="search">
             <div class="search-ct">
-                <div class="search-name">法人姓名</div>
-                <el-input class="inline-input" v-model="data.name" placeholder="请输入内容" clearable></el-input>
+                <div class="search-name">商户名称</div>
+                <el-input class="inline-input" v-model="data.mch_name" placeholder="请输入内容" clearable></el-input>
             </div>
             <div class="search-ct">
-                <div class="search-name">法人手机号</div>
+                <div class="search-name">手机号</div>
                 <el-input class="inline-input" v-model="data.phone" placeholder="请输入内容" clearable></el-input>
                 <div class="search-btn" @click="searchBtn">搜索</div>
             </div>
@@ -46,46 +53,49 @@
                     type="index"
                     width="50">
                 </el-table-column>
-                <!-- <el-table-column
-                    prop="mch_id"
-                    label="序号"
-                    width="100">
-                </el-table-column> -->
                 <el-table-column
                     prop="mch_id"
                     label="商户号"
-                    width="150">
+                    width="80">
                 </el-table-column>
                 <el-table-column
                     prop="mch_name"
                     label="商户名称"
-                    width="180">
+                    width="170">
                 </el-table-column>
                 <el-table-column
-                    prop="legal_name"
-                    label="法人姓名"
+                    prop="phone"
+                    label="注册手机号"
                     width="130">
                 </el-table-column>
                 <el-table-column
-                    prop="legal_phone"
-                    label="法人手机号"
-                    width="150">
-                </el-table-column>
-                <el-table-column
-                    prop="yuee"
+                    prop="money"
                     label="账户余额"
-                    width="150">
+                    width="100">
                 </el-table-column>
                 <el-table-column
-                    prop="state"
-                    label="状态"
-                    width="130">
+                    prop="audit_state"
+                    label="审核状态"
+                    width="100">
+                </el-table-column>
+                <el-table-column
+                    prop="mch_state"
+                    label="账户状态"
+                    width="100">
+                </el-table-column>
+                <el-table-column
+                    prop="channel_name"
+                    label="通道"
+                    width="120">
                 </el-table-column>
                 <el-table-column
                 label="操作"
                 >
                 <template slot-scope="scope">
                     <el-button @click="handleClick(scope.row)" type="text" size="small">详情</el-button>
+                    <el-button @click="handleClickCutState(scope.row)" type="danger" size="small">{{scope.row.mch_state == '激活' ? '冻结' : '激活'}}</el-button>
+                    <el-button @click="handleClickCutChannel(scope.row)" type="text" size="small">切换通道</el-button>
+                    <el-button @click="handleClickResetPw(scope.row)" type="warning" size="small">重置密码</el-button>
                 </template>
                 </el-table-column>
             </el-table>
@@ -101,12 +111,24 @@
                 </el-pagination>
             </div>
         </div>
-
+        <el-dialog title="切换通道" :visible.sync="dialogFormVisible">
+            <el-form :model="form">
+                <el-form-item label="通道名称" :label-width="formLabelWidth">
+                    <el-select v-model="form.region" placeholder="请选择">
+                        <el-option  v-for="item in channelList" :key="item.id" :value="item.id" :label="item.name"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="sureChangeChannel">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-import { merList } from '../../config/api'
+import { merList,cutMchState,channelList,changeMchChannel,resetMchPW } from '../../config/api'
 export default {
     name: 'accountManage',
     data() {
@@ -122,23 +144,41 @@ export default {
                 label: '待审核'
                 }, {
                 value: '1',
-                label: '审核通过'
+                label: '审核成功'
                 }, {
                 value: '2',
-                label: '审核拒绝'
+                label: '审核失败'
+                }],
+            options2: [{
+                value: null,
+                label: '请选择'
+                },{
+                value: 'enable',
+                label: '激活'
+                }, {
+                value: 'disable',
+                label: '冻结'
                 }],
             data: {
                 phone: null,
-                name: null,
                 mch_name: null,
-                state: null,
+                mch_state: null,
                 mch_id: null,
+                audit_state: null,
                 offset: 0,
                 limit: 10
-            }
+            },
+            dialogFormVisible: false,
+            form: {
+                region: ''
+            },
+            formLabelWidth: '120px' ,
+            channelList: [] ,
+            mch_id: ''
         }
     },
     methods: {
+        //商户列表
         getList() {
             for(var key in this.data) {
                 if(this.data[key] === '') {
@@ -149,25 +189,110 @@ export default {
                 this.total = res.data.total_count
                 this.tableData = res.data.data_list
                 this.tableData.forEach( ele => {
-                    if(ele.state == 0) {
-                        ele.state = '待审核'
-                    }else if(ele.state == 1) {
-                        ele.state = '审核通过'
+                    if(ele.money) {
+                        ele.money = ele.money/100
+                    }
+                    if(ele.mch_state == 'enable') {
+                        ele.mch_state = '激活'
+                    } else{
+                        ele.mch_state = '冻结'
+                    }
+                    if(ele.audit_state == 0) {
+                        ele.audit_state = '待审核'
+                    }else if(ele.audit_state == 1) {
+                        ele.audit_state = '审核成功'
                     }else {
-                        ele.state = '审核拒绝'
+                        ele.audit_state = '审核失败'
                     }
                 })
-                console.log(res)
             })
         },
-
+        // 通道列表
+        getChannelList() {
+            let data = {
+                offset: 0,
+                limit: 10000
+            }
+            channelList(data).then((res) => {
+                this.channelList = res.data.data_list
+                this.channelList = this.channelList.filter( ele => {
+                    return ele.state 
+                })
+            })
+        },
+        //切换通道
+        handleClickCutChannel(row) {
+            this.dialogFormVisible = true
+            this.getChannelList()
+            this.mch_id = row.mch_id
+        },
+        sureChangeChannel() {
+            this.dialogFormVisible = false
+            if(this.form.region != '') {
+                let data = {
+                    mch_id: this.mch_id,
+                    channel_id: this.form.region
+                }
+                changeMchChannel(data).then( res => {
+                    this.getList()
+                })
+            }
+        },
+        // 切换商户状态
+        handleClickCutState(row) {
+            this.$confirm('确定切换通道状态?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                let data = {
+                    mch_id: row.mch_id,
+                    open: row.mch_state == '激活' ? false : true
+                }
+                cutMchState(data).then( res => {
+                    this.$message({
+                        type: 'success',
+                        message: '切换成功!'
+                    });
+                    this.getList()
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消'
+                });          
+            });
+        },
+        //  重置密码
+        handleClickResetPw(row) {
+            this.$prompt('请输入新密码', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+            }).then(({ value }) => {
+                let data ={
+                    mch_id: row.mch_id,
+                    password: value
+                }
+                resetMchPW(data).then( res => {
+                    this.$message({
+                        type: 'success',
+                        message: '设置成功！'
+                    });
+                })
+                
+            }).catch(() => {
+            this.$message({
+                type: 'info',
+                message: '取消输入'
+            });       
+            });
+        },
         searchBtn() {
             this.getList()
         },
 
         handleClick(row) {
-            console.log(row);
-            this.$router.push({path: '/home/merDetail',query: {detail: row}})
+            this.$router.push({path: '/home/merDetail',query: {mch_id: row.mch_id}})
         },
 
         handleSizeChange(val) {
@@ -222,7 +347,7 @@ export default {
             margin-left: 0
     .table
         margin-top: 40px
-        width: 1101px
+        width: 1151px
         .block
             padding: 30px 0
             text-align: center 

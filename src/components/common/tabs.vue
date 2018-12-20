@@ -39,7 +39,10 @@
                         <i class="el-icon-document"></i>
                         <span slot="title">代理商管理</span>
                     </el-menu-item>
-                    
+                    <el-menu-item index="/home/channel">
+                        <i class="el-icon-goods"></i>
+                        <span slot="title">通道管理</span>
+                    </el-menu-item>
                     
                     <!-- <el-menu-item index="/home/merchant">
                         <i class="el-icon-document"></i>

@@ -54,6 +54,17 @@ export default {
     methods: {
         addSysAppBtn() {
             this.data.rate = this.data.rate*100
+            if(this.data.status == '开启') {
+                this.data.status = true
+            }else if(this.data.status == '关闭'){
+                this.data.status = false
+            }
+            if(this.data.create_time) {
+                delete this.data.create_time
+            }
+            if(this.data.modify_time) {
+                delete this.data.modify_time
+            }
             changeSysApp(this.data).then( res => {
                  this.$message({
                     message: '修改成功！',

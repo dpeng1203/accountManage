@@ -6,7 +6,7 @@
             </div>
             <div class="box-wrapper">
                 <div class="box">
-                    <div class="box-title">今日成功收款（元）</div>
+                    <div class="box-title">今日成功收款（万元）</div>
                     <ul class="scss"><li>{{sum.smoney}}</li></ul>
                 </div>
                 <div class="box">
@@ -16,7 +16,7 @@
             </div>
             <div class="box-wrapper">
                 <div class="box">
-                    <div class="box-title">今日未成功收款（元）</div>
+                    <div class="box-title">今日未成功收款（万元）</div>
                     <ul class="fail"><li>{{sum.fmoney}}</li></ul>
                 </div>
                 <div class="box">
@@ -26,15 +26,15 @@
             </div>
             <div class="box-wrapper small-box-wrapper">
                 <div class="box small-box">
-                    <div class="box-title">总收款（元）</div>
+                    <div class="box-title">总收款（万元）</div>
                     <ul class="money"><li>{{sum.tmoney}}</li></ul>
                 </div>
                 <div class="box small-box">
-                    <div class="box-title">已出款（元）</div>
+                    <div class="box-title">已出款（万元）</div>
                     <ul class="money"><li>{{sum.cmoney}}</li></ul>
                 </div>
                 <div class="box small-box">
-                    <div class="box-title">未出款（元）</div>
+                    <div class="box-title">未出款（万元）</div>
                     <ul class="money"><li>{{sum.rmoney}}</li></ul>
                 </div>
             </div>
@@ -152,11 +152,11 @@ export default {
         getData() {
             statsTotal().then( res => {
                 this.sum = res.data
-                this.sum.smoney = this.sum.smoney/100
-                this.sum.fmoney = this.sum.fmoney/100
-                this.sum.tmoney = this.sum.tmoney/100
-                this.sum.cmoney = this.sum.cmoney/100
-                this.sum.rmoney = this.sum.rmoney/100
+                this.sum.smoney = (this.sum.smoney/100/10000).toFixed(2)
+                this.sum.fmoney = (this.sum.fmoney/100/10000).toFixed(2)
+                this.sum.tmoney = (this.sum.tmoney/100/10000).toFixed(2)
+                this.sum.cmoney = (this.sum.cmoney/100/10000).toFixed(2)
+                this.sum.rmoney = (this.sum.rmoney/100/10000).toFixed(2)
             })
             chartData().then( res => {
                 this.serverData = res.data

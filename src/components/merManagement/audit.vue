@@ -41,14 +41,9 @@
                     width="180">
                 </el-table-column>
                 <el-table-column
-                    prop="reserved_phone"
-                    label="手机号"
-                    width="130">
-                </el-table-column>
-                <el-table-column
                     prop="bankcard_number"
                     label="银行卡号"
-                    width="180">
+                    width="200">
                 </el-table-column>
                 <el-table-column
                     prop="money"
@@ -64,7 +59,8 @@
                 label="操作"
                 >
                 <template slot-scope="scope">
-                    <el-button @click="handleClick(scope.row)" type="text" size="small">到账</el-button>
+                    <el-button @click="handleClickSucc(scope.row)" type="text" size="small" v-if="scope.row.state == '提现中'">到账</el-button>
+                    <el-button @click="handleClickFail(scope.row)" type="text" size="small" v-if="scope.row.state == '提现中'">拒绝</el-button>
                 </template>
                 </el-table-column>
             </el-table>
@@ -128,20 +124,46 @@ export default {
         searchBtn() {
             this.getList()
         },
-
-        handleClick(row) {
-            this.$confirm('是否确认到账?', '提示', {
+        //  成功到账
+        handleClickSucc(row) {
+            this.$confirm('是否确认到账成功?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
             type: 'warning'
             }).then(() => {
                 let data = {
-                    cash_log_id: row.id
+                    cash_log_id: row.id,
+                    success: true
                 }
                 auditOk(data).then(res => {
                     this.$message({
                         type: 'success',
-                        message: '删除成功!'
+                        message: '到账成功!'
+                    });
+                    this.getList()
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
+            }); 
+        },
+        //拒绝到账
+        handleClickFail(row) {
+            this.$confirm('是否确认拒绝到账?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+            type: 'warning'
+            }).then(() => {
+                let data = {
+                    cash_log_id: row.id,
+                    success: false
+                }
+                auditOk(data).then(res => {
+                    this.$message({
+                        type: 'success',
+                        message: '已拒绝!'
                     });
                     this.getList()
                 })
@@ -205,7 +227,7 @@ export default {
             margin-left: 0
     .table
         margin-top: 40px
-        width: 1150px
+        width: 1100px
         .block
             padding: 30px 0
             text-align: center 
