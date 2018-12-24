@@ -16,7 +16,10 @@ export const loginOut = () => myDelete('/own')
 export const auditList = p => myGet('/cash/list',{params: p})
 
 //  到账
-export const auditOk = p => myPost('/cash/success', p);
+export const auditOk = p => myPost('/cash/manual', p);
+
+// 提现系统代付
+export const cashSys = p => myPost('/cash/sys', p);
 
 // 商户信息
 export const merList = p => myGet('/mch/list',{params: p})
@@ -74,6 +77,32 @@ export const changeMchChannel = p => myPost('/channel/mch',p)
 
 // 重置密码
 export const resetMchPW = p => myPost('/mch/pwd',p)
+
+// 代理商创建
+export const creatAgent = p => myPost('/admin/agent',p)
+
+// 修改代理商
+export const changeAgent = p => myPut('/admin/agent', p);
+
+//代理商列表
+export const agentList = p => myGet('/admin/agent',{params: p})
+
+// 查看子账户
+export const childAgent = p => myGet('/auth/phone/sub',{params: p})
+
+//关联两个商户
+export const lineAgent = p => myPost('/auth/phone/sub',p)
+
+//删除子账户
+export const delChildAgent = p => myDelete('/auth/phone/sub/'+ p)
+
+// 代付列表
+export const payBankList = p => myGet('/bank/payment/sys',{params: p})
+
+//改变代付状态
+export const changePayBankState = p => myPost('/bank/payment/sys',p)
+
+
 
 
 

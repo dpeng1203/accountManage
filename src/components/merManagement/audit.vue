@@ -31,36 +31,47 @@
                     width="180">
                 </el-table-column>
                 <el-table-column
-                    prop="name"
-                    label="姓名"
+                    prop="mch_name"
+                    label="商户全称"
                     width="100">
                 </el-table-column>
                 <el-table-column
-                    prop="mch_name"
-                    label="商户全称"
-                    width="180">
+                    prop="open_bank"
+                    label="银行卡类型"
+                    width="100">
                 </el-table-column>
                 <el-table-column
                     prop="bankcard_number"
                     label="银行卡号"
-                    width="200">
+                    width="160">
                 </el-table-column>
                 <el-table-column
                     prop="money"
                     label="金额(元)"
-                    width="120">
+                    width="80">
+                </el-table-column>
+                 <el-table-column
+                    prop="type"
+                    label="代付类型"
+                    width="90">
+                </el-table-column>
+                <el-table-column
+                    prop="msg"
+                    label="备注"
+                    width="100">
                 </el-table-column>
                 <el-table-column
                     prop="state"
-                    label="是否到账"
-                    width="120">
+                    label="提现状态"
+                    width="100">
                 </el-table-column>
                 <el-table-column
                 label="操作"
                 >
                 <template slot-scope="scope">
-                    <el-button @click="handleClickSucc(scope.row)" type="text" size="small" v-if="scope.row.state == '提现中'">到账</el-button>
-                    <el-button @click="handleClickFail(scope.row)" type="text" size="small" v-if="scope.row.state == '提现中'">拒绝</el-button>
+                    <el-button @click="handleClickSucc(scope.row)" type="text" size="small" v-if="scope.row.state == '待处理'">到账</el-button>
+                    <el-button @click="handleClickFail(scope.row)" type="text" size="small" v-if="scope.row.state == '待处理'">拒绝</el-button>
+                    <el-button @click="handleClickSys(scope.row)" type="success" size="small" v-if="scope.row.state == '待处理'">系统代付</el-button>
                 </template>
                 </el-table-column>
             </el-table>
@@ -76,13 +87,25 @@
                 </el-pagination>
             </div>
         </div>
-
+        <el-dialog title="系统代付" :visible.sync="dialogFormVisible">
+            <el-form :model="form">
+                <el-form-item label="通道名称" :label-width="formLabelWidth">
+                    <el-select v-model="form.region" placeholder="请选择">
+                        <el-option  v-for="item in payBankList" :key="item.id" :value="item.id" :label="item.name"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="sureSysPay">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import changeData from '../../config/formatData'
-import { auditList,auditOk } from '../../config/api'
+import { auditList,auditOk,payBankList,cashSys } from '../../config/api'
 export default {
     name: 'accountManage',
     data() {
@@ -95,7 +118,14 @@ export default {
                 mch_id: null,
                 offset: 0,
                 limit: 10
-            }
+            },
+            dialogFormVisible: false,
+            cash_log_id: '',        //列表id
+            form: {
+                region: ''
+            },
+            formLabelWidth: '120px' ,
+            payBankList: []
         }
     },
     methods: {
@@ -107,12 +137,21 @@ export default {
                     if(ele.money && ele.money != '') {
                         ele.money = ele.money/100
                     }
-                    if(ele.state == 1) {
+                    if(ele.state == 0) {
+                        ele.state = '待处理'
+                    }else if(ele.state == 1) {
                         ele.state = '提现成功'
                     }else if(ele.state == 2){
                         ele.state = '提现失败'
-                    }else {
-                        ele.state = '提现中'
+                    }else if(ele.state == 9){
+                        ele.state = '处理中'
+                    }
+                    if(ele.type == 1) {
+                        ele.type = '手工代付'
+                    } else if(ele.type == 2) {
+                        ele.type = '平安'
+                    } else if(ele.type == 3) {
+                        ele.type = '先锋'
                     }
                     if( ele.create_time ) {
                         ele.create_time = changeData(ele.create_time)
@@ -174,7 +213,32 @@ export default {
                 });          
             }); 
         },
-
+        //系统代付
+        handleClickSys(row) {
+            this.dialogFormVisible = true
+            this.cash_log_id = row.id
+            let data = {
+                offset: 0,
+                limit: 10000
+            }
+            payBankList(data).then( res => {
+                this.payBankList = res.data.data_list
+                this.payBankList = this.payBankList.filter( ele => {
+                    return ele.state 
+                })
+            })
+        },
+        //确认代付
+        sureSysPay() {
+            this.dialogFormVisible = false
+            let data = {
+                cash_log_id: this.cash_log_id,
+                bank_pay_id: this.form.region
+            }
+            cashSys(data).then( res => {
+                this.getList()
+            })
+        },
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
             this.data.limit = val
@@ -227,7 +291,7 @@ export default {
             margin-left: 0
     .table
         margin-top: 40px
-        width: 1100px
+        max-width: 1160px
         .block
             padding: 30px 0
             text-align: center 

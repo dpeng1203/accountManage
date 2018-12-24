@@ -1,8 +1,10 @@
 <template>
     <div class="mer-manage">
         <div class="title">
-            <span>通道管理</span>
+            <img src="../../assets/img/ic_back.png" alt="" @click="$router.push('/home/agentList')">
+            <span>子账户管理</span>
         </div>  
+        <div class="add-btn" @click="addBtn">新增</div>
         <div class="table">
             <el-table
                 :data="tableData"
@@ -13,30 +15,30 @@
                     width="50">
                 </el-table-column>
                 <el-table-column
-                    prop="create_time"
-                    label="创建时间"
-                    width="200">
+                    prop="mch_name"
+                    label="商户名称"
+                    width="180">
                 </el-table-column>
                 <el-table-column
-                    prop="name"
-                    label="通道名称"
-                    width="200">
-                </el-table-column>
-                <el-table-column
-                    prop="code"
-                    label="通道标识"
+                    prop="phone"
+                    label="手机号"
                     width="150">
                 </el-table-column>
                 <el-table-column
-                    prop="state"
-                    label="通道状态"
+                    prop="money"
+                    label="交易金额"
+                    width="150">
+                </el-table-column>
+                <el-table-column
+                    prop="bounsMoney"
+                    label="分润金额"
                     width="150">
                 </el-table-column>
                 <el-table-column
                 label="操作"
                 >
                 <template slot-scope="scope">
-                    <el-button @click="handleClick(scope.row)" type="danger" size="small">{{scope.row.state == '开启' ? '关闭' : '开启'}}</el-button>
+                    <el-button @click="handleClick(scope.row)" type="danger" size="small">删除</el-button>
                 </template>
                 </el-table-column>
             </el-table>
@@ -58,11 +60,13 @@
 
 <script>
 import changeData from '../../config/formatData'
-import { channelList,changeChannelState } from '../../config/api'
+import { childAgent,delChildAgent } from '../../config/api'
 export default {
-    name: 'accountManage',
+    name: 'childAgent',
     data() {
         return{
+            mch_id: '',
+            childList: [],
             tableData: [],
             currentPage: 1,
             total: 0,
@@ -74,64 +78,63 @@ export default {
     },
     methods: {
         getList() {
-            channelList(this.data).then((res) => {
+            this.data.mch_id = this.mch_id
+            childAgent(this.data).then((res) => {
                 this.total = res.data.total_count
                 this.tableData = res.data.data_list
                 this.tableData.forEach( ele => {
-                    if(ele.state) {
-                        ele.state = '开启'
-                    }else {
-                        ele.state = '关闭'
+                    if(ele.money){
+                        ele.money = ele.money/100
                     }
-                    if( ele.create_time ) {
-                        ele.create_time = changeData(ele.create_time)
+                    if(ele.bounsMoney){
+                        ele.bounsMoney = ele.bounsMoney/100
                     }
+                    
                 })
-                console.log(res)
             })
         },
 
+        //删除子账户
         handleClick(row) {
-            this.$confirm('确定切换商户状态?', '提示', {
+            this.$confirm('确定删除此子账户?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                let data = {
-                    id: row.id,
-                    is_open: row.state == '开启' ? false : true
-                }
-                changeChannelState(data).then( res => {
+                delChildAgent(row.sub_id).then( res => {
                     this.$message({
                         type: 'success',
-                        message: '切换成功!'
+                        message: '删除成功!'
                     });
                     this.getList()
                 })
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: '已取消'
+                    message: '已取消删除'
                 });          
             });
+            
         },
 
         handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
             this.data.limit = val
             this.getList()
         },
         handleCurrentChange(val) {
-            console.log(`当前页: ${val}`);
             this.data.offset = (val - 1) * this.data.limit
             this.getList()
         },
         addBtn() {
-            this.$router.push('/home/addSysApp')
+            this.$router.push({path: '/home/addChildAgent',query: {id: this.mch_id}})
+            // childAgent(this.data).then( res => {
+            //     this.tableData = res.data.data_list
+            // })
         }
 
     },
     mounted() {
+        this.mch_id = this.$route.query.id
         this.getList()
     }
 }
@@ -144,6 +147,35 @@ export default {
     .title 
         font-size: 24px
         font-weight: bold
+        img
+            width: 35px
+            height: 35px
+            cursor: pointer
+    .search
+        display: flex
+        margin-top: 20px
+        .search-ct
+            margin-left: 60px
+            .search-name
+                font-size: 14px
+                line-height: 18.2px
+                padding-bottom: 10px
+            .inline-input
+                width: 220px
+            
+        .search-ct:first-child
+            margin-left: 0
+    .add-btn
+        width: 120px
+        height: 40px
+        margin-top: 60px
+        line-height: 40px
+        text-align: center
+        color: #fff
+        background: #00BFA6;
+        border-radius: 25px;
+        font-size: 14px
+        margin-top: 30px 
     .table
         margin-top: 40px
         width: 1002px

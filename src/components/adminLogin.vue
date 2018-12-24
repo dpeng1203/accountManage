@@ -15,6 +15,7 @@
 <script>
 import {login} from '../config/api'
 export default {
+    name: 'adminLogin',
     data() {
         return{ 
             account: '',
@@ -32,7 +33,9 @@ export default {
                 console.log(res)
                 localStorage.id = res.id
                 localStorage.nickname = res.nickname
-                localStorage.name = res.base.mch_name
+                if(res.base.mch_name) {
+                    localStorage.name = res.base.mch_name
+                }
                 this.$router.push('/home')
             })
         },
@@ -43,7 +46,7 @@ export default {
 <style lang="sass" scoped>
 .login
     background: #00BFA6
-    width: 100vw
+    min-width: 1500px
     height: 100vh
     display: flex
     align-items: center

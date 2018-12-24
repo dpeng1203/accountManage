@@ -97,11 +97,11 @@
                 </div>
             </div>
         </div>
-        <div class="btn" v-if="list.state != '待审核' && editorState == 0" @click="editorInfo">编辑</div>
+        <div class="btn" v-if="list.state != 0 && editorState == 0" @click="editorInfo">编辑</div>
         <div class="btn" v-if="editorState == 1" @click="succ">保存</div>
         <div class="btn" v-if="editorState == 1" @click="editorState = 0">取消</div>
-        <div class="btn" @click="succ" v-if="list.state == '待审核'">审核通过</div>
-        <div class="btn err" @click="fail" v-if="list.state == '待审核'">审核失败</div>
+        <div class="btn" @click="succ" v-if="list.state == 0">审核通过</div>
+        <div class="btn err" @click="fail" v-if="list.state == 0">审核失败</div>
     </div>
 </template>
 
@@ -110,12 +110,14 @@ import hostName from '../../config/hostName'
 import { changeMerDetail,merInfoList } from '../../config/api'
 export default {
     name: 'merchant',
-    props: ['mch_id'],
+    props: {
+        mch_id: [Number,String]
+    },
     data() {
         return{
             editorState: 0,             //  1: 编辑  0：不可编辑
             hostName: hostName,
-            list: {}
+            list: {},
         }
     },
     methods: {
@@ -162,7 +164,7 @@ export default {
         },
         // 审核通过
         succ() {
-            this.list.state = 1
+            this.list.state = 1 
             this.save()
         },
         // 审核失败
@@ -172,7 +174,10 @@ export default {
         },
     },
     mounted() {
-        this.getMerInfo()
+        setTimeout(() =>{
+            this.getMerInfo()
+        },0 )
+        
     }
 }
 </script>

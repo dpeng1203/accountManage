@@ -113,7 +113,7 @@ export default {
                 this.total = res.data.total_count
                 this.tableData = res.data.data_list
                 this.tableData.forEach( ele => {
-                    if(ele.status) {
+                    if(ele.status && ele.status == true) {
                         ele.status = '开启'
                     }else {
                         ele.status = '关闭'

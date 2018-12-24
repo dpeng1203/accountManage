@@ -35,15 +35,18 @@
                         <i class="el-icon-printer"></i>
                         <span slot="title">提现管理</span>
                     </el-menu-item>
-                    <el-menu-item index="/home/agent">
+                    <el-menu-item index="/home/agentList">
                         <i class="el-icon-document"></i>
-                        <span slot="title">代理商管理</span>
+                        <span slot="title">代理管理</span>
                     </el-menu-item>
                     <el-menu-item index="/home/channel">
                         <i class="el-icon-goods"></i>
                         <span slot="title">通道管理</span>
                     </el-menu-item>
-                    
+                    <el-menu-item index="/home/payBank">
+                        <i class="el-icon-setting"></i>
+                        <span slot="title">代付管理</span>
+                    </el-menu-item>
                     <!-- <el-menu-item index="/home/merchant">
                         <i class="el-icon-document"></i>
                         <span slot="title">商户审核</span>
@@ -77,6 +80,5 @@ export default {
         width: 287px
         flex-shrink: 0
     .el-menu-vertical-demo:not(.el-menu--collapse) 
-        height: 100vh
-        width: 287px
+        height: calc(100vh - 111px)
 </style>

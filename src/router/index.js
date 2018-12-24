@@ -14,9 +14,17 @@ const changeSysApp = resolve => require(['../components/merManagement/changeSysA
 const merRate = resolve => require(['../components/merManagement/merRate'], resolve);
 const billDetail = resolve => require(['../components/merManagement/billDetail'], resolve);
 const oneBillDetail = resolve => require(['../components/merManagement/oneBillDetail'], resolve);
-const agent = resolve => require(['../components/merManagement/agent'], resolve);
 const dataDetail = resolve => require(['../components/merManagement/dataDetail'], resolve);
 const channel = resolve => require(['../components/merManagement/channel'], resolve);
+const payBank = resolve => require(['../components/merManagement/payBank'], resolve);
+
+//代理管理
+const agentList = resolve => require(['../components/agent/agentList'], resolve);
+const addAgent = resolve => require(['../components/agent/addAgent'], resolve);
+const childAgent = resolve => require(['../components/agent/childAgent'], resolve);
+const addChildAgent = resolve => require(['../components/agent/addChildAgent'], resolve);
+
+
 
 Vue.use(Router)
 
@@ -38,16 +46,21 @@ export default new Router({
         {path: 'merRate', name: 'merRate', component: merRate},
         {path: 'billDetail', name: 'billDetail', component: billDetail},
         {path: 'oneBillDetail', name: 'oneBillDetail', component: oneBillDetail},
-        {path: 'agent', name: 'agent', component: agent},
         {path: 'dataDetail', name: 'dataDetail', component: dataDetail},
         {path: 'channel', name: 'channel', component: channel},
+        {path: 'payBank', name: 'payBank', component: payBank},
+
+        //  代理管理
+        {path: 'agentList', name: 'agentList', component: agentList},
+        {path: 'addAgent', name: 'addAgent', component: addAgent},
+        {path: 'childAgent', name: 'childAgent', component: childAgent},
+        {path: 'addChildAgent', name: 'addChildAgent', component: addChildAgent},
+
       ]
     },
     {
       path: '/',
-      redirect: '/adminLogin',
-      name: 'adminLogin',
-      component: adminLogin
+      redirect: '/adminLogin'
     },
     {
       path: '/adminLogin',

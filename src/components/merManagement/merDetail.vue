@@ -8,7 +8,7 @@
             <div class="tabs">
                 <el-tabs v-model="activeName2" type="card" @tab-click="handleClick">
                     <el-tab-pane label="基础信息" name="first">
-                        <merInfo :mch_id = 'mch_id'/> 
+                        <merInfo :mch_id = 'mch_id' /> 
                     </el-tab-pane>
                     <el-tab-pane label="应用信息" name="second">
                         <div class="basic-wrapper">

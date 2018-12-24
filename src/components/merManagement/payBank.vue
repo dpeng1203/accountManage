@@ -1,7 +1,7 @@
 <template>
     <div class="mer-manage">
         <div class="title">
-            <span>通道管理</span>
+            <span>代付管理</span>
         </div>  
         <div class="table">
             <el-table
@@ -58,9 +58,9 @@
 
 <script>
 import changeData from '../../config/formatData'
-import { channelList,changeChannelState } from '../../config/api'
+import { payBankList,changePayBankState } from '../../config/api'
 export default {
-    name: 'accountManage',
+    name: 'payBank',
     data() {
         return{
             tableData: [],
@@ -74,7 +74,7 @@ export default {
     },
     methods: {
         getList() {
-            channelList(this.data).then((res) => {
+            payBankList(this.data).then((res) => {
                 this.total = res.data.total_count
                 this.tableData = res.data.data_list
                 this.tableData.forEach( ele => {
@@ -101,7 +101,7 @@ export default {
                     id: row.id,
                     is_open: row.state == '开启' ? false : true
                 }
-                changeChannelState(data).then( res => {
+                changePayBankState(data).then( res => {
                     this.$message({
                         type: 'success',
                         message: '切换成功!'
