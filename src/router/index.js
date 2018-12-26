@@ -3,20 +3,33 @@ import Router from 'vue-router'
 import home from '@/components/home'
 import adminLogin from '@/components/adminLogin'
 
-
-const audit = resolve => require(['../components/merManagement/audit'], resolve);
+//商户管理
 const merchant = resolve => require(['../components/merManagement/merchant'], resolve);
 const merManage = resolve => require(['../components/merManagement/merManage'], resolve);
 const merDetail = resolve => require(['../components/merManagement/merDetail'], resolve);
-const sysApp = resolve => require(['../components/merManagement/sysApp'], resolve);
-const addSysApp = resolve => require(['../components/merManagement/addSysApp'], resolve);
-const changeSysApp = resolve => require(['../components/merManagement/changeSysApp'], resolve);
 const merRate = resolve => require(['../components/merManagement/merRate'], resolve);
-const billDetail = resolve => require(['../components/merManagement/billDetail'], resolve);
-const oneBillDetail = resolve => require(['../components/merManagement/oneBillDetail'], resolve);
-const dataDetail = resolve => require(['../components/merManagement/dataDetail'], resolve);
-const channel = resolve => require(['../components/merManagement/channel'], resolve);
-const payBank = resolve => require(['../components/merManagement/payBank'], resolve);
+
+//提现列表
+const cashList = resolve => require(['../components/cashList/cashList'], resolve);
+
+//通道管理、
+const channel = resolve => require(['../components/channelAndPayBank/channel'], resolve);
+//代付管理
+const payBank = resolve => require(['../components/channelAndPayBank/payBank'], resolve);
+
+
+//主页详情
+const homeDetail = resolve => require(['../components/homeDetail/homeDetail'], resolve);
+
+//交易管理
+const billDetail = resolve => require(['../components/billManage/billDetail'], resolve);
+const oneBillDetail = resolve => require(['../components/billManage/oneBillDetail'], resolve);
+
+// 系统产品管理
+const sysApp = resolve => require(['../components/sysApp/sysApp'], resolve);
+const addSysApp = resolve => require(['../components/sysApp/addSysApp'], resolve);
+const changeSysApp = resolve => require(['../components/sysApp/changeSysApp'], resolve);
+
 
 //代理管理
 const agentList = resolve => require(['../components/agent/agentList'], resolve);
@@ -34,21 +47,31 @@ export default new Router({
       path: '/home',
       name: 'home',
       component: home,
-      redirect: '/home/dataDetail',
+      redirect: '/home/homeDetail',
       children:[
-        {path: 'audit', name: 'audit', component: audit},
         {path: 'merchant', name: 'merchant', component: merchant},
         {path: 'merManage', name: 'merManage', component: merManage},
         {path: 'merDetail', name: 'merDetail', component: merDetail},
+        {path: 'merRate', name: 'merRate', component: merRate},
+
+        //提现列表
+        {path: 'cashList', name: 'cashList', component: cashList},
+        //通道管理
+        {path: 'channel', name: 'channel', component: channel},
+        //代付管理
+        {path: 'payBank', name: 'payBank', component: payBank},
+
+        // 主页详情
+        {path: 'homeDetail', name: 'homeDetail', component: homeDetail},
+
+        //交易管理
+        {path: 'billDetail', name: 'billDetail', component: billDetail},
+        {path: 'oneBillDetail', name: 'oneBillDetail', component: oneBillDetail},
+
+        //系统产品管理
         {path: 'sysApp', name: 'sysApp', component: sysApp},
         {path: 'addSysApp', name: 'addSysApp', component: addSysApp},
         {path: 'changeSysApp', name: 'changeSysApp', component: changeSysApp},
-        {path: 'merRate', name: 'merRate', component: merRate},
-        {path: 'billDetail', name: 'billDetail', component: billDetail},
-        {path: 'oneBillDetail', name: 'oneBillDetail', component: oneBillDetail},
-        {path: 'dataDetail', name: 'dataDetail', component: dataDetail},
-        {path: 'channel', name: 'channel', component: channel},
-        {path: 'payBank', name: 'payBank', component: payBank},
 
         //  代理管理
         {path: 'agentList', name: 'agentList', component: agentList},

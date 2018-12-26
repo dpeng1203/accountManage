@@ -31,7 +31,7 @@
                         <i class="el-icon-picture-outline"></i>
                         <span slot="title">产品管理</span>
                     </el-menu-item>
-                    <el-menu-item index="/home/audit">
+                    <el-menu-item index="/home/cashList">
                         <i class="el-icon-printer"></i>
                         <span slot="title">提现管理</span>
                     </el-menu-item>
@@ -82,3 +82,5 @@ export default {
     .el-menu-vertical-demo:not(.el-menu--collapse) 
         height: calc(100vh - 111px)
 </style>
+
+

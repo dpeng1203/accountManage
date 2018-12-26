@@ -79,13 +79,13 @@ export const changeMchChannel = p => myPost('/channel/mch',p)
 export const resetMchPW = p => myPost('/mch/pwd',p)
 
 // 代理商创建
-export const creatAgent = p => myPost('/admin/agent',p)
+export const creatAgent = p => myPost('/mch/agent',p)
 
 // 修改代理商
-export const changeAgent = p => myPut('/admin/agent', p);
+export const changeAgent = p => myPut('/mch/agent', p);
 
 //代理商列表
-export const agentList = p => myGet('/admin/agent',{params: p})
+export const agentList = p => myGet('/mch/agent',{params: p})
 
 // 查看子账户
 export const childAgent = p => myGet('/auth/phone/sub',{params: p})

@@ -28,7 +28,12 @@
                 <el-table-column
                     prop="create_time"
                     label="创建时间"
-                    width="180">
+                    width="170">
+                </el-table-column>
+                <el-table-column
+                    prop="name"
+                    label="姓名"
+                    width="80">
                 </el-table-column>
                 <el-table-column
                     prop="mch_name"
@@ -107,7 +112,7 @@
 import changeData from '../../config/formatData'
 import { auditList,auditOk,payBankList,cashSys } from '../../config/api'
 export default {
-    name: 'accountManage',
+    name: 'cashList',
     data() {
         return{
             tableData: [],
@@ -291,7 +296,7 @@ export default {
             margin-left: 0
     .table
         margin-top: 40px
-        max-width: 1160px
+        max-width: 1230px
         .block
             padding: 30px 0
             text-align: center 
