@@ -3,10 +3,7 @@
         <div class="title">
             <span>交易管理</span>
         </div>
-        <!-- <div class="num-wrapper">
-            <div class="num">今日成交金额：<span>{{ total }}</span> 元</div>
-            <div class="num">今日成交笔数：<span>{{ count }}</span> 笔</div>
-        </div> -->
+        
         <div class="search">
             <div class="search-ct">
                 <div class="search-name">状态</div>
@@ -24,8 +21,16 @@
                 <el-input class="inline-input" v-model="data.mch_id" placeholder="请输入系统订单号" clearable></el-input>
             </div>
             <div class="search-ct">
-                <div class="search-name">商户订单号</div>
-                <el-input class="inline-input" v-model="data.mch_order_id" placeholder="请输入商户订单号" clearable></el-input>
+                <div class="search-name">商户名称</div>
+                <el-autocomplete
+                    class="inline-input"
+                    v-model="state2"
+                    :fetch-suggestions="querySearch"
+                    placeholder="请输入内容"
+                    :trigger-on-focus="false"
+                    @select="handleSelect"
+                ></el-autocomplete>
+                <!-- <el-input class="inline-input" v-model="data.mch_name" placeholder="请输入商户订单号" clearable></el-input> -->
             </div>
              <div class="search-ct">
                 <div class="search-name">系统订单号</div>
@@ -33,7 +38,6 @@
             </div>
         </div>
         <div class="search">
-           
             <div class="search-ct">
                 <div class="search-name">支付类型</div>
                 <el-select v-model="data.pay_type" placeholder="请选择" class="pay-state">
@@ -64,6 +68,11 @@
                 <div class="rapid-btn" @click="searchLastMonth">上月</div>
                 <div class="search-btn" @click="searchBtn">搜索</div>
             </div>
+        </div>
+        <div class="num-wrapper">
+            <div class="num">成交总金额：<span>{{ total }}</span> 元</div>
+            <div class="num">成交总手续费：<span>{{ mchCharge }}</span> 元</div>
+            <div class="num">成交总笔数：<span>{{ count }}</span> 笔</div>
         </div>
         <div class="table">
             <el-table
@@ -142,15 +151,18 @@
 
 <script>
 import changeData from '../../config/formatData'
-import { todayNum,billList,reissue } from '../../config/api'
+import { moneySum,billList,reissue,getMch } from '../../config/api'
 export default {
     name: "billDetail",
     data() {
         let that = this
         return{
+            state2: '',
+            mchList: [],         //查询商户列表
             total_count: 0,
             currentPage: 1,
             total: '',
+            mchCharge: '',
             count: '',
             options1: [{
                 value: '',
@@ -184,7 +196,7 @@ export default {
             data: {
                 mch_id: null,
                 status: null,
-                mch_order_id: null,
+                mch_name: null,
                 sys_order_id: null,
                 pay_type: null,
                 start_time: null,
@@ -197,16 +209,32 @@ export default {
         }
     },
     methods: {
-        // getTodayNum() {
-        //     let data = {
-        //         mch_id: localStorage.id
-        //     }
-        //     todayNum(data).then((res) => {
-        //         console.log(res)
-        //         this.total = Number(res.data.total)/100
-        //         this.count = res.data.count
-        //     })
-        // },
+        getSum() {
+            moneySum(this.data).then((res) => {
+                this.total = Number(res.data.sum)/100 || 0
+                this.mchCharge = Number(res.data.mch_charge)/100 || 0
+                this.count = res.data.count || 0
+            })
+        },
+        //商户收搜
+        handleSelect(item) {
+            this.data.mch_name = item.value
+            this.getBillList()
+            this.getSum()
+        },
+        //关键字查询
+        querySearch(queryString, cb) {
+            this.mchList = []
+            getMch(queryString).then( res => {
+                let list = res.data
+                list.forEach( ele => {
+                    let obj = {}
+                    obj.value = ele
+                    this.mchList.push(obj)
+                })
+            })
+            cb(this.mchList)
+        },
         //今日
         searchToday() {
             const end = new Date();
@@ -303,6 +331,7 @@ export default {
                 }
             }
             this.getBillList()
+            this.getSum()
         },
         //交易列表
         getBillList() {
@@ -374,8 +403,7 @@ export default {
         }
     },
     mounted() {
-        console.log(this.currentPage)
-        // this.getTodayNum()
+        this.getSum()
         this.getBillList()
     }
 
@@ -393,6 +421,8 @@ export default {
         margin-top: 30px
         font-size: 18px
         .num
+            display: inline-block
+            margin-right: 50px
             margin-top: 15px
             font-size: 14px
             span

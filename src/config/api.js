@@ -48,6 +48,12 @@ export const delAppRate = p => myDelete('/mch/app',{params: p})
 //  今日账单数据
 export const todayNum = p => myGet('/bill/today',{params: p})
 
+// 交易金额统计
+export const moneySum = p => myGet('/bill/count',{params: p})
+
+//关键字查询
+export const getMch = p => myGet('/user/base/mchName/' + p)
+
 //  账单明细
 export const billList = p => myGet('/bill',{params: p})
 
