@@ -33,6 +33,10 @@ export const addSysApp = p => myPost('/sys/app', p);
 //修改系统应用
 export const changeSysApp = p => myPut('/sys/app', p);
 
+//审核通过
+export const auditPass = p => myPost('/user/base/audit', p);
+
+
 //修改商户审核信息
 export const changeMerDetail = p => myPut('/user/base', p);
 
@@ -66,6 +70,9 @@ export const statsTotal = p => myGet('/stats/total',{params: p})
 // 补单
 export const reissue = p => myPost('/bill/reissue', p);
 
+//回滚
+export const rollback = p => myPost('/bill/reissue/rollback', p);
+
 //激活、冻结商户
 export const cutMchState = p => myPost('/mch', p);
 
@@ -83,6 +90,9 @@ export const changeMchChannel = p => myPost('/channel/mch',p)
 
 // 重置密码
 export const resetMchPW = p => myPost('/mch/pwd',p)
+
+//代理充值
+export const recharge = p => myPost('/wallet/recharge',p)
 
 // 代理商创建
 export const creatAgent = p => myPost('/mch/agent',p)

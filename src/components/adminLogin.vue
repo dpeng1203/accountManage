@@ -7,23 +7,36 @@
             <div class="title">Alian后台管理系统</div>
             <div><input type="text" placeholder="账号" v-model="account"></div>
             <div><input type="password" placeholder="密码" v-model="pw" @keyup.enter="login"></div>
+            <validate @success="SetToken" class="verify"></validate>
             <div class="btn" @click="login">登录</div>
         </div>
     </div>    
 </template>
 
 <script>
+import Validate from "./Nc.vue"
 import {login} from '../config/api'
 export default {
     name: 'adminLogin',
     data() {
         return{ 
             account: '',
-            pw: ''
+            pw: '',
+            form: {
+                token: ""
+            },
+            submit: false
         }
+    },
+    components: {
+        Validate
     },
     methods: {
         login() {
+            // if (!this.ncVerify()) {
+            //     this.$Message.error({ message: "请重新验证" });
+            //     return;
+            // }
             localStorage.clear()
             let data = {
                 phone: this.account,
@@ -39,6 +52,22 @@ export default {
                 this.$router.push('/home')
             })
         },
+        ncVerify() {
+            if (!this.form.token) {
+                this.ResetValidate();
+                return false;
+            }
+            return true;
+        },
+        ResetValidate() {
+            this.form.token = "";
+            // eslint-disable-next-line
+            LUOCAPTCHA && LUOCAPTCHA.reset();
+        },
+        SetToken(resp) {
+            console.log(resp)
+            this.form.token = resp;
+        }
     }
 }
 </script>
@@ -59,12 +88,12 @@ export default {
         background: #fff
         margin-right: 250px
         border-radius: 5px
-        padding: 50px 30px
+        padding: 40px 30px
         text-align: center
         .title 
             font-size: 20px
             font-weight: bold
-            padding-bottom: 20px
+            padding-bottom: 10px
         input
             border: 1px solid #B1B3C1;
             border-radius: 2px;
@@ -74,8 +103,10 @@ export default {
             line-height: 40px
             margin-top: 20px
             padding-left: 20px
+        .verify
+            margin-top: 20px
         .btn
-            margin-top: 50px
+            margin-top: 10px
             background: #00BFA6
             border: 1px solid #B1B3C1;
             border-radius: 2px;

@@ -98,7 +98,7 @@
             </div>
         </div>
         <div class="btn" v-if="list.state != 0 && editorState == 0" @click="editorInfo">编辑</div>
-        <div class="btn" v-if="editorState == 1" @click="succ">保存</div>
+        <div class="btn" v-if="editorState == 1" @click="save">保存</div>
         <div class="btn" v-if="editorState == 1" @click="editorState = 0">取消</div>
         <div class="btn" @click="succ" v-if="list.state == 0">审核通过</div>
         <div class="btn err" @click="fail" v-if="list.state == 0">审核失败</div>
@@ -107,7 +107,7 @@
 
 <script>
 import hostName from '../../config/hostName'
-import { changeMerDetail,merInfoList } from '../../config/api'
+import { changeMerDetail,merInfoList,auditPass } from '../../config/api'
 export default {
     name: 'merchant',
     props: {
@@ -133,7 +133,7 @@ export default {
         editorInfo() {
             this.editorState = 1
         },
-        //  审核
+        //  修改后审核
         save() {
             let data = this.list
             delete data.id
@@ -148,29 +148,52 @@ export default {
             if(data.other_images) {
                 delete data.other_images
             }
+            data.state = 1
+            console.log(data)
             changeMerDetail(data).then( res => {
                 this.editorState = 0
                 this.$message({
                     message: '修改成功！',
                     type: 'success'
                 });
-                if(this.list.state == 1) {
-                    this.$router.push({path: '/home/merRate',query: {merId: this.list.mch_id}})
-                }else {
-                    this.$router.push('/home/merManage')
-                }
+                // this.editorState = 0
+                this.$router.push('/home/merManage')
+                // if(this.list.state == 1) {
+                //     this.$router.push({path: '/home/merRate',query: {merId: this.list.mch_id}})
+                // }else {
+                //     this.$router.push('/home/merManage')
+                // }
                 
             })
         },
+
         // 审核通过
         succ() {
-            this.list.state = 1 
-            this.save()
+            let data = {
+                mch_id: this.mch_id,
+                state: 1
+            }
+            auditPass(data).then( res => {
+                this.$message({
+                    message: '审核通过！',
+                    type: 'success'
+                });
+                this.$router.push({path: '/home/merRate',query: {merId: this.list.mch_id}})
+            })
         },
         // 审核失败
         fail() {
-            this.list.state = 2
-            this.save()
+            let data = {
+                mch_id: this.mch_id,
+                state: 2
+            }
+            auditPass(data).then( res => {
+                this.$message({
+                    message: '审核失败！',
+                    type: 'success'
+                });
+                this.$router.push('/home/merManage')
+            })
         },
     },
     mounted() {

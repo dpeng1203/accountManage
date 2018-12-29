@@ -69,16 +69,17 @@
                 <div class="search-btn" @click="searchBtn">搜索</div>
             </div>
         </div>
-        <div class="num-wrapper">
+        <!-- <div class="num-wrapper">
             <div class="num">成交总金额：<span>{{ total }}</span> 元</div>
             <div class="num">成交总手续费：<span>{{ mchCharge }}</span> 元</div>
             <div class="num">成交总笔数：<span>{{ count }}</span> 笔</div>
-        </div>
+        </div> -->
         <div class="table">
             <el-table
                 :data="tableData"
                 border
-                style="width: 100%">
+                style="width: 100%"
+                :row-class-name="tableRowClassName">
                 <el-table-column
                     type="index"
                     width="50">
@@ -102,7 +103,7 @@
                 <el-table-column
                     prop="channel"
                     label="通道"
-                    width="110">
+                    width="100">
                 </el-table-column>
                 <el-table-column
                     prop="money"
@@ -122,14 +123,15 @@
                 <el-table-column
                     prop="state"
                     label="状态"
-                    width="100">
+                    width="80">
                 </el-table-column>
                 <el-table-column
                 label="操作"
                 >
                 <template slot-scope="scope">
                     <el-button @click="handleClick(scope.row)" type="text" size="small">详情</el-button>
-                    <el-button @click="handleClickReissue(scope.row)" type="text" size="small">{{scope.row.state == '待支付' || scope.row.state == '超时关闭' ? '补单' : ''}}</el-button>
+                    <el-button @click="handleClickReissue(scope.row)" type="success" size="small" v-if="scope.row.state == '待支付' || scope.row.state == '超时关闭'">补单</el-button>
+                    <el-button @click="handleClickRollback(scope.row)" type="primary" size="small" v-if="scope.row.super_order_id && scope.row.super_order_id.indexOf('unknown') === 0">回滚</el-button>
                 </template>
                 </el-table-column>
             </el-table>
@@ -151,7 +153,7 @@
 
 <script>
 import changeData from '../../config/formatData'
-import { moneySum,billList,reissue,getMch } from '../../config/api'
+import { moneySum,billList,reissue,getMch,rollback } from '../../config/api'
 export default {
     name: "billDetail",
     data() {
@@ -209,6 +211,12 @@ export default {
         }
     },
     methods: {
+        tableRowClassName({row,rowIndex}) {
+            if(row.super_order_id && row.super_order_id.indexOf('unknown') === 0) {
+                return 'success'
+            }
+            return ''
+        },
         getSum() {
             moneySum(this.data).then((res) => {
                 this.total = Number(res.data.sum)/100 || 0
@@ -220,7 +228,7 @@ export default {
         handleSelect(item) {
             this.data.mch_name = item.value
             this.getBillList()
-            this.getSum()
+            // this.getSum()
         },
         //关键字查询
         querySearch(queryString, cb) {
@@ -331,7 +339,7 @@ export default {
                 }
             }
             this.getBillList()
-            this.getSum()
+            // this.getSum()
         },
         //交易列表
         getBillList() {
@@ -388,6 +396,30 @@ export default {
                 });          
             });
         },
+        //回滚
+        handleClickRollback(row) {
+            this.$confirm('确认回滚?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                let data = {
+                    sys_order_id: row.sys_order_id
+                }
+                rollback(data).then( res => {
+                    this.getBillList()
+                })
+                this.$message({
+                    type: 'success',
+                    message: '回滚成功!'
+                });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消'
+                });          
+            });
+        },
         // 详情
         handleClick(row) {
             this.$router.push({path: '/home/oneBillDetail',query: {billInfo: row}})
@@ -403,7 +435,7 @@ export default {
         }
     },
     mounted() {
-        this.getSum()
+        // this.getSum()
         this.getBillList()
     }
 
@@ -482,4 +514,5 @@ export default {
         .block
             padding: 30px 0
             text-align: center 
+  
 </style>

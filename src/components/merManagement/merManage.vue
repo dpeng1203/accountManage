@@ -73,6 +73,11 @@
                     label="账户余额"
                     width="100">
                 </el-table-column>
+                 <el-table-column
+                    prop="reservoir"
+                    label="代付余额"
+                    width="100">
+                </el-table-column>
                 <el-table-column
                     prop="audit_state"
                     label="审核状态"
@@ -96,6 +101,7 @@
                     <el-button @click="handleClickCutState(scope.row)" type="danger" size="small">{{scope.row.mch_state == '激活' ? '冻结' : '激活'}}</el-button>
                     <el-button @click="handleClickCutChannel(scope.row)" type="text" size="small">切换通道</el-button>
                     <el-button @click="handleClickResetPw(scope.row)" type="warning" size="small">重置密码</el-button>
+                    <el-button @click="handleClickVecharge(scope.row)" type="success" size="small">代付充值</el-button>
                 </template>
                 </el-table-column>
             </el-table>
@@ -124,11 +130,25 @@
                 <el-button type="primary" @click="sureChangeChannel">确 定</el-button>
             </div>
         </el-dialog>
+        <el-dialog
+            title="提示"
+            :visible.sync="dialogVisible"
+            width="30%"
+            >
+            <div class="tip">交易金额（元）:<span>{{mchMoney.recharge}}</span></div> 
+            <div class="tip">分润金额（元）:<span>{{mchMoney.bonus}}</span></div> 
+            <div class="tip">在途金额（元）:<span>{{mchMoney.pending}}</span></div> 
+            <div class="tip">账户余额（元）:<span>{{mchMoney.total}}</span></div> 
+            <div class="tip">代付金额（元）:<span>{{mchMoney.reservoir}}</span></div> 
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-import { merList,cutMchState,channelList,changeMchChannel,resetMchPW } from '../../config/api'
+import { merList,cutMchState,channelList,changeMchChannel,resetMchPW,recharge } from '../../config/api'
 export default {
     name: 'accountManage',
     data() {
@@ -168,6 +188,8 @@ export default {
                 offset: 0,
                 limit: 10
             },
+            dialogVisible: false,
+            mchMoney: {},
             dialogFormVisible: false,
             form: {
                 region: ''
@@ -191,6 +213,9 @@ export default {
                 this.tableData.forEach( ele => {
                     if(ele.money) {
                         ele.money = ele.money/100
+                    }
+                    if(ele.reservoir) {
+                        ele.reservoir = ele.reservoir/100
                     }
                     if(ele.mch_state == 'enable') {
                         ele.mch_state = '激活'
@@ -290,7 +315,35 @@ export default {
         searchBtn() {
             this.getList()
         },
+        //代付充值
+        handleClickVecharge(row) {
+            this.$prompt('请输入需要转入的金额(元)', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+            }).then(({ value }) => {
+                let data = {
+                    mch_id: row.mch_id,
+                    money: value * 100
+                }
+                recharge(data).then( res => {
+                    this.dialogVisible = true
+                    this.mchMoney = res
+                    this.mchMoney.recharge = this.mchMoney.recharge/100
+                    this.mchMoney.bonus = this.mchMoney.bonus/100
+                    this.mchMoney.total = this.mchMoney.total/100
+                    this.mchMoney.pending = this.mchMoney.pending/100
+                    this.mchMoney.reservoir = this.mchMoney.reservoir/100
 
+                    this.getList()
+                })
+                
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消！'
+                });       
+            });
+        },
         handleClick(row) {
             this.$router.push({path: '/home/merDetail',query: {mch_id: row.mch_id}})
         },
@@ -347,8 +400,13 @@ export default {
             margin-left: 0
     .table
         margin-top: 40px
-        width: 1151px
+        width: 1350px
         .block
             padding: 30px 0
             text-align: center 
+    .tip
+        margin-top: 10px
+        span
+            margin-left: 30px
+            color: red
 </style>

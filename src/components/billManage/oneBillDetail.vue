@@ -22,6 +22,10 @@
                 <span>{{data.sys_order_id}}</span>
             </div>
             <div class="item">
+                <span class="name">上游订单号：</span>
+                <span>{{data.super_order_id}}</span>
+            </div>
+            <div class="item">
                 <span class="name">支付类型：</span>
                 <span>{{data.pay_type}}</span>
             </div>
@@ -49,6 +53,10 @@
                 <span class="name">状态：</span>
                 <span>{{data.state}}</span>
             </div>
+            <div class="item">
+                <span class="name">是否手动补单：</span>
+                <span>{{data.handle}}</span>
+            </div>
         </div>
         <!-- <div class="btn" @click="addSysAppBtn">保存</div> -->
     </div>
@@ -67,6 +75,11 @@ export default {
     },
     mounted() {
         this.data = this.$route.query.billInfo
+        if(this.data.super_order_id && this.data.super_order_id.indexOf('unknown') === 0) {
+            this.data.handle = '是'
+        }else{
+            this.data.handle = '否'
+        }
     }
 }
 </script>
