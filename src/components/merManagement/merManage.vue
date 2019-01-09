@@ -102,6 +102,8 @@
                     <el-button @click="handleClickCutChannel(scope.row)" type="text" size="small">切换通道</el-button>
                     <el-button @click="handleClickResetPw(scope.row)" type="warning" size="small">重置密码</el-button>
                     <el-button @click="handleClickVecharge(scope.row)" type="success" size="small">代付充值</el-button>
+                    <el-button @click="handleClickPayRate(scope.row)" type="text" size="small">设置代付费率</el-button>
+
                 </template>
                 </el-table-column>
             </el-table>
@@ -144,11 +146,25 @@
                 <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
             </span>
         </el-dialog>
+        <el-dialog title="代付充值" :visible.sync="dialogFormVisible1">
+            <el-form :model="form">
+                <el-form-item label="充值金额：" :label-width="formLabelWidth">
+                    <el-input v-model="form.money" class="input-width" placeholder="请输入金额"></el-input>
+                </el-form-item>
+                <el-form-item label="密码：" :label-width="formLabelWidth">
+                    <el-input v-model="form.password" class="input-width" placeholder="请输入密码" type="password"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible1 = false">取 消</el-button>
+                <el-button type="primary" @click="hanlePay">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-import { merList,cutMchState,channelList,changeMchChannel,resetMchPW,recharge } from '../../config/api'
+import { merList,cutMchState,channelList,changeMchChannel,resetMchPW,recharge,payRate } from '../../config/api'
 export default {
     name: 'accountManage',
     data() {
@@ -191,8 +207,11 @@ export default {
             dialogVisible: false,
             mchMoney: {},
             dialogFormVisible: false,
+            dialogFormVisible1: false,
             form: {
-                region: ''
+                region: '',
+                money: '',
+                password: ''
             },
             formLabelWidth: '120px' ,
             channelList: [] ,
@@ -251,6 +270,7 @@ export default {
             this.getChannelList()
             this.mch_id = row.mch_id
         },
+        //选择通道
         sureChangeChannel() {
             this.dialogFormVisible = false
             if(this.form.region != '') {
@@ -313,41 +333,73 @@ export default {
             });
         },
         searchBtn() {
+            this.data.offset = 0
+            this.data.limit = 10
             this.getList()
         },
         //代付充值
         handleClickVecharge(row) {
-            this.$prompt('请输入需要转入的金额(元)', '提示', {
+            this.dialogFormVisible1 = true
+            this.mch_id = row.mch_id
+        },
+        //确认充值
+        hanlePay() {
+            if(this.form.money == '') {
+                this.$message.error('请输入金额')
+                return
+            }
+            if(this.form.password == '') {
+                this.$message.error('请输入密码')
+                return
+            }
+            let data = {
+                mch_id: this.mch_id,
+                money: this.form.money * 100,
+                password: this.form.password
+            }
+            recharge(data).then( res => {
+                this.$message({
+                    type: 'success',
+                    message: '充值成功!'
+                });
+                this.dialogFormVisible1 = false
+                this.dialogVisible = true
+                this.mchMoney = res
+                this.mchMoney.recharge = this.mchMoney.recharge/100
+                this.mchMoney.bonus = this.mchMoney.bonus/100
+                this.mchMoney.total = this.mchMoney.total/100
+                this.mchMoney.pending = this.mchMoney.pending/100
+                this.mchMoney.reservoir = this.mchMoney.reservoir/100
+                this.getList()
+            })
+        },
+        handleClick(row) {
+            this.$router.push({path: '/home/merDetail',query: {mch: row}})
+        },
+        //设置商户代付费率
+        handleClickPayRate(row) {
+            this.$prompt('请输入商户代付费率(%)', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
             }).then(({ value }) => {
                 let data = {
                     mch_id: row.mch_id,
-                    money: value * 100
+                    rate: value * 100
                 }
-                recharge(data).then( res => {
-                    this.dialogVisible = true
-                    this.mchMoney = res
-                    this.mchMoney.recharge = this.mchMoney.recharge/100
-                    this.mchMoney.bonus = this.mchMoney.bonus/100
-                    this.mchMoney.total = this.mchMoney.total/100
-                    this.mchMoney.pending = this.mchMoney.pending/100
-                    this.mchMoney.reservoir = this.mchMoney.reservoir/100
-
-                    this.getList()
+                payRate(data).then( res => {
+                    this.$message({
+                        type: 'success',
+                        message: '设置成功！！'
+                    });
                 })
                 
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: '已取消！'
+                    message: '已取消'
                 });       
             });
         },
-        handleClick(row) {
-            this.$router.push({path: '/home/merDetail',query: {mch_id: row.mch_id}})
-        },
-
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
             this.data.limit = val
@@ -400,7 +452,7 @@ export default {
             margin-left: 0
     .table
         margin-top: 40px
-        width: 1350px
+        width: 1450px
         .block
             padding: 30px 0
             text-align: center 
@@ -409,4 +461,6 @@ export default {
         span
             margin-left: 30px
             color: red
+    .input-width
+        width: 220px
 </style>

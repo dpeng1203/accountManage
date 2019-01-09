@@ -126,7 +126,10 @@ export default {
                 mch_id: this.mch_id
             }
             merInfoList(data).then( res => {
-                this.list = res.data.data_list[0]
+                if(res.data.data_list.length != 0) {
+                     this.list = res.data.data_list[0]
+                }
+               
             })
         },
         //编辑

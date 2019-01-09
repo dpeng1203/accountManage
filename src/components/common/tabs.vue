@@ -11,10 +11,6 @@
                     unique-opened
                     router
                     active-text-color="#00B7AD">
-                    <!-- <el-menu-item index="/home/accountManage">
-                        <i class="el-icon-menu"></i>
-                        <span slot="title">用户管理</span>
-                    </el-menu-item> -->
                     <el-menu-item index="/home">
                         <i class="el-icon-menu"></i>
                         <span slot="title">主页</span>
@@ -23,10 +19,20 @@
                         <i class="el-icon-setting"></i>
                         <span slot="title">商户管理</span>
                     </el-menu-item>
-                    <el-menu-item index="/home/billDetail">
-                        <i class="el-icon-goods"></i>
-                        <span slot="title">交易管理</span>
-                    </el-menu-item>
+                    <el-submenu index="3">
+                        <template slot="title">
+                            <i class="el-icon-goods"></i>
+                            <span>交易管理</span>
+                        </template>
+                        <el-menu-item index="/home/billList">
+                            <i class="el-icon-goods"></i>
+                            <span slot="title">充值交易</span>
+                        </el-menu-item>
+                        <el-menu-item index="/home/payList">
+                            <i class="el-icon-goods"></i>
+                            <span slot="title">代付交易</span>
+                        </el-menu-item>
+                    </el-submenu>
                     <el-menu-item index="/home/sysApp">
                         <i class="el-icon-picture-outline"></i>
                         <span slot="title">产品管理</span>
@@ -39,14 +45,18 @@
                         <i class="el-icon-document"></i>
                         <span slot="title">代理管理</span>
                     </el-menu-item> -->
-                    <el-menu-item index="/home/channel">
-                        <i class="el-icon-goods"></i>
-                        <span slot="title">通道管理</span>
-                    </el-menu-item>
-                    <el-menu-item index="/home/payBank">
-                        <i class="el-icon-setting"></i>
-                        <span slot="title">代付管理</span>
-                    </el-menu-item>
+                    <el-submenu index="5">
+                        <template slot="title">
+                            <i class="el-icon-goods"></i>
+                            <span>通道管理</span>
+                        </template>
+                        <el-menu-item index="/home/channel">
+                            <span slot="title">充值通道</span>
+                        </el-menu-item>
+                        <el-menu-item index="/home/payBank">
+                            <span slot="title">代付通道</span>
+                        </el-menu-item>
+                    </el-submenu>
                     <!-- <el-menu-item index="/home/merchant">
                         <i class="el-icon-document"></i>
                         <span slot="title">商户审核</span>

@@ -166,6 +166,8 @@ export default {
         },
 
         searchBtn() {
+            this.data.offset = 0
+            this.data.limit = 10
             this.getList()
         },
         //  成功到账

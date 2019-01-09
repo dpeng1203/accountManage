@@ -14,7 +14,6 @@ const cashList = resolve => require(['../components/cashList/cashList'], resolve
 
 //通道管理、
 const channel = resolve => require(['../components/channelAndPayBank/channel'], resolve);
-//代付管理
 const payBank = resolve => require(['../components/channelAndPayBank/payBank'], resolve);
 
 
@@ -22,8 +21,9 @@ const payBank = resolve => require(['../components/channelAndPayBank/payBank'], 
 const homeDetail = resolve => require(['../components/homeDetail/homeDetail'], resolve);
 
 //交易管理
-const billDetail = resolve => require(['../components/billManage/billDetail'], resolve);
+const billList = resolve => require(['../components/billManage/billList'], resolve);
 const oneBillDetail = resolve => require(['../components/billManage/oneBillDetail'], resolve);
+const payList = resolve => require(['../components/billManage/payList'], resolve);
 
 // 系统产品管理
 const sysApp = resolve => require(['../components/sysApp/sysApp'], resolve);
@@ -65,9 +65,9 @@ export default new Router({
         {path: 'homeDetail', name: 'homeDetail', component: homeDetail},
 
         //交易管理
-        {path: 'billDetail', name: 'billDetail', component: billDetail},
+        {path: 'billList', name: 'billList', component: billList},
         {path: 'oneBillDetail', name: 'oneBillDetail', component: oneBillDetail},
-
+        {path: 'payList', name: 'payList', component: payList},
         //系统产品管理
         {path: 'sysApp', name: 'sysApp', component: sysApp},
         {path: 'addSysApp', name: 'addSysApp', component: addSysApp},

@@ -2,6 +2,7 @@
     <div class="mer-manage">
         <div class="title">
             <span>代付管理</span>
+            <p>(备注：代付通道可同时开启多个，系统优先先锋通道)</p>
         </div>  
         <div class="table">
             <el-table
@@ -144,6 +145,9 @@ export default {
     .title 
         font-size: 24px
         font-weight: bold
+        p
+            font-size: 16px
+            color: red
     .table
         margin-top: 40px
         width: 1002px

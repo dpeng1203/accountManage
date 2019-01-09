@@ -6,37 +6,69 @@
         <div class="wrapper">
             <div class="title">Alian后台管理系统</div>
             <div><input type="text" placeholder="账号" v-model="account"></div>
-            <div><input type="password" placeholder="密码" v-model="pw" @keyup.enter="login"></div>
-            <validate @success="SetToken" class="verify"></validate>
-            <div class="btn" @click="login">登录</div>
+            <div class="input-wrap" v-if="eyeOpen">
+                <input type="password" placeholder="密码" v-model="pw">
+                <img src="../assets/img/eye_close.png" alt=""  @click="showPw"> 
+            </div>
+            <div class="input-wrap" v-if="!eyeOpen">
+                <input type="text" placeholder="密码" v-model="pw">
+                <img src="../assets/img/eye_open.png" alt="" @click="showPw"> 
+            </div>
+
+            <div class="slide">
+                <slide-verify 
+                    :l="42"
+                    :r="10"
+                    :w="310"
+                    :h="155"
+                    @success="onSuccess"
+                    @fail="onFail"
+                    @refresh="onRefresh"
+                >
+                </slide-verify>
+            </div>
         </div>
     </div>    
 </template>
 
 <script>
-import Validate from "./Nc.vue"
+import SlideVerify from 'vue-monoplasty-slide-verify'
 import {login} from '../config/api'
 export default {
     name: 'adminLogin',
     data() {
         return{ 
+            eyeOpen: true,
             account: '',
             pw: '',
-            form: {
-                token: ""
-            },
-            submit: false
+            slideShow: false
         }
     },
     components: {
-        Validate
+        SlideVerify
     },
     methods: {
+        showPw() {
+            this.eyeOpen = !this.eyeOpen
+        },
+        onSuccess(){
+            if(this.account == '') {
+                this.$message.error('请输入账号')
+                return false
+            }
+            if(this.pw == '') {
+                this.$message.error('请输入密码')
+                return false
+            }
+            this.login()
+        },
+        onFail(){
+
+        },
+        onRefresh(){
+
+        },
         login() {
-            // if (!this.ncVerify()) {
-            //     this.$Message.error({ message: "请重新验证" });
-            //     return;
-            // }
             localStorage.clear()
             let data = {
                 phone: this.account,
@@ -52,22 +84,6 @@ export default {
                 this.$router.push('/home')
             })
         },
-        ncVerify() {
-            if (!this.form.token) {
-                this.ResetValidate();
-                return false;
-            }
-            return true;
-        },
-        ResetValidate() {
-            this.form.token = "";
-            // eslint-disable-next-line
-            LUOCAPTCHA && LUOCAPTCHA.reset();
-        },
-        SetToken(resp) {
-            console.log(resp)
-            this.form.token = resp;
-        }
     }
 }
 </script>
@@ -83,8 +99,7 @@ export default {
         flex: 1
         text-align: center
     .wrapper
-        width: 350px
-        height: 350px
+        width: 370px
         background: #fff
         margin-right: 250px
         border-radius: 5px
@@ -103,10 +118,18 @@ export default {
             line-height: 40px
             margin-top: 20px
             padding-left: 20px
-        .verify
-            margin-top: 20px
-        .btn
+        .input-wrap
+            position: relative
+            img
+                position: absolute
+                right: 10px
+                top: 32px
+                width: 20px
+                height: 20px
+        .slide
             margin-top: 10px
+        .btn
+            margin-top: 40px
             background: #00BFA6
             border: 1px solid #B1B3C1;
             border-radius: 2px;

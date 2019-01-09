@@ -10,10 +10,10 @@
                     <el-tab-pane label="基础信息" name="first">
                         <merInfo :mch_id = 'mch_id' /> 
                     </el-tab-pane>
-                    <el-tab-pane label="应用信息" name="second">
+                    <el-tab-pane label="费率信息" name="second">
                         <div class="basic-wrapper">
                             <div class="basic-info">
-                                <h2>应用信息</h2>
+                                <h2>充值费率</h2>
                                 <div class="table">
                                     <el-table
                                         :data="tableData1"
@@ -36,7 +36,7 @@
                                         <el-table-column
                                             prop="mch_name"
                                             label="商户名称"
-                                            width="200">
+                                            width="150">
                                         </el-table-column>
                                         <el-table-column
                                             prop="is_default"
@@ -54,6 +54,52 @@
                                             <template slot-scope="scope">
                                                 <el-button @click="handleDel(scope.row)" type="text" size="small">{{scope.row.is_default == '是' ? '' : '恢复默认'}}</el-button>
                                                 <el-button @click="handleChange(scope.row)" type="text" size="small">更新</el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                </div>
+                            </div>
+                            <div class="basic-info">
+                                <h2>代付费率</h2>
+                                <div class="table">
+                                    <el-table
+                                        :data="tableData2"
+                                        border
+                                        >
+                                        <el-table-column
+                                            type="index"
+                                            width="50">
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="mch_id"
+                                            label="商户号"
+                                            width="150">
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="mch_name"
+                                            label="商户名称"
+                                            width="200">
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="money"
+                                            label="账户余额"
+                                            width="150">
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="reservoir"
+                                            label="代付余额"
+                                            width="150">
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="rate"
+                                            label="费率（%）"
+                                            width="150">
+                                        </el-table-column>
+                                        <el-table-column
+                                            label="操作"
+                                            >
+                                            <template slot-scope="scope">
+                                                <el-button @click="handlePay(scope.row)" type="text" size="small">设置费率</el-button>
                                             </template>
                                         </el-table-column>
                                     </el-table>
@@ -134,13 +180,15 @@
 <script>
 import merInfo from './merchant'
 import hostName from '../../config/hostName'
-import { changeMerDetail,merAppRate,delAppRate,zdyRate,auditList } from '../../config/api'
+import { changeMerDetail,merAppRate,delAppRate,zdyRate,auditList,getPayRate,payRate } from '../../config/api'
 export default {
     data() {
         return{
             mch_id: '',
+            mch: {},
             activeName2: 'first',
             tableData1: [],
+            tableData2: [],
             currentPage: 1,
             data: {
                 app_name: null,
@@ -156,7 +204,7 @@ export default {
         merInfo
     },
     methods: {
-        //获得费率
+        //获得充值费率
         getMerAppRate() {
             let data = {
                 mch_id: this.mch_id
@@ -174,6 +222,48 @@ export default {
                     }
                 })
             })
+        },
+        //获取代付费率
+        getPayRate() {
+            let data = {
+                mch_id: this.mch_id
+            }
+            getPayRate(data).then( res => {
+                let obj = Object.assign(res.data, this.mch);
+                this.tableData2 = []
+                this.tableData2.push(obj)
+                console.log(this.tableData2)
+                this.tableData2.forEach(ele => {
+                    if(ele.rate) {
+                        ele.rate = ele.rate/100
+                    }
+                })
+            })
+        },
+        //设置商户代付费率
+        handlePay(row) {
+            this.$prompt('请输入商户代付费率(%)', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+            }).then(({ value }) => {
+                let data = {
+                    mch_id: row.mch_id,
+                    rate: value * 100
+                }
+                payRate(data).then( res => {
+                    this.getPayRate()
+                    this.$message({
+                        type: 'success',
+                        message: '设置成功！！'
+                    });
+                })
+                
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消'
+                });       
+            });
         },
         //获得提现列表
         getList() {
@@ -201,6 +291,7 @@ export default {
         handleClick(tab, event) {
             if(tab.index == 1) {
                 this.getMerAppRate()
+                this.getPayRate()
             }
             if(tab.index == 2) {
                 this.getList()
@@ -256,7 +347,8 @@ export default {
         },
     },
     mounted() {
-        this.mch_id = this.$route.query.mch_id
+        this.mch = this.$route.query.mch
+        this.mch_id = this.$route.query.mch.mch_id
     }
 }
 </script>

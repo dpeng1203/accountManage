@@ -58,8 +58,14 @@ export const moneySum = p => myGet('/bill/count',{params: p})
 //关键字查询
 export const getMch = p => myGet('/user/base/mchName/' + p)
 
-//  账单明细
+//  充值明细
 export const billList = p => myGet('/bill',{params: p})
+
+//  代付明细
+export const payList = p => myGet('/bankpay',{params: p})
+
+// 导出账单明细
+export const billExcel = p => myGet('/bill/export',{params: p})
 
 //  图标数据
 export const chartData = p => myGet('/stats',{params: p})
@@ -93,6 +99,12 @@ export const resetMchPW = p => myPost('/mch/pwd',p)
 
 //代理充值
 export const recharge = p => myPost('/wallet/recharge',p)
+
+//设置商户代付费率
+export const payRate = p => myPost('/bankpay/mch/rate',p)
+
+//查看代付费率
+export const getPayRate = p => myGet('/bankpay/mch/rate',{params: p})
 
 // 代理商创建
 export const creatAgent = p => myPost('/mch/agent',p)

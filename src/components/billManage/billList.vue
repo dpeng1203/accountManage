@@ -1,7 +1,7 @@
 <template>
-    <div class="bill-detail">
+    <div class="bill-list">
         <div class="title">
-            <span>交易管理</span>
+            <span>充值管理</span>
         </div>
         
         <div class="search">
@@ -21,16 +21,16 @@
                 <el-input class="inline-input" v-model="data.mch_id" placeholder="请输入系统订单号" clearable></el-input>
             </div>
             <div class="search-ct">
-                <div class="search-name">商户名称</div>
-                <el-autocomplete
+                <div class="search-name">商户订单号</div>
+                <!-- <el-autocomplete
                     class="inline-input"
                     v-model="state2"
                     :fetch-suggestions="querySearch"
                     placeholder="请输入内容"
                     :trigger-on-focus="false"
                     @select="handleSelect"
-                ></el-autocomplete>
-                <!-- <el-input class="inline-input" v-model="data.mch_name" placeholder="请输入商户订单号" clearable></el-input> -->
+                ></el-autocomplete> -->
+                <el-input class="inline-input" v-model="data.mch_order_id" placeholder="请输入商户订单号" clearable></el-input>
             </div>
              <div class="search-ct">
                 <div class="search-name">系统订单号</div>
@@ -67,6 +67,7 @@
                 <div class="rapid-btn" @click="searchMonth">本月</div>
                 <div class="rapid-btn" @click="searchLastMonth">上月</div>
                 <div class="search-btn" @click="searchBtn">搜索</div>
+                <div class="search-btn" @click="excel">导出</div>
             </div>
         </div>
         <!-- <div class="num-wrapper">
@@ -89,11 +90,20 @@
                     label="商户名称"
                     width="140">
                 </el-table-column>
-                
+                <el-table-column
+                    prop="mch_order_id"
+                    label="商户订单号"
+                    width="150">
+                </el-table-column>
                 <el-table-column
                     prop="sys_order_id"
                     label="系统订单号"
                     width="210">
+                </el-table-column>
+                <el-table-column
+                    prop="super_order_id"
+                    label="上游订单号"
+                    width="170">
                 </el-table-column>
                 <el-table-column
                     prop="pay_type"
@@ -147,12 +157,25 @@
                 </el-pagination>
             </div>
         </div>
+        <!-- <el-dialog
+            title="提示"
+            :visible.sync="dialogVisible"
+            width="30%"
+            >
+            <span v-if="value7 != null">请在浏览器打开{{excelUrl + 'start_time=' + value7[0] + '&end_time=' + value7[1]}}</span>
+            <span v-else>请在浏览器打开{{excelUrl}}</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            </span>
+        </el-dialog>
+        <span v-if="value7 != null">{{ `start_time=${value7[0]}` }}</span> -->
         
     </div>
 </template>
 
 <script>
 import changeData from '../../config/formatData'
+import hostName from '../../config/hostName'
 import { moneySum,billList,reissue,getMch,rollback } from '../../config/api'
 export default {
     name: "billDetail",
@@ -198,7 +221,7 @@ export default {
             data: {
                 mch_id: null,
                 status: null,
-                mch_name: null,
+                mch_order_id: null,
                 sys_order_id: null,
                 pay_type: null,
                 start_time: null,
@@ -207,7 +230,8 @@ export default {
                 limit: 10
             },
             tableData: [],
-            value7: null
+            value7: null,
+            excelUrl: ''
         }
     },
     methods: {
@@ -311,7 +335,6 @@ export default {
             end.setHours(0);
             end.setSeconds(0);
             end.setMinutes(0);
-            end.getTime();
             const month = start.getMonth()
             const year = start.getFullYear()
             if(month == 0) {
@@ -320,7 +343,6 @@ export default {
             }else{
                 start.setMonth(month - 1)
             }
-            start.getTime()
             this.value7 = [start,end]
             this.searchBtn()
         },
@@ -338,8 +360,44 @@ export default {
                     delete this.data[key]
                 }
             }
+            this.data.offset = 0
+            this.data.limit = 10
             this.getBillList()
             // this.getSum()
+        },
+        //导出excel
+        excel() {
+            if(this.data.mch_id === null || this.data.mch_id === '') {
+                this.$message.error('请输入商户号')
+                return false
+            }
+            if(this.value7 != null) {
+                this.data.start_time = this.value7[0]
+                this.data.end_time = this.value7[1]
+                var dateee = new Date(this.data.start_time).toJSON();
+                this.data.start_time = new Date(+new Date(dateee)+8*3600*1000).toISOString()
+                var dateee1 = new Date(this.data.end_time).toJSON();
+                this.data.end_time = new Date(+new Date(dateee1)+8*3600*1000).toISOString()
+            } else{
+                this.data.start_time = null
+                this.data.end_time = null
+            }
+            for( var key in this.data) {
+                if(this.data[key] === null || this.data[key] === '') {
+                    delete this.data[key]
+                }
+            }
+            delete this.data.offset
+            delete this.data.limit
+            // billExcel(this.data).then(res =>{
+            this.excelUrl = hostName + '/bill/export?'
+            Object.keys(this.data).map((key)=>{
+                this.excelUrl += key + '=' + this.data[key] +'&';    
+            })
+            console.log(this.excelUrl)
+            window.location.href = this.excelUrl
+            // })
+
         },
         //交易列表
         getBillList() {
@@ -443,7 +501,7 @@ export default {
 </script>
 
 <style lang='sass' scoped>
-.bill-detail
+.bill-list
     color: #3D4060;
     padding-left: 30px
     .title 
@@ -496,7 +554,7 @@ export default {
                 cursor: pointer
             .search-btn
                 display: inline-block
-                width: 100px
+                width: 80px
                 height: 35px
                 line-height: 35px
                 text-align: center
@@ -504,13 +562,13 @@ export default {
                 background: #00BFA6;
                 border-radius: 25px;
                 font-size: 14px
-                margin: 0 0 0 30px
+                margin: 0 0 0 10px
         .search-ct:first-child
             margin-left: 0
            
     .table
         margin-top: 40px
-        width: 1160px
+        width: 1460px
         .block
             padding: 30px 0
             text-align: center 
