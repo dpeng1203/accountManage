@@ -113,22 +113,64 @@ export const creatAgent = p => myPost('/mch/agent',p)
 export const changeAgent = p => myPut('/mch/agent', p);
 
 //代理商列表
-export const agentList = p => myGet('/mch/agent',{params: p})
+export const agentList = p => myGet('/mch/agency',{params: p})
 
 // 查看子账户
-export const childAgent = p => myGet('/auth/phone/sub',{params: p})
+// export const childAgent = p => myGet('/auth/phone/sub',{params: p})
 
 //关联两个商户
-export const lineAgent = p => myPost('/auth/phone/sub',p)
+export const lineAgent = p => myPost('/mch/agency',p)
 
 //删除子账户
-export const delChildAgent = p => myDelete('/auth/phone/sub/'+ p)
+export const delChildAgent = p => myDelete('/mch/agency/'+ p)
 
 // 代付列表
 export const payBankList = p => myGet('/bank/payment/sys',{params: p})
 
 //改变代付状态
 export const changePayBankState = p => myPost('/bank/payment/sys',p)
+
+// 个码列表
+export const qrList = p => myGet('/pay/qr/code',{params: p})
+
+// 增加个码
+export const addQr = p => myPost('/pay/qr/code', p)
+
+// 删除个码
+export const delQr = p => myDelete('/pay/qr/code/'+ p)
+
+// 设置uid
+export const setUid = p => myPost('/pay/qr/uid', p)
+
+//  回调确认列表
+export const callbackList = p => myGet('/pay/qr/order',{params: p})
+
+// 回调确认
+export const callbackFinish = p => myPost('/pay/qr/order/finish', p)
+
+// 回调回滚
+export const callbackRoll = p => myPost('/pay/qr/reissue/rollback', p);
+
+// 上线
+export const up = () => myPost('/pay/qr/login')
+
+// 下线
+export const down =  () => myDelete('/pay/qr/logout')
+
+// 挂单列表
+export const missList = p => myGet('/pay/qr/pending',{params: p})
+
+// 新增挂单
+export const addMissList = p => myPost('/pay/qr/pending', p);
+
+// 处理挂单
+export const doList = p => myGet('/pay/qr/pending/'+ p)
+
+// 在线人数统计
+export const loginNum = () => myGet('/pay/qr/login')
+
+// 充值记录
+export const rechargeList = p => myGet('/wallet/recharge/log',{params: p})
 
 
 

@@ -7,15 +7,15 @@
             <div class="title">Alian后台管理系统</div>
             <div><input type="text" placeholder="账号" v-model="account"></div>
             <div class="input-wrap" v-if="eyeOpen">
-                <input type="password" placeholder="密码" v-model="pw">
-                <img src="../assets/img/eye_close.png" alt=""  @click="showPw"> 
+                <input type="password" placeholder="密码" v-model="pw" @keyup.enter="login">
+                <img src="../assets/img/eye_close.png" alt=""  @click="showPw" > 
             </div>
             <div class="input-wrap" v-if="!eyeOpen">
-                <input type="text" placeholder="密码" v-model="pw">
-                <img src="../assets/img/eye_open.png" alt="" @click="showPw"> 
+                <input type="text" placeholder="密码" v-model="pw" @keyup.enter="login">
+                <img src="../assets/img/eye_open.png" alt="" @click="showPw" > 
             </div>
 
-            <div class="slide">
+            <!-- <div class="slide">
                 <slide-verify 
                     :l="42"
                     :r="10"
@@ -26,7 +26,8 @@
                     @refresh="onRefresh"
                 >
                 </slide-verify>
-            </div>
+            </div> -->
+            <div class="btn" @click="login">登录</div>
         </div>
     </div>    
 </template>
@@ -70,6 +71,14 @@ export default {
         },
         login() {
             localStorage.clear()
+            if(this.account == '') {
+                this.$message.error('请输入账号')
+                return false
+            }
+            if(this.pw == '') {
+                this.$message.error('请输入密码')
+                return false
+            }
             let data = {
                 phone: this.account,
                 password: this.pw
@@ -80,6 +89,13 @@ export default {
                 localStorage.nickname = res.nickname
                 if(res.base.mch_name) {
                     localStorage.name = res.base.mch_name
+                }
+                if(res.roles && res.roles.length != 0) {
+                    res.roles.forEach(ele => {
+                        if(ele.id == 1002) {
+                            localStorage.rolesId = 1002
+                        }
+                    });
                 }
                 this.$router.push('/home')
             })

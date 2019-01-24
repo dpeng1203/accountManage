@@ -11,15 +11,15 @@
                     unique-opened
                     router
                     active-text-color="#00B7AD">
-                    <el-menu-item index="/home">
+                    <el-menu-item index="/home/homeDetail" v-if="root != 2">
                         <i class="el-icon-menu"></i>
                         <span slot="title">主页</span>
                     </el-menu-item>
-                     <el-menu-item index="/home/merManage">
+                     <el-menu-item index="/home/merManage" v-if="root != 2">
                         <i class="el-icon-setting"></i>
                         <span slot="title">商户管理</span>
                     </el-menu-item>
-                    <el-submenu index="3">
+                    <el-submenu index="3" v-if="root != 2">
                         <template slot="title">
                             <i class="el-icon-goods"></i>
                             <span>交易管理</span>
@@ -33,11 +33,11 @@
                             <span slot="title">代付交易</span>
                         </el-menu-item>
                     </el-submenu>
-                    <el-menu-item index="/home/sysApp">
+                    <el-menu-item index="/home/sysApp" v-if="root != 2">
                         <i class="el-icon-picture-outline"></i>
                         <span slot="title">产品管理</span>
                     </el-menu-item>
-                    <el-menu-item index="/home/cashList">
+                    <el-menu-item index="/home/cashList" v-if="root != 2">
                         <i class="el-icon-printer"></i>
                         <span slot="title">提现管理</span>
                     </el-menu-item>
@@ -45,7 +45,20 @@
                         <i class="el-icon-document"></i>
                         <span slot="title">代理管理</span>
                     </el-menu-item> -->
-                    <el-submenu index="5">
+                    <el-submenu index="7">
+                        <template slot="title">
+                            <i class="el-icon-goods"></i>
+                            <span>代理管理</span>
+                        </template>
+                        <el-menu-item index="/home/agentList">
+                            <span slot="title">支付代理商</span>
+                        </el-menu-item>
+                        <el-menu-item index="/home/agentPayList">
+                            <span slot="title">代付代理商</span>
+                        </el-menu-item>
+                    </el-submenu>
+
+                    <el-submenu index="5" v-if="root != 2">
                         <template slot="title">
                             <i class="el-icon-goods"></i>
                             <span>通道管理</span>
@@ -57,10 +70,21 @@
                             <span slot="title">代付通道</span>
                         </el-menu-item>
                     </el-submenu>
-                    <!-- <el-menu-item index="/home/merchant">
-                        <i class="el-icon-document"></i>
-                        <span slot="title">商户审核</span>
-                    </el-menu-item> -->
+                    <el-submenu index="6">
+                        <template slot="title">
+                            <i class="el-icon-goods"></i>
+                            <span>回调确认</span>
+                        </template>
+                        <el-menu-item index="/home/qrList">
+                            <span slot="title">收款码管理</span>
+                        </el-menu-item>
+                        <el-menu-item index="/home/callbackList">
+                            <span slot="title">回调列表</span>
+                        </el-menu-item>
+                        <el-menu-item index="/home/missList">
+                            <span slot="title">挂单列表</span>
+                        </el-menu-item>
+                    </el-submenu>
                 </el-menu>
             </el-col>
         </el-row>
@@ -71,7 +95,7 @@ export default {
     name: 'tabs',
     data() {
         return{
-
+            root: 1     //  1:管理员  2：客服
         }
     },
     methods: {
@@ -80,6 +104,11 @@ export default {
         },
         handleClose(key, keyPath) {
             console.log(key, keyPath)
+        }
+    },
+    mounted() {
+        if(localStorage.rolesId == 1002) {
+            this.root = 2
         }
     }
 }

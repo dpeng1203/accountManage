@@ -1,7 +1,7 @@
 <template>
     <div class="mer-manage">
         <div class="title">
-            <span>通道管理</span>
+            <span>充值通道</span>
         </div>  
         <div class="table">
             <el-table

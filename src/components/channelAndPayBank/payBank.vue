@@ -1,7 +1,7 @@
 <template>
     <div class="mer-manage">
         <div class="title">
-            <span>代付管理</span>
+            <span>代付通道</span>
             <p>(备注：代付通道可同时开启多个，系统优先先锋通道)</p>
         </div>  
         <div class="table">

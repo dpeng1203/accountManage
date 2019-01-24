@@ -12,7 +12,7 @@ const merRate = resolve => require(['../components/merManagement/merRate'], reso
 //提现列表
 const cashList = resolve => require(['../components/cashList/cashList'], resolve);
 
-//通道管理、
+//通道管理
 const channel = resolve => require(['../components/channelAndPayBank/channel'], resolve);
 const payBank = resolve => require(['../components/channelAndPayBank/payBank'], resolve);
 
@@ -24,6 +24,7 @@ const homeDetail = resolve => require(['../components/homeDetail/homeDetail'], r
 const billList = resolve => require(['../components/billManage/billList'], resolve);
 const oneBillDetail = resolve => require(['../components/billManage/oneBillDetail'], resolve);
 const payList = resolve => require(['../components/billManage/payList'], resolve);
+const payDetail = resolve => require(['../components/billManage/payDetail'], resolve);
 
 // 系统产品管理
 const sysApp = resolve => require(['../components/sysApp/sysApp'], resolve);
@@ -33,11 +34,19 @@ const changeSysApp = resolve => require(['../components/sysApp/changeSysApp'], r
 
 //代理管理
 const agentList = resolve => require(['../components/agent/agentList'], resolve);
-const addAgent = resolve => require(['../components/agent/addAgent'], resolve);
-const childAgent = resolve => require(['../components/agent/childAgent'], resolve);
-const addChildAgent = resolve => require(['../components/agent/addChildAgent'], resolve);
+const agentPayList = resolve => require(['../components/agent/agentPayList'], resolve);
 
+// const addAgent = resolve => require(['../components/agent/addAgent'], resolve);
+// const childAgent = resolve => require(['../components/agent/childAgent'], resolve);
+// const addChildAgent = resolve => require(['../components/agent/addChildAgent'], resolve);
 
+//回调确认
+const callbackList = resolve => require(['../components/callback/callbackList'], resolve);
+const qrList = resolve => require(['../components/callback/qrList'], resolve);
+const missList = resolve => require(['../components/callback/missList'], resolve);
+const addQr = resolve => require(['../components/callback/addQr'], resolve);
+const setUid = resolve => require(['../components/callback/setUid'], resolve);
+const addmiss = resolve => require(['../components/callback/addmiss'], resolve);
 
 Vue.use(Router)
 
@@ -47,7 +56,7 @@ export default new Router({
       path: '/home',
       name: 'home',
       component: home,
-      redirect: '/home/homeDetail',
+      // redirect: '/home/homeDetail',
       children:[
         {path: 'merchant', name: 'merchant', component: merchant},
         {path: 'merManage', name: 'merManage', component: merManage},
@@ -68,6 +77,8 @@ export default new Router({
         {path: 'billList', name: 'billList', component: billList},
         {path: 'oneBillDetail', name: 'oneBillDetail', component: oneBillDetail},
         {path: 'payList', name: 'payList', component: payList},
+        {path: 'payDetail', name: 'payDetail', component: payDetail},
+
         //系统产品管理
         {path: 'sysApp', name: 'sysApp', component: sysApp},
         {path: 'addSysApp', name: 'addSysApp', component: addSysApp},
@@ -75,10 +86,18 @@ export default new Router({
 
         //  代理管理
         {path: 'agentList', name: 'agentList', component: agentList},
-        {path: 'addAgent', name: 'addAgent', component: addAgent},
-        {path: 'childAgent', name: 'childAgent', component: childAgent},
-        {path: 'addChildAgent', name: 'addChildAgent', component: addChildAgent},
-
+        {path: 'agentPayList', name: 'agentPayList', component: agentPayList},
+        // {path: 'addAgent', name: 'addAgent', component: addAgent},
+        // {path: 'childAgent', name: 'childAgent', component: childAgent},
+        // {path: 'addChildAgent', name: 'addChildAgent', component: addChildAgent},
+        
+        //  回调确认
+        {path: 'callbackList', name: 'callbackList', component: callbackList},
+        {path: 'qrList', name: 'qrList', component: qrList},
+        {path: 'missList', name: 'missList', component: missList},
+        {path: 'addQr', name: 'addQr', component: addQr},
+        {path: 'setUid', name: 'setUid', component: setUid},
+        {path: 'addmiss', name: 'addmiss', component: addmiss},
       ]
     },
     {

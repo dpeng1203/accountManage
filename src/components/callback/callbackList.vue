@@ -1,7 +1,7 @@
 <template>
-    <div class="pay-list">
+    <div class="bill-list">
         <div class="title">
-            <span>代付管理</span>
+            <span>回调确认</span>
         </div>
         
         <div class="search">
@@ -16,42 +16,28 @@
                     </el-option>
                 </el-select>
             </div>
+            <div class="search-ct" v-if="rolesId != 1002">
+                <div class="search-name">账户id</div>
+                <el-input class="inline-input" v-model="data.auth_id" placeholder="请输入账户id" clearable></el-input>
+            </div>
             <div class="search-ct">
-                <div class="search-name">商户号</div>
-                <el-input class="inline-input" v-model="data.mch_ids" placeholder="请输入系统订单号" clearable></el-input>
+                <div class="search-name">昵称</div>
+                <el-input class="inline-input" v-model="data.nick_name" placeholder="请输入昵称" clearable></el-input>
+            </div>
+            <div class="search-ct">
+                <div class="search-name">手机号</div>
+                <el-input class="inline-input" v-model="data.phone" placeholder="请输入手机号" clearable></el-input>
             </div>
             <div class="search-ct">
                 <div class="search-name">商户订单号</div>
-                <!-- <el-autocomplete
-                    class="inline-input"
-                    v-model="state2"
-                    :fetch-suggestions="querySearch"
-                    placeholder="请输入内容"
-                    :trigger-on-focus="false"
-                    @select="handleSelect"
-                ></el-autocomplete> -->
                 <el-input class="inline-input" v-model="data.mch_order_id" placeholder="请输入商户订单号" clearable></el-input>
-            </div>
-             <div class="search-ct">
-                <div class="search-name">系统订单号</div>
-                <el-input class="inline-input" v-model="data.sys_order_id" placeholder="请输入系统订单号" clearable></el-input>
-            </div>
-            <div class="search-ct">
-                <div class="search-name">收款人</div>
-                <el-input class="inline-input" v-model="data.acc_name" placeholder="请输入收款人" clearable></el-input>
             </div>
         </div>
         <div class="search">
-            <div class="search-ct">
-                <div class="search-name">支付类型</div>
-                <el-select v-model="data.pay_type" placeholder="请选择" class="pay-state">
-                    <el-option
-                    v-for="item in options2"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                    </el-option>
-                </el-select>
+            
+             <div class="search-ct">
+                <div class="search-name">系统订单号</div>
+                <el-input class="inline-input" v-model="data.sys_order_id" placeholder="请输入系统订单号" clearable></el-input>
             </div>
             <div class="search-ct">
                 <div class="search-name">选择日期范围</div>
@@ -71,20 +57,14 @@
                 <div class="rapid-btn" @click="searchMonth">本月</div>
                 <div class="rapid-btn" @click="searchLastMonth">上月</div>
                 <div class="search-btn" @click="searchBtn">搜索</div>
-                <!-- <div class="search-btn" @click="excel">导出</div> -->
             </div>
         </div>
-        <!-- <div class="num-wrapper">
-            <div class="num">成交总金额：<span>{{ total }}</span> 元</div>
-            <div class="num">成交总手续费：<span>{{ mchCharge }}</span> 元</div>
-            <div class="num">成交总笔数：<span>{{ count }}</span> 笔</div>
-        </div> -->
         <div class="table">
             <el-table
                 :data="tableData"
                 border
                 style="width: 100%"
-                >
+               >
                 <el-table-column
                     type="index"
                     width="50">
@@ -92,11 +72,16 @@
                 <el-table-column
                     prop="mch_id"
                     label="商户号"
-                    width="80">
+                    width="100">
                 </el-table-column>
                 <el-table-column
-                    prop="acc_name"
-                    label="收款人姓名"
+                    prop="qr_owner"
+                    label="收款人"
+                    width="100">
+                </el-table-column>
+                <el-table-column
+                    prop="reserve_word"
+                    label="付款备注号"
                     width="100">
                 </el-table-column>
                 <el-table-column
@@ -107,37 +92,17 @@
                 <el-table-column
                     prop="sys_order_id"
                     label="系统订单号"
-                    width="150">
-                </el-table-column>
-                <!-- <el-table-column
-                    prop="super_order_id"
-                    label="上游订单号"
-                    width="220">
-                </el-table-column> -->
-                <el-table-column
-                    prop="pay_type"
-                    label="代付类型"
-                    width="100">
-                </el-table-column>
-                <el-table-column
-                    prop="charge_type"
-                    label="结算类型"
-                    width="100">
-                </el-table-column>
-                <el-table-column
-                    prop="bank_payment_id"
-                    label="通道"
-                    width="100">
+                    width="160">
                 </el-table-column>
                 <el-table-column
                     prop="money"
-                    label="金额"
-                    width="80">
+                    label="下单金额"
+                    width="100">
                 </el-table-column>
                 <el-table-column
-                    prop="charge_money"
-                    label="手续费"
-                    width="80">
+                    prop="msg"
+                    label="实付金额"
+                    width="100">
                 </el-table-column>
                 <el-table-column
                     prop="create_time"
@@ -153,7 +118,9 @@
                 label="操作"
                 >
                 <template slot-scope="scope">
-                    <el-button @click="handleClick(scope.row)" type="text" size="small">详情</el-button>
+                    <!-- <el-button @click="handleClick(scope.row)" type="text" size="small">详情</el-button> -->
+                    <el-button @click="handleClickReissue(scope.row)" type="success" size="small" v-if="scope.row.status == '待支付' || scope.row.status == '超时关闭'">确认付款</el-button>
+                    <el-button @click="handleClickRollback(scope.row)" type="primary" size="small" v-if="scope.row.super_order_id && scope.row.super_order_id.indexOf('unknown') === 0">回滚</el-button>
                 </template>
                 </el-table-column>
             </el-table>
@@ -169,18 +136,24 @@
                 </el-pagination>
             </div>
         </div>
-        <!-- <el-dialog
+        <el-dialog
             title="提示"
             :visible.sync="dialogVisible"
             width="30%"
             >
-            <span v-if="value7 != null">请在浏览器打开{{excelUrl + 'start_time=' + value7[0] + '&end_time=' + value7[1]}}</span>
-            <span v-else>请在浏览器打开{{excelUrl}}</span>
+            <el-form>
+                <el-form-item label="下单金额">
+                    <el-input v-model="row.money" autocomplete="off" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="实付金额">
+                    <el-input v-model="row.real_money" autocomplete="off"></el-input>
+                </el-form-item>
+            </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="finish">确 定</el-button>
+                <el-button type="primary" @click="dialogVisible = false">取 消</el-button>
             </span>
         </el-dialog>
-        <span v-if="value7 != null">{{ `start_time=${value7[0]}` }}</span> -->
         
     </div>
 </template>
@@ -188,51 +161,41 @@
 <script>
 import changeData from '../../config/formatData'
 import hostName from '../../config/hostName'
-import { payList } from '../../config/api'
+import { callbackList,callbackFinish,callbackRoll } from '../../config/api'
 export default {
     name: "billDetail",
     data() {
         let that = this
         return{
-            state2: '',         //商户模糊
-            mchList: [],         //查询商户列表
+           
+            rolesId: localStorage.rolesId,  //角色权限
+            dialogVisible: false,       //确认付款弹框
+            row: '',                   //待确认付款项
             total_count: 0,
             currentPage: 1,
-            total: '',
-            mchCharge: '',
-            count: '',
             options1: [{
                 value: '',
                 label: '请选择'
                 },{
                 value: '1',
-                label: '新订单'
-                }, {
-                value: '2',
-                label: '进行中'
+                label: '待支付'
                 }, {
                 value: '3',
                 label: '交易成功'
                 }, {
                 value: '4',
                 label: '交易失败'
-                }],
-            options2: [{
-                value: '',
-                label: '请选择'
-                },{
-                value: '1',
-                label: '对私'
                 }, {
-                value: '2',
-                label: '对公'
+                value: '9',
+                label: '超时关闭'
                 }],
             data: {
-                mch_ids: null,
+                auth_id: null,
+                nick_name: null,
+                phone: null,
                 status: null,
                 mch_order_id: null,
                 sys_order_id: null,
-                acc_name: null,
                 pay_type: null,
                 start_time: null,
                 end_time: null,
@@ -240,42 +203,11 @@ export default {
                 limit: 10
             },
             tableData: [],
-            value7: null,
+            value7: null,       //时间范围
         }
     },
     methods: {
-        tableRowClassName({row,rowIndex}) {
-            if(row.super_order_id && row.super_order_id.indexOf('unknown') === 0) {
-                return 'success'
-            }
-            return ''
-        },
-        getSum() {
-            moneySum(this.data).then((res) => {
-                this.total = Number(res.data.sum)/100 || 0
-                this.mchCharge = Number(res.data.mch_charge)/100 || 0
-                this.count = res.data.count || 0
-            })
-        },
-        //商户收搜
-        handleSelect(item) {
-            this.data.mch_name = item.value
-            this.getList()
-            // this.getSum()
-        },
-        //关键字查询
-        querySearch(queryString, cb) {
-            this.mchList = []
-            getMch(queryString).then( res => {
-                let list = res.data
-                list.forEach( ele => {
-                    let obj = {}
-                    obj.value = ele
-                    this.mchList.push(obj)
-                })
-            })
-            cb(this.mchList)
-        },
+        
         //今日
         searchToday() {
             const end = new Date();
@@ -370,77 +302,114 @@ export default {
                 }
             }
             this.data.offset = 0
-            this.getList()
+            this.getBillList()
             // this.getSum()
         },
         //交易列表
-        getList() {
-            payList(this.data).then((res) => {
+        getBillList() {
+            for(var key in this.data) {
+                if(this.data[key] === '' || this.data[key] === null) {
+                    delete this.data[key]
+                }
+            }
+            if(localStorage.rolesId == 1002) {
+                this.data.auth_id = localStorage.id
+            }
+            callbackList(this.data).then((res) => {
                 this.total_count = res.data.total_count
                 this.tableData = res.data.data_list
                 this.tableData.forEach( ele => {
                     if(ele.money && ele.money != '') {
                         ele.money = ele.money/100
                     }
-                    if(ele.charge_money && ele.charge_money != '') {
-                        ele.charge_money = ele.charge_money/100
+                    if(!ele.msg) {
+                        ele.real_money = ele.money
                     }
+                    
                     if( ele.create_time ) {
                         ele.create_time = changeData(ele.create_time)
                     }
                     if(ele.status == 1) {
-                        ele.status = '新订单'
-                    }else if(ele.status == 2) {
-                        ele.status = '进行中'
+                        ele.status = '待支付'
                     }else if(ele.status == 3) {
                         ele.status = '交易成功'
                     }else if(ele.status == 4) {
                         ele.status = '交易失败'
+                    }else if(ele.status == 9) {
+                        ele.status = '超时关闭'
                     }else{
                         ele.status = '状态异常'
-                    }
-                    if(ele.pay_type && ele.pay_type == 1) {
-                        ele.pay_type = '对私'
-                    } else if(ele.pay_type == 2) {
-                        ele.pay_type = '对公'
-                    }
-                    if(ele.charge_type && ele.charge_type == 1) {
-                        ele.charge_type = '定额'
-                    } else if(ele.charge_type == 2) {
-                        ele.charge_type = '百分比'
-                    }
-                    if(ele.bank_payment_id && ele.bank_payment_id == 1) {
-                        ele.bank_payment_id = '平安'
-                    }else if(ele.bank_payment_id == 2) {
-                        ele.bank_payment_id = '先锋'
                     }
                 })
                
             })
         },
-        //详情
-        handleClick(row) {
-            this.$router.push({path: 'payDetail',query:{row: row}})
+        // 补单
+        handleClickReissue(row) {
+            this.dialogVisible = true
+            this.row = row
         },
+        //确认付款
+        finish() {
+            let data = {
+                sys_order_id: this.row.sys_order_id,
+                money: this.row.real_money * 100
+            }
+            callbackFinish(data).then( res => {
+                this.dialogVisible = false
+                this.$message.success('确认ok！！')
+                this.data.offset = 0
+                this.getBillList()
+            })
+        },
+        //回滚
+        handleClickRollback(row) {
+            this.$confirm('确认回滚?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                let data = {
+                    sys_order_id: row.sys_order_id
+                }
+                callbackRoll(data).then( res => {
+                    this.data.offset = 0
+                    this.getBillList()
+                })
+                this.$message({
+                    type: 'success',
+                    message: '回滚成功!'
+                });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消'
+                });          
+            });
+        },
+        // 详情
+        // handleClick(row) {
+        //     this.$router.push({path: '/home/oneBillDetail',query: {billInfo: row}})
+        // },
+        
         handleSizeChange(val) {
             this.data.limit = val
-            this.getList()
+            this.getBillList()
         },
         handleCurrentChange(val) {
             this.data.offset = (val -1) * this.data.limit
-            this.getList()
+            this.getBillList()
         }
     },
     mounted() {
-        // this.getSum()
-        this.getList()
+        this.getBillList()
     }
 
 }
 </script>
 
 <style lang='sass' scoped>
-.pay-list
+.bill-list
     color: #3D4060;
     padding-left: 30px
     .title 
@@ -460,21 +429,11 @@ export default {
         display: flex
         margin-top: 20px
         .search-ct
-            margin-left: 60px
+            margin-left: 40px
             .search-name
                 font-size: 12px
                 line-height: 18.2px
                 padding-bottom: 10px
-            input
-                margin-top: 10px
-                border: 1px solid #B1B3C1
-                border-radius: 2px
-                width: 200px
-                height: 40px
-                line-height: 40px
-                padding: 20px
-                font-size: 14px
-                background: #fff
             .inline-input
                 width: 200px
             .pay-state
@@ -507,7 +466,7 @@ export default {
            
     .table
         margin-top: 40px
-        width: 1380px
+        width: 1300px
         .block
             padding: 30px 0
             text-align: center 

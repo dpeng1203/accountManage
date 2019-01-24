@@ -1,7 +1,7 @@
 <template>
     <div class="mer-manage">
         <div class="title">
-            <span>支付代理商</span>
+            <span>代付代理商</span>
         </div>  
         <div class="search">
             <!-- <div class="search-ct">
@@ -17,7 +17,7 @@
             </div> -->
             <div class="search-ct">
                 <div class="search-name">代理商商户号</div>
-                <el-input class="inline-input" v-model="data.mch_id" placeholder="请输入代理商商户号" clearable></el-input>
+                <el-input class="inline-input" v-model="data.mch_id" placeholder="请输入父商户号" clearable></el-input>
             </div>
             <div class="search-ct">
                 <div class="search-name">子商户号</div>
@@ -45,7 +45,7 @@
                 <el-table-column
                     prop="mch_name"
                     label="代理商名称"
-                    width="120">
+                    width="180">
                 </el-table-column>
                 <el-table-column
                     prop="sub_id"
@@ -55,37 +55,21 @@
                 <el-table-column
                     prop="sub_name"
                     label="子商户名称"
-                    width="120">
-                </el-table-column>
-                <!-- 支付列表 -->
-                <el-table-column
-                    prop="sup_wx_rate"
-                    label="代理商微信费率"
-                    width="120">
+                    width="180">
                 </el-table-column>
                 <el-table-column
-                    prop="sub_wx_rate"
-                    label="子账户微信费率"
+                    prop="sup_rate"
+                    label="代理商代付费率"
                     width="120">
                 </el-table-column>
                 <el-table-column
-                    prop="wx_rate"
-                    label="微信费率差"
-                    width="100">
+                    prop="sub_rate"
+                    label="子账户代付费率"
+                    width="120">
                 </el-table-column>
                 <el-table-column
-                    prop="sup_alipay_rate"
-                    label="代理商支付宝费率"
-                    width="140">
-                </el-table-column>
-                <el-table-column
-                    prop="sub_alipay_rate"
-                    label="子账户支付宝费率"
-                    width="140">
-                </el-table-column>
-                <el-table-column
-                    prop="alipay_rate"
-                    label="支付宝费率差"
+                    prop="bank_rate"
+                    label="代付费率差"
                     width="110">
                 </el-table-column>
                 <el-table-column
@@ -157,12 +141,12 @@ export default {
             //     }
             // ],
             form: {
-                type: "1",
+                type: "2",
                 mch_id: '',
                 sub_id: ''
             },
             data: {
-                type: 1,
+                type: 2,
                 mch_id: '',
                 sub_id: '',
                 offset: 0,
@@ -172,7 +156,7 @@ export default {
     },
     methods: {
         tableRowClassName({row,rowIndex}) {
-            if(row.sup_wx_rate > row.sub_wx_rate || row.sup_alipay_rate > row.sub_alipay_rate) {
+            if(row.sup_rate > row.sub_rate) {
                 return 'success'
             }
             return ''
@@ -187,12 +171,9 @@ export default {
                 this.total = res.data.total_count
                 this.tableData = res.data.data_list
                 this.tableData.forEach( ele => {
-                    ele.sup_wx_rate = ele.sup_wx_rate/100 + '%'
-                    ele.sub_wx_rate = ele.sub_wx_rate/100 + '%'
-                    ele.wx_rate = ele.wx_rate/100 + '%'
-                    ele.sup_alipay_rate = ele.sup_alipay_rate/100 + '%'
-                    ele.sub_alipay_rate = ele.sub_alipay_rate/100 + '%'
-                    ele.alipay_rate = ele.alipay_rate/100 + '%'
+                    ele.sup_rate = ele.sup_rate/100 + '%'
+                    ele.sub_rate = ele.sub_rate/100 + '%'
+                    ele.bank_rate = ele.bank_rate/100 + '%'
                 })
             })
         },
@@ -297,7 +278,7 @@ export default {
         margin-top: 30px 
     .table
         margin-top: 40px
-        width: 1320px
+        max-width: 1100px
         .block
             padding: 30px 0
             text-align: center 

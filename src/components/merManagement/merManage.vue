@@ -91,19 +91,27 @@
                 <el-table-column
                     prop="channel_name"
                     label="通道"
-                    width="120">
+                    width="100">
                 </el-table-column>
                 <el-table-column
                 label="操作"
                 >
                 <template slot-scope="scope">
-                    <el-button @click="handleClick(scope.row)" type="text" size="small">详情</el-button>
+                    <!-- <el-button @click="handleClick(scope.row)" type="text" size="small">详情</el-button>
                     <el-button @click="handleClickCutState(scope.row)" type="danger" size="small">{{scope.row.mch_state == '激活' ? '冻结' : '激活'}}</el-button>
                     <el-button @click="handleClickCutChannel(scope.row)" type="text" size="small">切换通道</el-button>
                     <el-button @click="handleClickResetPw(scope.row)" type="warning" size="small">重置密码</el-button>
                     <el-button @click="handleClickVecharge(scope.row)" type="success" size="small">代付充值</el-button>
-                    <el-button @click="handleClickPayRate(scope.row)" type="text" size="small">设置代付费率</el-button>
-
+                    <el-button @click="handleClickPayRate(scope.row)" type="text" size="small">设置代付费率</el-button> -->
+                    <el-button-group>
+                        <el-button @click="handleClick(scope.row)" type="primary" size="small">详情</el-button>
+                        <el-button @click="handleClickCutChannel(scope.row)" type="primary" size="small">切换通道</el-button>
+                        <el-button @click="handleClickVecharge(scope.row)" type="success" size="small">代付充值</el-button>
+                        <el-button @click="handleClickPayRate(scope.row)" type="success" size="small">设置代付费率</el-button>
+                        <el-button @click="handleTable(scope.row)" type="success" size="small">充值记录</el-button>
+                        <el-button @click="handleClickResetPw(scope.row)" type="danger" size="small">重置密码</el-button>
+                        <el-button @click="handleClickCutState(scope.row)" type="danger" size="small">{{scope.row.mch_state == '激活' ? '冻结' : '激活'}}</el-button>
+                    </el-button-group>
                 </template>
                 </el-table-column>
             </el-table>
@@ -160,18 +168,35 @@
                 <el-button type="primary" @click="hanlePay">确 定</el-button>
             </div>
         </el-dialog>
+
+        <el-dialog title="充值记录" :visible.sync="dialogTableVisible">
+            <el-table :data="gridData">
+                <el-table-column property="mch_id" label="商户号" width="80"></el-table-column>
+                <el-table-column property="mch_name" label="商户名称" width="100"></el-table-column>
+                <el-table-column property="auth_name" label="操作人" width="100"></el-table-column>
+                <el-table-column property="money" label="金额" width="100"></el-table-column>
+                <el-table-column property="type" label="类型" width="100"></el-table-column>
+                <el-table-column property="create_time" label="创建时间"></el-table-column>
+            </el-table>
+            <div class="block" style="text-align: center">
+                <el-pagination layout="prev, pager, next" :total="gridDataNum"></el-pagination>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-import { merList,cutMchState,channelList,changeMchChannel,resetMchPW,recharge,payRate } from '../../config/api'
+import formatDate from '../../config/formatData'
+import { merList,cutMchState,channelList,changeMchChannel,resetMchPW,recharge,payRate,rechargeList } from '../../config/api'
 export default {
     name: 'accountManage',
     data() {
         return{
             tableData: [],
+            gridData: [],
             currentPage: 1,
             total: 0,
+            gridDataNum: 0,
             options1: [{
                 value: null,
                 label: '请选择'
@@ -204,9 +229,15 @@ export default {
                 offset: 0,
                 limit: 10
             },
+            rechargeData: {
+                mch_id: '',
+                offset: 0,
+                limit: 10
+            },
             dialogVisible: false,
             mchMoney: {},
             dialogFormVisible: false,
+            dialogTableVisible: false,
             dialogFormVisible1: false,
             form: {
                 region: '',
@@ -334,7 +365,6 @@ export default {
         },
         searchBtn() {
             this.data.offset = 0
-            this.data.limit = 10
             this.getList()
         },
         //代付充值
@@ -371,6 +401,26 @@ export default {
                 this.mchMoney.pending = this.mchMoney.pending/100
                 this.mchMoney.reservoir = this.mchMoney.reservoir/100
                 this.getList()
+            })
+        },
+        //充值记录
+        handleTable(row) {
+            this.dialogTableVisible = true
+            this.rechargeData.mch_id = row.mch_id
+            rechargeList(this.rechargeData).then( res => {
+                this.gridData = res.data.data_list
+                this.gridDataNum = res.data.total_count
+                this.gridData.forEach( ele => {
+                    if(ele.money) {
+                        ele.money = ele.money/100
+                    }
+                    ele.create_time = formatDate(ele.create_time)
+                    if(ele.type == 1) {
+                        ele.type = '线下充值'
+                    }else if(ele.type == 2) {
+                        ele.type = '余额转换'
+                    }
+                })
             })
         },
         handleClick(row) {
@@ -452,7 +502,7 @@ export default {
             margin-left: 0
     .table
         margin-top: 40px
-        width: 1450px
+        width: 1500px
         .block
             padding: 30px 0
             text-align: center 

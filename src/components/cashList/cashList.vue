@@ -76,7 +76,7 @@
                 <template slot-scope="scope">
                     <el-button @click="handleClickSucc(scope.row)" type="text" size="small" v-if="scope.row.state == '待处理'">到账</el-button>
                     <el-button @click="handleClickFail(scope.row)" type="text" size="small" v-if="scope.row.state == '待处理'">拒绝</el-button>
-                    <el-button @click="handleClickSys(scope.row)" type="success" size="small" v-if="scope.row.state == '待处理'">系统代付</el-button>
+                    <!-- <el-button @click="handleClickSys(scope.row)" type="success" size="small" v-if="scope.row.state == '待处理'">系统代付</el-button> -->
                 </template>
                 </el-table-column>
             </el-table>
@@ -105,6 +105,18 @@
                 <el-button type="primary" @click="sureSysPay">确 定</el-button>
             </div>
         </el-dialog>
+
+        <el-dialog
+            title="提示"
+            :visible.sync="dialogVisible"
+            width="30%"
+            :before-close="handleClose">
+            <span>若商户提现至先锋备付金，到账成功，将自动增加至商户代付余额，请勿重复入账！！！</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="sureCash">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -124,6 +136,8 @@ export default {
                 offset: 0,
                 limit: 10
             },
+            dialogVisible: false,
+            selId: '',                  
             dialogFormVisible: false,
             cash_log_id: '',        //列表id
             form: {
@@ -157,6 +171,8 @@ export default {
                         ele.type = '平安'
                     } else if(ele.type == 3) {
                         ele.type = '先锋'
+                    } else if(ele.type == 4) {
+                        ele.type = 'cnt代付'
                     }
                     if( ele.create_time ) {
                         ele.create_time = changeData(ele.create_time)
@@ -167,33 +183,49 @@ export default {
 
         searchBtn() {
             this.data.offset = 0
-            this.data.limit = 10
             this.getList()
         },
         //  成功到账
         handleClickSucc(row) {
-            this.$confirm('是否确认到账成功?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-            type: 'warning'
-            }).then(() => {
-                let data = {
-                    cash_log_id: row.id,
-                    success: true
-                }
-                auditOk(data).then(res => {
-                    this.$message({
-                        type: 'success',
-                        message: '到账成功!'
-                    });
-                    this.getList()
-                })
-            }).catch(() => {
+            this.dialogVisible = true
+            this.selId = row.id
+            // this.$confirm('是否确认到账成功?', '提示', {
+            //     confirmButtonText: '确定',
+            //     cancelButtonText: '取消',
+            // type: 'warning'
+            // }).then(() => {
+            //     let data = {
+            //         cash_log_id: row.id,
+            //         success: true
+            //     }
+            //     auditOk(data).then(res => {
+            //         this.$message({
+            //             type: 'success',
+            //             message: '到账成功!'
+            //         });
+            //         this.getList()
+            //     })
+            // }).catch(() => {
+            //     this.$message({
+            //         type: 'info',
+            //         message: '已取消删除'
+            //     });          
+            // }); 
+        },
+        //  成功到账
+        sureCash() {
+            let data = {
+                cash_log_id: this.selId,
+                success: true
+            }
+            auditOk(data).then(res => {
                 this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });          
-            }); 
+                    type: 'success',
+                    message: '到账成功!'
+                });
+                this.dialogVisible = false
+                this.getList()
+            })
         },
         //拒绝到账
         handleClickFail(row) {

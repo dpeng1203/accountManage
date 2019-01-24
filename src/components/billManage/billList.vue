@@ -18,7 +18,7 @@
             </div>
             <div class="search-ct">
                 <div class="search-name">商户号</div>
-                <el-input class="inline-input" v-model="data.mch_id" placeholder="请输入系统订单号" clearable></el-input>
+                <el-input class="inline-input" v-model="data.mch_ids" placeholder="请输入商户号" clearable></el-input>
             </div>
             <div class="search-ct">
                 <div class="search-name">商户订单号</div>
@@ -86,6 +86,11 @@
                     width="50">
                 </el-table-column>
                 <el-table-column
+                    prop="mch_id"
+                    label="商户号"
+                    width="80">
+                </el-table-column>
+                <el-table-column
                     prop="mch_name"
                     label="商户名称"
                     width="140">
@@ -98,7 +103,7 @@
                 <el-table-column
                     prop="sys_order_id"
                     label="系统订单号"
-                    width="210">
+                    width="170">
                 </el-table-column>
                 <el-table-column
                     prop="super_order_id"
@@ -219,7 +224,7 @@ export default {
                 label: '微信'
                 }],
             data: {
-                mch_id: null,
+                mch_ids: null,
                 status: null,
                 mch_order_id: null,
                 sys_order_id: null,
@@ -361,13 +366,12 @@ export default {
                 }
             }
             this.data.offset = 0
-            this.data.limit = 10
             this.getBillList()
             // this.getSum()
         },
         //导出excel
         excel() {
-            if(this.data.mch_id === null || this.data.mch_id === '') {
+            if(this.data.mch_ids === null || this.data.mch_ids === '') {
                 this.$message.error('请输入商户号')
                 return false
             }
@@ -568,7 +572,7 @@ export default {
            
     .table
         margin-top: 40px
-        width: 1460px
+        width: 1490px
         .block
             padding: 30px 0
             text-align: center 
