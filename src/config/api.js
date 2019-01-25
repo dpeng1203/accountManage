@@ -50,10 +50,12 @@ export const merAppRate = p => myGet('/mch/app',{params: p})
 export const delAppRate = p => myDelete('/mch/app',{params: p})
 
 //  今日账单数据
-export const todayNum = p => myGet('/bill/today',{params: p})
+// export const todayNum = p => myGet('/bill/today',{params: p})
 
 // 交易金额统计
 export const moneySum = p => myGet('/bill/count',{params: p})
+
+
 
 //关键字查询
 export const getMch = p => myGet('/user/base/mchName/' + p)
@@ -78,6 +80,9 @@ export const reissue = p => myPost('/bill/reissue', p);
 
 //回滚
 export const rollback = p => myPost('/bill/reissue/rollback', p);
+
+//发起回调
+export const notify = p => myGet('/pay/manual/notify',{params: p})
 
 //激活、冻结商户
 export const cutMchState = p => myPost('/mch', p);

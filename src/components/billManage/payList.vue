@@ -388,6 +388,9 @@ export default {
                     if( ele.create_time ) {
                         ele.create_time = changeData(ele.create_time)
                     }
+                    if( ele.trade_time ) {
+                        ele.trade_time = changeData(ele.trade_time)
+                    }
                     if(ele.status == 1) {
                         ele.status = '新订单'
                     }else if(ele.status == 2) {

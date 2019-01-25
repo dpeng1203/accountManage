@@ -137,16 +137,23 @@
                 </el-table-column>
                 <el-table-column
                     prop="state"
-                    label="状态"
+                    label="订单状态"
+                    width="80">
+                </el-table-column>
+                <el-table-column
+                    prop="is_success"
+                    label="回调状态"
                     width="80">
                 </el-table-column>
                 <el-table-column
                 label="操作"
+               
                 >
                 <template slot-scope="scope">
                     <el-button @click="handleClick(scope.row)" type="text" size="small">详情</el-button>
                     <el-button @click="handleClickReissue(scope.row)" type="success" size="small" v-if="scope.row.state == '待支付' || scope.row.state == '超时关闭'">补单</el-button>
                     <el-button @click="handleClickRollback(scope.row)" type="primary" size="small" v-if="scope.row.super_order_id && scope.row.super_order_id.indexOf('unknown') === 0">回滚</el-button>
+                    <el-button @click="handleClickNotify(scope.row)" type="warning" size="small">回调</el-button>
                 </template>
                 </el-table-column>
             </el-table>
@@ -162,18 +169,6 @@
                 </el-pagination>
             </div>
         </div>
-        <!-- <el-dialog
-            title="提示"
-            :visible.sync="dialogVisible"
-            width="30%"
-            >
-            <span v-if="value7 != null">请在浏览器打开{{excelUrl + 'start_time=' + value7[0] + '&end_time=' + value7[1]}}</span>
-            <span v-else>请在浏览器打开{{excelUrl}}</span>
-            <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-            </span>
-        </el-dialog>
-        <span v-if="value7 != null">{{ `start_time=${value7[0]}` }}</span> -->
         
     </div>
 </template>
@@ -181,7 +176,7 @@
 <script>
 import changeData from '../../config/formatData'
 import hostName from '../../config/hostName'
-import { moneySum,billList,reissue,getMch,rollback } from '../../config/api'
+import { moneySum,billList,reissue,getMch,rollback,notify } from '../../config/api'
 export default {
     name: "billDetail",
     data() {
@@ -371,10 +366,6 @@ export default {
         },
         //导出excel
         excel() {
-            if(this.data.mch_ids === null || this.data.mch_ids === '') {
-                this.$message.error('请输入商户号')
-                return false
-            }
             if(this.value7 != null) {
                 this.data.start_time = this.value7[0]
                 this.data.end_time = this.value7[1]
@@ -416,6 +407,12 @@ export default {
                     }
                     if( ele.create_time ) {
                         ele.create_time = changeData(ele.create_time)
+                    }
+                    if( ele.trade_time ) {
+                        ele.trade_time = changeData(ele.trade_time)
+                    }
+                    if(ele.is_success) {
+                        ele.is_success = '回调成功'
                     }
                     if(ele.state == 1) {
                         ele.state = '待支付'
@@ -485,6 +482,22 @@ export default {
         // 详情
         handleClick(row) {
             this.$router.push({path: '/home/oneBillDetail',query: {billInfo: row}})
+        },
+        // 发起回调
+        handleClickNotify(row) {
+            this.$confirm('确认发起回调?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                let data = {
+                    mch_order_id: row.mch_order_id
+                }
+                notify(data).then(res => {
+                    this.$message.success('成功！！')
+                })
+            })
+            
         },
         
         handleSizeChange(val) {
@@ -572,7 +585,7 @@ export default {
            
     .table
         margin-top: 40px
-        width: 1490px
+        width: 1660px
         .block
             padding: 30px 0
             text-align: center 
