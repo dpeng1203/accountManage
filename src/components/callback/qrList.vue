@@ -63,6 +63,11 @@
                     width="180">
                 </el-table-column>
                 <el-table-column
+                    prop="online"
+                    label="是否在线"
+                    width="100">
+                </el-table-column>
+                <el-table-column
                 label="操作"
                 >
                 <template slot-scope="scope">
@@ -157,6 +162,11 @@ export default {
                 this.tableData.forEach( ele => {
                     if( ele.create_time ) {
                         ele.create_time = changeData(ele.create_time)
+                    }
+                    if(ele.enable) {
+                        ele.online = '上线'
+                    }else{
+                        ele.online = '下线'
                     }
                 })
             })
@@ -254,7 +264,7 @@ export default {
             margin-left: 0
     .table
         margin-top: 40px
-        width: 1202px
+        width: 1250px
         .block
             padding: 30px 0
             text-align: center 

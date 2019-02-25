@@ -1,54 +1,102 @@
 <template>
     <div class="data-detail">
-        <div class="data-wrapper">
-            <div class="title">
-                <span>最新数据</span>
+        <div class="stat-wrapper">
+            <div class="data-wrapper">
+                <div class="title">
+                    <span>最新数据</span>
+                </div>
+                <div class="box-wrapper">
+                    <div class="box">
+                        <div class="box-title">今日成功收款（万元）</div>
+                        <ul class="scss"><li>{{sum.smoney}}</li></ul>
+                    </div>
+                    <div class="box">
+                        <div class="box-title">今日成功订单量</div>
+                        <ul class="scss"><li>{{sum.scount}}</li></ul>
+                    </div>
+                </div>
+                <div class="box-wrapper">
+                    <div class="box">
+                        <div class="box-title">今日未成功收款（万元）</div>
+                        <ul class="fail"><li>{{sum.fmoney}}</li></ul>
+                    </div>
+                    <div class="box">
+                        <div class="box-title">今日未成功订单量</div>
+                        <ul class="fail"><li>{{sum.fcount}}</li></ul>
+                    </div>
+                </div>
+                <div class="box-wrapper small-box-wrapper">
+                    <div class="box small-box">
+                        <div class="box-title">总收款（万元）</div>
+                        <ul class="money"><li>{{sum.tmoney}}</li></ul>
+                    </div>
+                    <div class="box small-box">
+                        <div class="box-title">已出款（万元）</div>
+                        <ul class="money"><li>{{sum.cmoney}}</li></ul>
+                    </div>
+                    <div class="box small-box">
+                        <div class="box-title">未出款（万元）</div>
+                        <ul class="money"><li>{{sum.rmoney}}</li></ul>
+                    </div>
+                </div>
             </div>
-            <div class="box-wrapper">
-                <div class="box">
-                    <div class="box-title">今日成功收款（万元）</div>
-                    <ul class="scss"><li>{{sum.smoney}}</li></ul>
+            
+            <div class="data-wrapper bonus-wrapper">
+                <div class="title">
+                    <span>分润统计： </span>
+                    <el-select v-model="value1" placeholder="请选择" class="select" @change="bonusDate">
+                        <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
                 </div>
-                <div class="box">
-                    <div class="box-title">今日成功订单量</div>
-                    <ul class="scss"><li>{{sum.scount}}</li></ul>
+                <div class="box-wrapper ">
+                    <div class="box bonus-box">
+                        <div class="box-title">代理商：</div>
+                        <ul>
+                            <li class="child" v-for="item in bonus" :key="item.mch_id">
+                                <span>{{item.mch_id}}</span>
+                                <span class="money">分润金额：{{item.money}}元</span>
+                            </li>
+                        </ul>
+                        
+                        <div class="total">总分润金额： <span class="money">{{bonusTotal}}</span> 元</div>
+                    </div>
+                    
                 </div>
+                
             </div>
-            <div class="box-wrapper">
-                <div class="box">
-                    <div class="box-title">今日未成功收款（万元）</div>
-                    <ul class="fail"><li>{{sum.fmoney}}</li></ul>
+
+
+            <div class="data-wrapper xf-wrapper">
+                <div class="title">
+                    <span>先锋账户余额</span>
                 </div>
-                <div class="box">
-                    <div class="box-title">今日未成功订单量</div>
-                    <ul class="fail"><li>{{sum.fcount}}</li></ul>
+                <div class="box-wrapper">
+                    <div class="box">
+                        <div class="box-title">账户余额（元）</div>
+                        <ul class="scss"><li>{{xfSum.balance}}</li></ul>
+                    </div>
                 </div>
-            </div>
-            <div class="box-wrapper small-box-wrapper">
-                <div class="box small-box">
-                    <div class="box-title">总收款（万元）</div>
-                    <ul class="money"><li>{{sum.tmoney}}</li></ul>
+                <div class="box-wrapper">
+                    <div class="box">
+                        <div class="box-title">出款在途金额（元）</div>
+                        <ul class="fail"><li>{{xfSum.freezeAmount}}</li></ul>
+                    </div>
                 </div>
-                <div class="box small-box">
-                    <div class="box-title">已出款（万元）</div>
-                    <ul class="money"><li>{{sum.cmoney}}</li></ul>
-                </div>
-                <div class="box small-box">
-                    <div class="box-title">未出款（万元）</div>
-                    <ul class="money"><li>{{sum.rmoney}}</li></ul>
+                <div class="box-wrapper">
+                    <div class="box">
+                        <div class="box-title">可用金额（元）</div>
+                        <ul class="money"><li>{{xfSum.available}}</li></ul>
+                    </div>
                 </div>
             </div>
         </div>
-        <div>
+        <div class="chart">
             <div class="chart-wrapper" >
                 <div class="chart-title">每小时交易金额</div>
                 <div class="chart-ct">
                     <div id="c1"></div>
                 </div>
             </div>
-        </div>
-        
-        <div>
             <div class="chart-wrapper" >
                 <div class="chart-title">每小时交易数量</div>
                 <div class="chart-ct">
@@ -56,23 +104,181 @@
                 </div>
             </div>
         </div>
-        
-        
+        <div class="chart">
+            <div class="chart-wrapper" >
+                <div class="chart-title">
+                    <span>时间:</span>
+                    <el-select v-model="value" placeholder="请选择" style="margin-left: 10px" @change="changeDate">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
+                </div>
+                <div class="chart-ct chart-ct1">
+                    <div id="channel" style="width: 100%;height:400px;"></div>
+                    <!-- <div id="mountNode"></div> -->
+                </div>
+            </div>
+            <div class="chart-wrapper" >
+                <div class="chart-title">
+                    <span v-if="channel_id == ''">所有通道</span>
+                    <span v-else>通道--{{channel_name}}</span>
+                </div>
+                <div class="chart-ct chart-ct1">
+                    <div id="mch" style="width: 100%;height:400px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="chart" v-if="mch_id != ''">
+            <div class="chart-wrapper" >
+                <div class="chart-title">
+                    <span>商户--{{mch_id}}</span>
+                    <span style="margin-left: 10px" v-if="channel_id != ''">通道--{{channel_name}}</span>
+                </div>
+                <div class="chart-ct chart-ct1">
+                    <div id="status" style="width: 100%;height:400px;"></div>
+                </div>
+            </div>
+        </div>
     </div>
        
 </template>
 
 <script>
-import { chartData,statsTotal } from '../../config/api'
+import { chartData,statsTotal,picData,xfMoneySum,bonusStat } from '../../config/api'
 import G2 from '@antv/g2';
+var echarts = require('echarts');
+var channelName = {1:'易付宝',2:'网众',3:'个码',4:'个码-风控',5:'CNT支付',6:'畅通支付',7:'GPay支付',8:'eazy支付',9:'BNT',10:'诚信通',11:'支付宝红包',12:'鼎宏'}
 export default {
     data() {
         return{
             serverData: [],
-            sum: {}
+            sum: {},                
+            xfSum: {},              
+            options: [
+                {value: '0d',label: '今天'},{value: '1d',label: '昨天'},{value: '3d',label: '最近3天'},{value: '7d',label: '最近一周'},
+                {value: '1m',label: '最近一月'},{value: '3m',label: '最近三月'},{value: '1y',label: '最近一年'}
+            ],
+
+            value: '3d',
+            options1: [
+                {value: '0d',label: '今天'},{value: '1d',label: '昨天'},{value: '3d',label: '最近3天'},{value: '7d',label: '最近一周'},
+                {value: '1m',label: '最近一月'},{value: '3m',label: '最近三月'},{value: '1y',label: '最近一年'}
+            ],
+            bonusTotal: 0,
+            bonus: [],
+
+            value1: '0d',
+            channel_id: '',         //圆饼图所选通道id
+            channel_name: '',       //圆饼图所选通道名称
+            mch_id: '',             //圆饼图所选商户id
+            option: {
+                title : {
+                    text: '通道交易额比例',
+                    // subtext: '纯属虚构',
+                    x:'center'
+                },
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c}元 ({d}%)"
+                },
+                legend: {
+                    type: 'scroll',
+                    orient: 'vertical',
+                    right: 10,
+                    top: 20,
+                    bottom: 20,
+                    data: []
+                },
+                series : [
+                    {
+                        name: '通道',
+                        type: 'pie',
+                        radius : '55%',
+                        center: ['40%', '60%'],
+                        data:[],
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            },
+            option1: {
+                title : {
+                    text: '商户交易额比例',
+                    // subtext: '纯属虚构',
+                    x:'center'
+                },
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c}元 ({d}%)"
+                },
+                legend: {
+                    type: 'scroll',
+                    orient: 'vertical',
+                    right: 10,
+                    top: 20,
+                    bottom: 20,
+                    data: []
+                },
+                series : [
+                    {
+                        name: '商户',
+                        type: 'pie',
+                        radius : '55%',
+                        center: ['40%', '60%'],
+                        data:[],
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            },
+            option2: {
+                title : {
+                    text: '商户交易成功率比例',
+                    // subtext: '纯属虚构',
+                    x:'center'
+                },
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c}元 ({d}%)"
+                },
+                legend: {
+                    type: 'scroll',
+                    orient: 'vertical',
+                    right: 10,
+                    top: 20,
+                    bottom: 20,
+                    data: []
+                },
+                series : [
+                    {
+                        name: '商户',
+                        type: 'pie',
+                        radius : '55%',
+                        center: ['40%', '60%'],
+                        data:[],
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            },
         }
     },
     methods:{
+        //交易金额图标
         getMoneyChart() {
             var chart = new G2.Chart({
                 container: 'c1',
@@ -111,6 +317,7 @@ export default {
             });
             chart.render();
         },
+        //交易笔数图表
         getOrderChart() {
             var chart = new G2.Chart({
                 container: 'c2',
@@ -149,6 +356,7 @@ export default {
             });
             chart.render();
         },
+        //统计
         getData() {
             statsTotal().then( res => {
                 this.sum = res.data
@@ -173,10 +381,204 @@ export default {
                 this.getMoneyChart()
                 this.getOrderChart()
             })
-        }
+        },
+
+        //精确js加法运算
+        add(num1, num2) {
+            const num1Digits = (num1.toString().split('.')[1] || '').length;
+            const num2Digits = (num2.toString().split('.')[1] || '').length;
+            const baseNum = Math.pow(10, Math.max(num1Digits, num2Digits));
+            return (num1 * baseNum + num2 * baseNum) / baseNum;
+        },
+
+
+        //分润统计
+        bonusDate() {
+            let data = {
+                mch_id: localStorage.id
+            }
+            bonusStat(this.value1,data).then(res => {
+                this.bonusMchId = []
+                this.bonus = []
+                this.bonusTotal= 0
+                let bonusDate = res.data
+                bonusDate.forEach(ele => {
+                    this.bonusMchId.push(ele.mch_id)
+                    this.bonusMchId = this.unique1(this.bonusMchId)
+                })
+                this.bonusMchId.forEach(ele => {
+                    let obj = {}
+                    obj.mch_id = ele
+                    obj.money = 0
+                    let arr = bonusDate.filter(element => {
+                        return ele === element.mch_id
+                    })
+                    arr.forEach(ele => {
+                        if(ele.zhifu.length!==0) {
+                            ele.zhifu[0].money = ele.zhifu[0].money/100
+                            obj.money = this.add(obj.money,ele.zhifu[0].money) 
+                        }
+                        if(ele.daifu.length!==0) {
+                            ele.daifu[0].money = ele.daifu[0].money/100
+                            obj.money = this.add(obj.money,ele.daifu[0].money)
+                        }
+                    })
+                    this.bonusTotal = this.add(this.bonusTotal,obj.money) 
+                    this.bonus.push(obj)
+                })
+                
+            })
+        },
+
+        // 先锋账户余额
+        getXf() {
+            xfMoneySum().then(res => {
+                if(res.data.resCode === '00000') {
+                    this.xfSum = res.data
+                    this.xfSum.balance = (this.xfSum.balance/100).toFixed(2)
+                    this.xfSum.freezeAmount = (this.xfSum.freezeAmount/100).toFixed(2)
+                    this.xfSum.available = (this.xfSum.available/100).toFixed(2)
+                }
+            })
+        },
+        //去重
+        unique1(arr){
+            var hash=[];
+            for (var i = 0; i < arr.length; i++) {
+                if(hash.indexOf(arr[i])==-1){
+                hash.push(arr[i]);
+                }
+            }
+            return hash;
+        },
+        //h获得元饼图通道数据
+        getPicData() {
+            let data= {
+                channel_id: null,
+                mch_id: null,
+                status: null,
+                groupby: 1
+            }
+            picData(this.value,data).then(res => {
+                let picData = res.data
+                picData = picData.filter(ele => {
+                    return ele.money != 0
+                })
+                this.option.legend.data = []
+                picData.forEach(ele => {
+                    ele.name = channelName[ele.channel_id] 
+                    ele.value = ele.money 
+                    this.option.legend.data.push(ele.name)
+                })
+                this.option.series[0].data = picData
+                var myChart = echarts.init(document.getElementById('channel'));
+                myChart.setOption(this.option);
+                myChart.on('click', (params) => {
+                    // 控制台打印数据的名称
+                    console.log(params.data);
+                    this.channel_id = params.data.channel_id
+                    this.channel_name = params.name
+                    this.mch_id = ''
+                    this.getPicMerData()
+                    params.stopPropagation()
+                });
+            })
+        },
+        //h获得元饼图商户数据
+        getPicMerData() {
+            let data = {}
+            if(this.channel_id != '') {
+                data= {
+                    channel_id: this.channel_id,
+                    mch_id: null,
+                    status: null,
+                    groupby: 3
+                }
+            }else{
+                data= {
+                    channel_id: null,
+                    mch_id: null,
+                    status: null,
+                    groupby: 2
+                }
+            }
+            picData(this.value,data).then(res => {
+                let picData = res.data
+                picData = picData.filter(ele => {
+                    return ele.money != 0
+                })
+                this.option1.legend.data = []
+                picData.forEach(ele => {
+                    ele.value = ele.money
+                    ele.name = '商户' + ele.mch_id
+                    this.option1.legend.data.push(ele.name)
+                })
+                this.option1.series[0].data = picData
+                var myChart = echarts.init(document.getElementById('mch'));
+                myChart.setOption(this.option1);
+                myChart.on('click', (params) => {
+                    // 控制台打印数据的名称
+                    console.log(params.data);
+                    this.mch_id = params.data.mch_id 
+                    this.getPicStateData()  
+                    params.stopPropagation()            
+                });
+            })
+        },
+        //商户交易成功率数据
+        getPicStateData() {
+            let data = {}
+            if(this.channel_id == '') {
+                data = {
+                    channel_id: null,
+                    mch_id: this.mch_id,
+                    status: null,
+                    groupby: 6
+                }
+            }else{
+                data = {
+                    channel_id: this.channel_id,
+                    mch_id: this.mch_id,
+                    status: null,
+                    groupby: 7
+                }
+            }
+             
+            picData(this.value,data).then(res => {
+                let picData = res.data
+                picData = picData.filter(ele => {
+                    return ele.money != 0
+                })
+                this.option2.legend.data = []
+                picData.forEach(ele => {
+                    ele.value = ele.money
+                    if(ele.success) {
+                        ele.name = '交易成功'
+                    }else {
+                        ele.name = '交易失败'
+                    }
+                    
+                    this.option2.legend.data.push(ele.name)
+                })
+                this.option2.series[0].data = picData
+                var myChart = echarts.init(document.getElementById('status'));
+                myChart.setOption(this.option2);
+            })
+        },
+        changeDate(val) {
+            this.channel_id = ''
+            this.channel_name = ''
+            this.mch_id = ''
+            this.getPicData()
+            this.getPicMerData()
+        },
     },
     mounted() {
         this.getData()
+        this.bonusDate()
+        this.getXf()
+        this.getPicData()
+        this.getPicMerData()
     }
 }
 </script>
@@ -185,61 +587,101 @@ export default {
 .data-detail
     color: #3D4060;
     padding-left: 30px
-    .data-wrapper
-        padding: 30px
-        display: inline-block
-        background: #eee
-        box-shadow: 0 1px 2px 0 rgba(0,0,0,.05)
-        border-radius: 10px
-        .title 
-            font-size: 15px
-            // font-weight: bold
-        .box-wrapper
-            padding-top: 10px
-            display: flex
-            margin-left: -20px
-            .box
-                width: 300px
-                background: #fff
-                margin-left: 20px
-                border-radius: 10px
-                padding: 15px 30px
-                .box-title
-                    font-size: 13px
-                    color: #999
-                ul
-                    font-size: 24px
-                    line-height: 24px
-                    color: #ff5722
-                    margin-top: 10px
-                    list-style: disc
-                    margin-left: 25px
-                .scss
-                    color: #3ccd3f
-                .money 
-                    color: #1E90FF
-        .small-box-wrapper
-            margin-left: -10px
-            .small-box
-                width: 200px
-                margin-left: 10px
-
-    .chart-wrapper
-        padding: 30px   
-        margin-top: 10px
-        display: inline-block
-        background: #eee
-        box-shadow: 0 1px 2px 0 rgba(0,0,0,.05)
-        border-radius: 10px
-        .chart-title
-            font-size: 15px
-            // font-weight: bold
-            padding: 0 0 10px 0
-        .chart-ct
-            background: #fff
+    .stat-wrapper
+        display: flex
+        align-items: first
+        // margin-left: -10px
+        .data-wrapper
+            padding: 30px
+            display: inline-block
+            background: #eee
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.05)
             border-radius: 10px
-            width: 800px
-            padding-top: 30px
-            padding-right: 35px
-            
+            .title 
+                font-size: 15px
+                // font-weight: bold
+                .select
+                    width: 150px
+            .box-wrapper
+                padding-top: 10px
+                display: flex
+                margin-left: -10px
+                .chart-box
+                    width: 500px
+                .box
+                    width: 270px
+                    background: #fff
+                    margin-left: 10px
+                    border-radius: 10px
+                    padding: 15px 20px
+                    .box-title
+                        font-size: 13px
+                        color: #999
+                    .chechbox
+                        display: block
+                        margin-left: 0
+                        margin-top: 8px
+                    .child
+                        font-size: 14px
+                        // color: #999
+                        .money
+                            margin-left: 5px
+                    .total
+                        font-size: 16px
+                        margin-top: 10px
+                    ul
+                        font-size: 24px
+                        line-height: 24px
+                        color: #ff5722
+                        margin-top: 10px
+                        list-style: disc
+                        margin-left: 25px
+                    .scss
+                        color: #3ccd3f
+                    .money 
+                        color: #1E90FF
+                .bonus-box
+                    height: 245px
+                    overflow: auto
+            .small-box-wrapper
+                // margin-left: -10px
+                .small-box
+                    width: 177px
+                    margin-left: 10px
+        .bonus-wrapper
+           
+            margin-left: 20px
+            .box-wrapper
+                .box 
+                    width: 250px
+        .xf-wrapper
+            margin-left: 10px
+            .box-wrapper
+                .box 
+                    width: 230px
+    .chart
+        display: flex
+        align-items: center 
+        margin-left: -20px
+        .chart-wrapper
+            padding: 30px   
+            margin-top: 10px
+            margin-left: 20px
+            display: inline-block
+            background: #eee
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.05)
+            border-radius: 10px
+            .chart-title
+                font-size: 15px
+                // font-weight: bold
+                height: 40px
+                line-height: 40px
+                margin: 0 0 10px 10px
+            .chart-ct
+                background: #fff
+                border-radius: 10px
+                width: 550px
+                // height: 450px
+                padding-top: 30px
+                padding-right: 35px
 </style>

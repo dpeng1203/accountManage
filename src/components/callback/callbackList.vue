@@ -57,6 +57,7 @@
                 <div class="rapid-btn" @click="searchMonth">本月</div>
                 <div class="rapid-btn" @click="searchLastMonth">上月</div>
                 <div class="search-btn" @click="searchBtn">搜索</div>
+                <div class="search-btn" @click="refresh">刷新</div>
             </div>
         </div>
         <div class="table">
@@ -304,6 +305,20 @@ export default {
             this.data.offset = 0
             this.getBillList()
             // this.getSum()
+        },
+        //刷新
+        refresh() {
+            this.data.auth_id = null
+            this.data.nick_name = null
+            this.data.phone = null
+            this.data.status = null
+            this.data.mch_order_id = null
+            this.data.sys_order_id = null
+            this.data.pay_type = null
+            this.data.start_time = null
+            this.data.end_time = null
+            this.data.offset = 0
+            this.getBillList()
         },
         //交易列表
         getBillList() {

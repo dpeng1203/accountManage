@@ -10,9 +10,11 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@antv/data-set": "^0.10.1",
     "@antv/g2": "^3.4.5",
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
+    "echarts": "^4.2.0-rc.2",
     "element-ui": "^2.4.9",
     "vue": "^2.5.2",
     "vue-monoplasty-slide-verify": "^1.0.1",

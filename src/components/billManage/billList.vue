@@ -67,6 +67,7 @@
                 <div class="rapid-btn" @click="searchMonth">本月</div>
                 <div class="rapid-btn" @click="searchLastMonth">上月</div>
                 <div class="search-btn" @click="searchBtn">搜索</div>
+                <div class="search-btn" @click="refresh">刷新</div>
                 <div class="search-btn" @click="excel">导出</div>
             </div>
         </div>
@@ -364,15 +365,28 @@ export default {
             this.getBillList()
             // this.getSum()
         },
+
+        //刷新
+        refresh() {
+            this.data.mch_ids = null
+            this.data.status = null
+            this.data.mch_order_id = null
+            this.data.sys_order_id = null
+            this.data.pay_type = null
+            this.data.start_time = null
+            this.data.end_time = null
+            this.data.offset = 0
+            this.getBillList()
+        },
         //导出excel
         excel() {
             if(this.value7 != null) {
                 this.data.start_time = this.value7[0]
                 this.data.end_time = this.value7[1]
                 var dateee = new Date(this.data.start_time).toJSON();
-                this.data.start_time = new Date(+new Date(dateee)+8*3600*1000).toISOString()
+                this.data.start_time = new Date(+new Date(dateee)).toISOString()
                 var dateee1 = new Date(this.data.end_time).toJSON();
-                this.data.end_time = new Date(+new Date(dateee1)+8*3600*1000).toISOString()
+                this.data.end_time = new Date(+new Date(dateee1)).toISOString()
             } else{
                 this.data.start_time = null
                 this.data.end_time = null
@@ -382,8 +396,6 @@ export default {
                     delete this.data[key]
                 }
             }
-            delete this.data.offset
-            delete this.data.limit
             // billExcel(this.data).then(res =>{
             this.excelUrl = hostName + '/bill/export?'
             Object.keys(this.data).map((key)=>{
@@ -571,7 +583,7 @@ export default {
                 cursor: pointer
             .search-btn
                 display: inline-block
-                width: 80px
+                width: 60px
                 height: 35px
                 line-height: 35px
                 text-align: center

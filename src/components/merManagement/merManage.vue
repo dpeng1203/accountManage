@@ -169,17 +169,24 @@
             </div>
         </el-dialog>
 
-        <el-dialog title="充值记录" :visible.sync="dialogTableVisible">
-            <el-table :data="gridData">
-                <el-table-column property="mch_id" label="商户号" width="80"></el-table-column>
-                <el-table-column property="mch_name" label="商户名称" width="100"></el-table-column>
-                <el-table-column property="auth_name" label="操作人" width="100"></el-table-column>
+        <el-dialog title="充值记录" :visible.sync="dialogTableVisible" width="1000px">
+            <el-table :data="gridData" >
+                <el-table-column property="account_name" label="姓名" width="80"></el-table-column>
+                <el-table-column property="account_no" label="银行卡号" width="160"></el-table-column>
+                <el-table-column property="recevie_bank" label="备付金账户标识" width="120"></el-table-column>
+                <el-table-column property="auth_name" label="操作人" width="80"></el-table-column>
                 <el-table-column property="money" label="金额" width="100"></el-table-column>
-                <el-table-column property="type" label="类型" width="100"></el-table-column>
+                <el-table-column property="type" label="类型" width="130"></el-table-column>
+                <el-table-column property="status" label="状态" width="100"></el-table-column>
                 <el-table-column property="create_time" label="创建时间"></el-table-column>
+                
             </el-table>
             <div class="block" style="text-align: center">
-                <el-pagination layout="prev, pager, next" :total="gridDataNum"></el-pagination>
+                <el-pagination layout="prev, pager, next" 
+                :total="gridDataNum" 
+                :page-size='rechargeData.limit'
+                @current-change="handleCurChange"
+                ></el-pagination>
             </div>
         </el-dialog>
     </div>
@@ -246,7 +253,8 @@ export default {
             },
             formLabelWidth: '120px' ,
             channelList: [] ,
-            mch_id: ''
+            mch_id: '',
+            row: {}
         }
     },
     methods: {
@@ -405,24 +413,43 @@ export default {
         },
         //充值记录
         handleTable(row) {
+            this.row = row
             this.dialogTableVisible = true
             this.rechargeData.mch_id = row.mch_id
             rechargeList(this.rechargeData).then( res => {
                 this.gridData = res.data.data_list
                 this.gridDataNum = res.data.total_count
+                console.log(this.gridDataNum)
                 this.gridData.forEach( ele => {
                     if(ele.money) {
                         ele.money = ele.money/100
                     }
                     ele.create_time = formatDate(ele.create_time)
                     if(ele.type == 1) {
-                        ele.type = '线下充值'
+                        if(ele.recevie_bank&&ele.recevie_bank!='') {
+                            ele.type = '线下充值-商户'
+                        }else{
+                            ele.type = '线下充值-系统'
+                        }
                     }else if(ele.type == 2) {
                         ele.type = '余额转换'
+                    }
+                    if(ele.status == 1) {
+                        ele.status = '进行中'
+                    }else if(ele.status == 2) {
+                        ele.status = '充值失败'
+                    }else if(ele.status == 3) {
+                        ele.status = '充值成功'
+                    }
+                    if(ele.recevie_bank === 'UPOPJS') {
+                        ele.recevie_bank = '银联'
+                    }else if(ele.recevie_bank === 'NUCC') {
+                        ele.recevie_bank = '网联'
                     }
                 })
             })
         },
+
         handleClick(row) {
             this.$router.push({path: '/home/merDetail',query: {mch: row}})
         },
@@ -459,8 +486,11 @@ export default {
             console.log(`当前页: ${val}`);
             this.data.offset = (val - 1) * this.data.limit
             this.getList()
+        },
+        handleCurChange(val) {
+            this.rechargeData.offset = (val - 1) * this.rechargeData.limit
+            this.handleTable(this.row)
         }
-
     },
     mounted() {
         this.getList()

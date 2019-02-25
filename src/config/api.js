@@ -55,6 +55,9 @@ export const delAppRate = p => myDelete('/mch/app',{params: p})
 // 交易金额统计
 export const moneySum = p => myGet('/bill/count',{params: p})
 
+// 先锋账户余额
+export const xfMoneySum = () => myGet('/pay/xf/balance')
+
 
 
 //关键字查询
@@ -74,6 +77,12 @@ export const chartData = p => myGet('/stats',{params: p})
 
 // 主页数据统计
 export const statsTotal = p => myGet('/stats/total',{params: p})
+
+//主页元饼图数据
+export const picData =  (p,n) => myGet('/stats/category/' + p, {params: n})
+
+//分润统计
+export const bonusStat = (p,n) => myGet('/stats/bonus/' + p, {params: n})
 
 // 补单
 export const reissue = p => myPost('/bill/reissue', p);
@@ -176,6 +185,8 @@ export const loginNum = () => myGet('/pay/qr/login')
 
 // 充值记录
 export const rechargeList = p => myGet('/wallet/recharge/log',{params: p})
+
+
 
 
 

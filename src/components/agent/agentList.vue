@@ -120,7 +120,7 @@
                         <el-option label="代付" value="2"></el-option>
                     </el-select>
                 </el-form-item> -->
-                 <el-form-item label="父商户号" :label-width="formLabelWidth">
+                 <el-form-item label="代理商商户号" :label-width="formLabelWidth">
                     <el-input v-model="form.mch_id" autocomplete="off" style="width: 220px"></el-input>
                 </el-form-item>
                  <el-form-item label="子商户号" :label-width="formLabelWidth">
