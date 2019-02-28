@@ -1,10 +1,16 @@
 <template>
     <div class="top">
-        <div class="name">
-            <span class="line">-</span>
-            <span>AlianPAY</span>
-            <span class="line">-</span>
-        </div>
+        <transition name="fade" >
+            <div class="name" v-show="!isCollapse">
+                <span class="line">-</span>
+                <span>AlianPAY</span>
+                <span class="line">-</span>
+            </div>
+        </transition>
+        <el-radio-group v-model="isCollapse" style="margin: 20px;" @change="opentabs">
+            <el-radio-button :label="false">展开</el-radio-button>
+            <el-radio-button :label="true">收起</el-radio-button>
+        </el-radio-group>
         <div class="head-title">后台管理系统</div>
         <div class="userInfo">
             <div class="user-name">您好，{{name}} | <span class="btn-out" @click="out">退出</span></div>
@@ -17,11 +23,13 @@
 </template>
 
 <script>
+import Bus from './bus'
 import { loginOut } from '../../config/api'
 export default {
     name: 'top',
     data() {
         return{
+            isCollapse: false,
             name: localStorage.name,
             accound: localStorage.nickname,
             code: localStorage.id
@@ -39,6 +47,10 @@ export default {
             }, (err) => {
                 this.$router.push('/')
             })
+        },
+        opentabs(e) {
+            console.log(e)
+            Bus.$emit('log', e)
         }
     },
     
@@ -51,7 +63,7 @@ export default {
         display: flex
         min-width: 1500px
         .name
-            width: 286px
+            width: 219px
             flex-shrink: 0
             text-align: center
             padding: 40px 0 
@@ -76,5 +88,11 @@ export default {
             border-bottom: 1px solid #EEE
             span
                 cursor: pointer
+                
+        .fade-enter-active, .fade-leave-active 
+            transition: opacity .3s;
+            
+        .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ 
+            opacity: 0;
 
 </style>

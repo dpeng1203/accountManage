@@ -186,6 +186,13 @@ export const loginNum = () => myGet('/pay/qr/login')
 // 充值记录
 export const rechargeList = p => myGet('/wallet/recharge/log',{params: p})
 
+//支付宝红包
+export const zfbhb = p => myGet('/alipay/h5/property',{params: p})
+
+//更新支付宝红包账户状态
+
+export const changeZfbhb = (p,n) => myPut('/alipay/h5/property/' + p, n);
+
 
 
 

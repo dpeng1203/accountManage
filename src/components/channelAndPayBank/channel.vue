@@ -68,7 +68,7 @@ export default {
             total: 0,
             data: {
                 offset: 0,
-                limit: 10
+                limit: 20
             }
         }
     },

@@ -25,10 +25,11 @@
                     type="index"
                     width="50">
                 </el-table-column>
+                
                 <el-table-column
-                    prop="create_time"
-                    label="创建时间"
-                    width="170">
+                    prop="mch_id"
+                    label="商户号"
+                    width="80">
                 </el-table-column>
                 <el-table-column
                     prop="name"
@@ -48,7 +49,7 @@
                 <el-table-column
                     prop="bankcard_number"
                     label="银行卡号"
-                    width="160">
+                    width="180">
                 </el-table-column>
                 <el-table-column
                     prop="money"
@@ -69,6 +70,11 @@
                     prop="state"
                     label="提现状态"
                     width="100">
+                </el-table-column>
+                <el-table-column
+                    prop="create_time"
+                    label="创建时间"
+                    width="170">
                 </el-table-column>
                 <el-table-column
                 label="操作"
@@ -330,7 +336,7 @@ export default {
             margin-left: 0
     .table
         margin-top: 40px
-        max-width: 1230px
+        width: 1250px
         .block
             padding: 30px 0
             text-align: center 

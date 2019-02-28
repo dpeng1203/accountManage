@@ -48,6 +48,9 @@ const addQr = resolve => require(['../components/callback/addQr'], resolve);
 const setUid = resolve => require(['../components/callback/setUid'], resolve);
 const addmiss = resolve => require(['../components/callback/addmiss'], resolve);
 
+//支付宝红包
+const zfbhb = resolve => require(['../components/zfbhb/zfbhb'], resolve);
+
 Vue.use(Router)
 
 export default new Router({
@@ -98,6 +101,9 @@ export default new Router({
         {path: 'addQr', name: 'addQr', component: addQr},
         {path: 'setUid', name: 'setUid', component: setUid},
         {path: 'addmiss', name: 'addmiss', component: addmiss},
+
+        //支付宝红包
+        {path: 'zfbhb', name: 'zfbhb', component: zfbhb},
       ]
     },
     {

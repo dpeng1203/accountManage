@@ -143,10 +143,9 @@
 </template>
 
 <script>
-import { chartData,statsTotal,picData,xfMoneySum,bonusStat } from '../../config/api'
+import { chartData,statsTotal,picData,xfMoneySum,bonusStat,channelList } from '../../config/api'
 import G2 from '@antv/g2';
 var echarts = require('echarts');
-var channelName = {1:'易付宝',2:'网众',3:'个码',4:'个码-风控',5:'CNT支付',6:'畅通支付',7:'GPay支付',8:'eazy支付',9:'BNT',10:'诚信通',11:'支付宝红包',12:'鼎宏'}
 export default {
     data() {
         return{
@@ -157,7 +156,6 @@ export default {
                 {value: '0d',label: '今天'},{value: '1d',label: '昨天'},{value: '3d',label: '最近3天'},{value: '7d',label: '最近一周'},
                 {value: '1m',label: '最近一月'},{value: '3m',label: '最近三月'},{value: '1y',label: '最近一年'}
             ],
-
             value: '3d',
             options1: [
                 {value: '0d',label: '今天'},{value: '1d',label: '昨天'},{value: '3d',label: '最近3天'},{value: '7d',label: '最近一周'},
@@ -165,8 +163,8 @@ export default {
             ],
             bonusTotal: 0,
             bonus: [],
-
             value1: '0d',
+
             channel_id: '',         //圆饼图所选通道id
             channel_name: '',       //圆饼图所选通道名称
             mch_id: '',             //圆饼图所选商户id
@@ -275,6 +273,8 @@ export default {
                     }
                 ]
             },
+
+            channel:{}              //    所有通道
         }
     },
     methods:{
@@ -466,21 +466,20 @@ export default {
                 })
                 this.option.legend.data = []
                 picData.forEach(ele => {
-                    ele.name = channelName[ele.channel_id] 
+                    ele.name = this.channel[ele.channel_id] 
                     ele.value = ele.money 
                     this.option.legend.data.push(ele.name)
                 })
                 this.option.series[0].data = picData
                 var myChart = echarts.init(document.getElementById('channel'));
+                myChart.off('click') // 这里很重要！！！
                 myChart.setOption(this.option);
                 myChart.on('click', (params) => {
                     // 控制台打印数据的名称
-                    console.log(params.data);
                     this.channel_id = params.data.channel_id
                     this.channel_name = params.name
                     this.mch_id = ''
                     this.getPicMerData()
-                    params.stopPropagation()
                 });
             })
         },
@@ -515,13 +514,12 @@ export default {
                 })
                 this.option1.series[0].data = picData
                 var myChart = echarts.init(document.getElementById('mch'));
+                myChart.off('click') // 这里很重要！！！如果不加off事件，就会叠加触发
                 myChart.setOption(this.option1);
                 myChart.on('click', (params) => {
                     // 控制台打印数据的名称
-                    console.log(params.data);
                     this.mch_id = params.data.mch_id 
                     this.getPicStateData()  
-                    params.stopPropagation()            
                 });
             })
         },
@@ -572,8 +570,24 @@ export default {
             this.getPicData()
             this.getPicMerData()
         },
+        //获取通道
+        getChannelList() {
+            let data = {
+                offset: 0,
+                limit: 200
+            }
+            channelList(data).then( res => {
+                let arr = res.data.data_list
+                arr.forEach(ele => {
+                    let key = ele.id
+                    let val = ele.name
+                    this.channel[key] = val
+                })
+            })
+        }
     },
     mounted() {
+        this.getChannelList()
         this.getData()
         this.bonusDate()
         this.getXf()
