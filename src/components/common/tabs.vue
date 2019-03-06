@@ -9,6 +9,7 @@
         text-color="#fff"
         :collapse="isCollapse"
         router
+        unique-opened
         active-text-color="#00B7AD">
         <el-menu-item index="/home/homeDetail" v-if="root != 2">
             <i class="el-icon-menu"></i>

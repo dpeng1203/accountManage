@@ -5,6 +5,10 @@
         </div>  
         <div class="search">
             <div class="search-ct">
+                <div class="search-name">商户号</div>
+                <el-input class="inline-input" v-model="data.mch_id" placeholder="请输入商户号" clearable></el-input>
+            </div>
+            <div class="search-ct">
                 <div class="search-name">备注</div>
                 <el-input class="inline-input" v-model="data.msg" placeholder="请输入备注" clearable></el-input>
                 <div class="search-btn" @click="searchBtn">搜索</div>
@@ -19,6 +23,11 @@
                 <el-table-column
                     type="index"
                     width="50">
+                </el-table-column>
+                <el-table-column
+                    prop="mch_id"
+                    label="商户号"
+                    width="100">
                 </el-table-column>
                 <el-table-column
                     prop="msg"
@@ -88,6 +97,9 @@
                         <el-option label="关闭" value="false"></el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="商户号:" :label-width="formLabelWidth">
+                    <el-input v-model="mch_id" style="width:220px"></el-input>
+                </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -110,6 +122,7 @@ export default {
             total: 0,
             money: '',
             data: {
+                mch_id: '',
                 msg: '',
                 offset: 0,
                 limit: 10
@@ -122,13 +135,17 @@ export default {
                 total: ''
             },
             enable: null,
+            mch_id: null,
             formLabelWidth: '150px'    
         }
     },
     methods: {
         getList() {
-            if(this.data.msg == '') {
+            if(this.data.msg === '') {
                 delete this.data.msg
+            }
+            if(this.data.mch_id === '') {
+                delete this.data.mch_id
             }
             zfbhb(this.data).then((res) => {
                 this.total = res.data.total_count
@@ -166,6 +183,7 @@ export default {
             this.form.max = row.max
             this.form.total = row.total
             this.enable = row.enable.toString() 
+            this.mch_id = row.mch_id || null
         },
         setZfbhb() {
             let data = this.form
@@ -173,6 +191,7 @@ export default {
                 data[key] = data[key]*100
             }
             data.enable = this.enable
+            data.mch_id = this.mch_id
             changeZfbhb(this.id,data).then(res => {
                 this.$message.success('更新成功！！')
                 this.dialogFormVisible = false
@@ -237,7 +256,7 @@ export default {
             margin-left: 0
     .table
         margin-top: 40px
-        width: 1000px
+        width: 1100px
         .block
             padding: 30px 0
             text-align: center 

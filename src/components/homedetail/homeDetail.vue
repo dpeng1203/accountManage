@@ -89,6 +89,30 @@
                     </div>
                 </div>
             </div>
+
+            <!-- <div class="data-wrapper xf-wrapper">
+                <div class="title">
+                    <span>先锋分润： </span>
+                    <el-select v-model="value1" placeholder="请选择" class="select" @change="bonusDate">
+                        <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
+                </div>
+                <div class="box-wrapper ">
+                    <div class="box bonus-box">
+                        <div class="box-title">代理商：</div>
+                        <ul>
+                            <li class="child" v-for="item in bonus" :key="item.mch_id">
+                                <span>{{item.mch_id}}</span>
+                                <span class="money">分润金额：{{item.money}}元</span>
+                            </li>
+                        </ul>
+                        <div class="total">总分润金额： <span class="money">{{bonusTotal}}</span> 元</div>
+                        <div class="total">实际分润金额： <span class="money">{{bonusTotal}}</span> 元</div>
+                    </div>
+                    
+                </div>
+            </div> -->
+
         </div>
         <div class="chart">
             <div class="chart-wrapper" >
@@ -441,7 +465,7 @@ export default {
                 }
             })
         },
-        //去重
+        //数组去重
         unique1(arr){
             var hash=[];
             for (var i = 0; i < arr.length; i++) {
@@ -642,7 +666,7 @@ export default {
                             margin-left: 5px
                     .total
                         font-size: 16px
-                        margin-top: 10px
+                        margin-top: 5px
                     ul
                         font-size: 24px
                         line-height: 24px
