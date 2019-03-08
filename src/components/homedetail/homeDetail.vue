@@ -3,117 +3,109 @@
         <div class="stat-wrapper">
             <div class="data-wrapper">
                 <div class="title">
-                    <span>最新数据</span>
-                </div>
-                <div class="box-wrapper">
-                    <div class="box">
-                        <div class="box-title">今日成功收款（万元）</div>
-                        <ul class="scss"><li>{{sum.smoney}}</li></ul>
-                    </div>
-                    <div class="box">
-                        <div class="box-title">今日成功订单量</div>
-                        <ul class="scss"><li>{{sum.scount}}</li></ul>
-                    </div>
-                </div>
-                <div class="box-wrapper">
-                    <div class="box">
-                        <div class="box-title">今日未成功收款（万元）</div>
-                        <ul class="fail"><li>{{sum.fmoney}}</li></ul>
-                    </div>
-                    <div class="box">
-                        <div class="box-title">今日未成功订单量</div>
-                        <ul class="fail"><li>{{sum.fcount}}</li></ul>
-                    </div>
-                </div>
-                <div class="box-wrapper small-box-wrapper">
-                    <div class="box small-box">
-                        <div class="box-title">总收款（万元）</div>
-                        <ul class="money"><li>{{sum.tmoney}}</li></ul>
-                    </div>
-                    <div class="box small-box">
-                        <div class="box-title">已出款（万元）</div>
-                        <ul class="money"><li>{{sum.cmoney}}</li></ul>
-                    </div>
-                    <div class="box small-box">
-                        <div class="box-title">未出款（万元）</div>
-                        <ul class="money"><li>{{sum.rmoney}}</li></ul>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="data-wrapper bonus-wrapper">
-                <div class="title">
-                    <span>分润统计： </span>
-                    <el-select v-model="value1" placeholder="请选择" class="select" @change="bonusDate">
+                    <span>支付数据：</span>
+                    <el-select v-model="value1" placeholder="请选择" @change="changeEnterDate">
                         <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
                     </el-select>
                 </div>
-                <div class="box-wrapper ">
-                    <div class="box bonus-box">
-                        <div class="box-title">代理商：</div>
-                        <ul>
-                            <li class="child" v-for="item in bonus" :key="item.mch_id">
-                                <span>{{item.mch_id}}</span>
-                                <span class="money">分润金额：{{item.money}}元</span>
-                            </li>
-                        </ul>
-                        
-                        <div class="total">总分润金额： <span class="money">{{bonusTotal}}</span> 元</div>
+                <div class="pay-box">
+                    <div class="content">
+                        <div class="cont-title">成功收款金额</div>
+                        <div class="money"><span class="number">{{enterDate.suc_money}}</span>万元</div>
                     </div>
-                    
-                </div>
-                
-            </div>
-
-
-            <div class="data-wrapper xf-wrapper">
-                <div class="title">
-                    <span>先锋账户余额</span>
-                </div>
-                <div class="box-wrapper">
-                    <div class="box">
-                        <div class="box-title">账户余额（元）</div>
-                        <ul class="scss"><li>{{xfSum.balance}}</li></ul>
+                    <div class="content">
+                        <div class="cont-title">成功订单量</div>
+                        <div class="money"><span class="number">{{enterDate.suc_count}}</span>笔</div>
+                    </div>
+                    <div class="content">
+                        <div class="cont-title">未成功收款金额</div>
+                        <div class="money"><span class="number">{{enterDate.fail_money}}</span>万元</div>
+                    </div>
+                    <div class="content">
+                        <div class="cont-title">未成功订单量</div>
+                        <div class="money"><span class="number">{{enterDate.fail_count}}</span>笔</div>
                     </div>
                 </div>
-                <div class="box-wrapper">
-                    <div class="box">
-                        <div class="box-title">出款在途金额（元）</div>
-                        <ul class="fail"><li>{{xfSum.freezeAmount}}</li></ul>
+                <div class="pay-box">
+                    <div class="content">
+                        <div class="cont-title">总手续费</div>
+                        <div class="money"><span class="number">{{enterDate.charge}}</span>元</div>
                     </div>
-                </div>
-                <div class="box-wrapper">
-                    <div class="box">
-                        <div class="box-title">可用金额（元）</div>
-                        <ul class="money"><li>{{xfSum.available}}</li></ul>
+                    <div class="content">
+                        <div class="cont-title">成功率</div>
+                        <div class="money"><span class="number">{{enterDate.rate}}</span>%</div>
+                    </div>
+                    <div class="content">
+                        <div class="cont-title">支付分润</div>
+                        <div class="btn"><el-button type="primary" size="small" @click="dialogTableVisible1 = true">查看</el-button></div>
+                    </div>
+                    <div class="content">
+                        <div class="cont-title">支付收益</div>
+                        <div class="money"><span class="number">{{enterDate.profit}}</span>元</div>
                     </div>
                 </div>
             </div>
-
-            <!-- <div class="data-wrapper xf-wrapper">
+            <div class="data-wrapper">
                 <div class="title">
-                    <span>先锋分润： </span>
-                    <el-select v-model="value1" placeholder="请选择" class="select" @change="bonusDate">
-                        <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    <span>代付数据：</span>
+                    <el-select v-model="value2" placeholder="请选择" @change="changeOutDate">
+                        <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
                     </el-select>
                 </div>
-                <div class="box-wrapper ">
-                    <div class="box bonus-box">
-                        <div class="box-title">代理商：</div>
-                        <ul>
-                            <li class="child" v-for="item in bonus" :key="item.mch_id">
-                                <span>{{item.mch_id}}</span>
-                                <span class="money">分润金额：{{item.money}}元</span>
-                            </li>
-                        </ul>
-                        <div class="total">总分润金额： <span class="money">{{bonusTotal}}</span> 元</div>
-                        <div class="total">实际分润金额： <span class="money">{{bonusTotal}}</span> 元</div>
+                <div class="pay-box">
+                    <div class="content">
+                        <div class="cont-title">成功代付金额</div>
+                        <div class="money"><span class="number">{{outDate.suc_money}}</span>万元</div>
                     </div>
-                    
+                    <div class="content">
+                        <div class="cont-title">成功订单量</div>
+                        <div class="money"><span class="number">{{outDate.suc_count}}</span>笔</div>
+                    </div>
+                    <div class="content">
+                        <div class="cont-title">未成功代付金额</div>
+                        <div class="money"><span class="number">{{outDate.fail_money}}</span>万元</div>
+                    </div>
+                    <div class="content">
+                        <div class="cont-title">未成功订单量</div>
+                        <div class="money"><span class="number">{{outDate.fail_count}}</span>笔</div>
+                    </div>
                 </div>
-            </div> -->
+                <div class="pay-box">
+                    <div class="content">
+                        <div class="cont-title">总手续费</div>
+                        <div class="money"><span class="number">{{outDate.charge}}</span>元</div>
+                    </div>
+                    <div class="content">
+                        <div class="cont-title">成功率</div>
+                        <div class="money"><span class="number">{{outDate.rate}}</span>%</div>
+                    </div>
+                    <div class="content">
+                        <div class="cont-title">代付分润</div>
+                        <div class="btn"><el-button type="primary" size="small" @click="dialogTableVisible2 = true">查看</el-button></div>
+                    </div>
+                    <div class="content">
+                        <div class="cont-title">代付收益</div>
+                        <div class="money"><span class="number">{{outDate.profit}}</span>元</div>
+                    </div>
+                </div>
+            </div>
 
         </div>
+
+        <el-dialog title="代理商支付分润" :visible.sync="dialogTableVisible1">
+            <el-table :data="gridData1">
+                <el-table-column property="mch_id" label="商户号" width="300"></el-table-column>
+                <el-table-column property="money" label="金额(元)" ></el-table-column>
+            </el-table>
+        </el-dialog>
+        <el-dialog title="代理商代付分润" :visible.sync="dialogTableVisible2">
+            <el-table :data="gridData2">
+                <el-table-column property="mch_id" label="商户号" width="300"></el-table-column>
+                <el-table-column property="money" label="金额(元)"></el-table-column>
+            </el-table>
+        </el-dialog>
+
+
         <div class="chart">
             <div class="chart-wrapper" >
                 <div class="chart-title">每小时交易金额</div>
@@ -167,15 +159,13 @@
 </template>
 
 <script>
-import { chartData,statsTotal,picData,xfMoneySum,bonusStat,channelList } from '../../config/api'
+import { chartData,picData,channelList,enterDate,outDate } from '../../config/api'
 import G2 from '@antv/g2';
 var echarts = require('echarts');
 export default {
     data() {
         return{
             serverData: [],
-            sum: {},                
-            xfSum: {},              
             options: [
                 {value: '0d',label: '今天'},{value: '1d',label: '昨天'},{value: '3d',label: '最近3天'},{value: '7d',label: '最近一周'},
                 {value: '1m',label: '最近一月'},{value: '3m',label: '最近三月'},{value: '1y',label: '最近一年'}
@@ -185,9 +175,13 @@ export default {
                 {value: '0d',label: '今天'},{value: '1d',label: '昨天'},{value: '3d',label: '最近3天'},{value: '7d',label: '最近一周'},
                 {value: '1m',label: '最近一月'},{value: '3m',label: '最近三月'},{value: '1y',label: '最近一年'}
             ],
-            bonusTotal: 0,
-            bonus: [],
             value1: '0d',
+            options2: [
+                {value: '0d',label: '今天'},{value: '1d',label: '昨天'},{value: '3d',label: '最近3天'},{value: '7d',label: '最近一周'},
+                {value: '1m',label: '最近一月'},{value: '3m',label: '最近三月'},{value: '1y',label: '最近一年'}
+            ],
+            value2: '0d',
+            
 
             channel_id: '',         //圆饼图所选通道id
             channel_name: '',       //圆饼图所选通道名称
@@ -298,7 +292,13 @@ export default {
                 ]
             },
 
-            channel:{}              //    所有通道
+            channel:{},              //    所有通道
+            enterDate: {},
+            outDate: {},
+            gridData1: [],
+            gridData2: [],
+            dialogTableVisible1: false,
+            dialogTableVisible2: false
         }
     },
     methods:{
@@ -382,14 +382,6 @@ export default {
         },
         //统计
         getData() {
-            statsTotal().then( res => {
-                this.sum = res.data
-                this.sum.smoney = (this.sum.smoney/100/10000).toFixed(2)
-                this.sum.fmoney = (this.sum.fmoney/100/10000).toFixed(2)
-                this.sum.tmoney = (this.sum.tmoney/100/10000).toFixed(2)
-                this.sum.cmoney = (this.sum.cmoney/100/10000).toFixed(2)
-                this.sum.rmoney = (this.sum.rmoney/100/10000).toFixed(2)
-            })
             chartData().then( res => {
                 this.serverData = res.data
                 this.serverData.forEach( ele => {
@@ -416,55 +408,6 @@ export default {
         },
 
 
-        //分润统计
-        bonusDate() {
-            let data = {
-                mch_id: localStorage.id
-            }
-            bonusStat(this.value1,data).then(res => {
-                this.bonusMchId = []
-                this.bonus = []
-                this.bonusTotal= 0
-                let bonusDate = res.data
-                bonusDate.forEach(ele => {
-                    this.bonusMchId.push(ele.mch_id)
-                    this.bonusMchId = this.unique1(this.bonusMchId)
-                })
-                this.bonusMchId.forEach(ele => {
-                    let obj = {}
-                    obj.mch_id = ele
-                    obj.money = 0
-                    let arr = bonusDate.filter(element => {
-                        return ele === element.mch_id
-                    })
-                    arr.forEach(ele => {
-                        if(ele.zhifu.length!==0) {
-                            ele.zhifu[0].money = ele.zhifu[0].money/100
-                            obj.money = this.add(obj.money,ele.zhifu[0].money) 
-                        }
-                        if(ele.daifu.length!==0) {
-                            ele.daifu[0].money = ele.daifu[0].money/100
-                            obj.money = this.add(obj.money,ele.daifu[0].money)
-                        }
-                    })
-                    this.bonusTotal = this.add(this.bonusTotal,obj.money) 
-                    this.bonus.push(obj)
-                })
-                
-            })
-        },
-
-        // 先锋账户余额
-        getXf() {
-            xfMoneySum().then(res => {
-                if(res.data.resCode === '00000') {
-                    this.xfSum = res.data
-                    this.xfSum.balance = (this.xfSum.balance/100).toFixed(2)
-                    this.xfSum.freezeAmount = (this.xfSum.freezeAmount/100).toFixed(2)
-                    this.xfSum.available = (this.xfSum.available/100).toFixed(2)
-                }
-            })
-        },
         //数组去重
         unique1(arr){
             var hash=[];
@@ -608,13 +551,63 @@ export default {
                     this.channel[key] = val
                 })
             })
-        }
+        },
+        //支付数据
+        getEnterDate() {
+            enterDate(this.value1).then(res => {
+                let date = res.data
+                this.gridData1 = res.data.bonus
+                this.gridData1.forEach(ele => {
+                    ele.money = ele.money/100
+                })
+                date.fail_money = date.fail_money/100/10000
+                date.suc_money = date.suc_money/100/10000
+                date.charge = (date.charge/100).toFixed(2)
+                date.profit = (date.profit/100).toFixed(2)
+                if(date.suc_money === 0 && date.fail_money === 0) {
+                    date.rate = '0.00'
+                }else{
+                    date.rate = (date.suc_money/(date.suc_money+date.fail_money)*100).toFixed(2)
+                }
+                date.fail_money= date.fail_money.toFixed(2)
+                date.suc_money = date.suc_money.toFixed(2)
+                this.enterDate = date
+            })
+        },
+        //代付数据
+        getOutDate() {
+            outDate(this.value2).then(res => {
+                let date = res.data
+                this.gridData2 = res.data.bonus
+                this.gridData2.forEach(ele => {
+                    ele.money = ele.money/100
+                })
+                date.fail_money = date.fail_money/100/10000
+                date.suc_money = date.suc_money/100/10000
+                date.charge = (date.charge/100).toFixed(2)
+                date.profit = (date.profit/100).toFixed(2)
+                if(date.suc_money === 0 && date.fail_money === 0) {
+                    date.rate = '0.00'
+                }else{
+                    date.rate = (date.suc_money/(date.suc_money+date.fail_money)*100).toFixed(2)
+                }
+                date.fail_money= date.fail_money.toFixed(2)
+                date.suc_money = date.suc_money.toFixed(2)
+                this.outDate = date
+            })
+        },
+        changeEnterDate() {
+            this.getEnterDate()
+        },
+        changeOutDate() {
+            this.getOutDate()
+        },
     },
     mounted() {
+        this.getEnterDate()
+        this.getOutDate()
         this.getChannelList()
         this.getData()
-        this.bonusDate()
-        this.getXf()
         this.getPicData()
         this.getPicMerData()
     }
@@ -626,83 +619,48 @@ export default {
     color: #3D4060;
     padding-left: 30px
     .stat-wrapper
-        display: flex
-        align-items: first
-        // margin-left: -10px
         .data-wrapper
-            padding: 30px
-            display: inline-block
+            padding: 20px
             background: #eee
             box-shadow: 0 1px 2px 0 rgba(0,0,0,.05)
             border-radius: 10px
+            margin-bottom: 10px
             .title 
                 font-size: 15px
-                // font-weight: bold
-                .select
-                    width: 150px
-            .box-wrapper
-                padding-top: 10px
+            .pay-box
                 display: flex
-                margin-left: -10px
-                .chart-box
-                    width: 500px
-                .box
-                    width: 270px
+                margin-top: 10px
+                .content
+                    flex: 1
+                    border: 2px #fff solid
                     background: #fff
-                    margin-left: 10px
-                    border-radius: 10px
-                    padding: 15px 20px
-                    .box-title
-                        font-size: 13px
-                        color: #999
-                    .chechbox
-                        display: block
-                        margin-left: 0
-                        margin-top: 8px
-                    .child
+                    border-radius: 3px
+                    padding: 14px 20px 10px
+                    color: #8492A6
+                    font-size: 13px
+                    font-weight: 400
+                    margin-right: 5px
+                    .cont-title
+                        color: #5F6E82
                         font-size: 14px
-                        // color: #999
-                        .money
-                            margin-left: 5px
-                    .total
-                        font-size: 16px
+                    .money
                         margin-top: 5px
-                    ul
-                        font-size: 24px
-                        line-height: 24px
-                        color: #ff5722
-                        margin-top: 10px
-                        list-style: disc
-                        margin-left: 25px
-                    .scss
-                        color: #3ccd3f
-                    .money 
-                        color: #1E90FF
-                .bonus-box
-                    height: 245px
-                    overflow: auto
-            .small-box-wrapper
-                // margin-left: -10px
-                .small-box
-                    width: 177px
-                    margin-left: 10px
-        .bonus-wrapper
-           
-            margin-left: 20px
-            .box-wrapper
-                .box 
-                    width: 250px
-        .xf-wrapper
-            margin-left: 10px
-            .box-wrapper
-                .box 
-                    width: 230px
+                        .number
+                            font-size: 40px
+                            color: #475669
+                            margin-right: 5px
+                    .btn
+                        display: block
+                        text-align: center
+                .content:hover
+                    border: 2px #00BFA6 solid
+
     .chart
         display: flex
         align-items: center 
         margin-left: -20px
         .chart-wrapper
-            padding: 30px   
+            padding: 20px   
             margin-top: 10px
             margin-left: 20px
             display: inline-block

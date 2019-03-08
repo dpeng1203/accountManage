@@ -58,6 +58,11 @@ export const moneySum = p => myGet('/bill/count',{params: p})
 // 先锋账户余额
 export const xfMoneySum = () => myGet('/pay/xf/balance')
 
+//首页支付数据统计
+export const enterDate = p => myGet('/stats/bill/'+p)
+
+//首页支付数据统计
+export const outDate = p => myGet('/stats/order/'+p)
 
 
 //关键字查询
