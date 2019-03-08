@@ -51,6 +51,9 @@
                     <el-select v-model="value2" placeholder="请选择" @change="changeOutDate">
                         <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
                     </el-select>
+                    <span class="xf-title">账户余额：<b>{{balance}}</b> 元</span>
+                    <span class="xf-title">在途金额：<b>{{freezeAmount}}</b> 元</span>
+                    <span class="xf-title">可用金额：<b>{{available}}</b> 元</span>
                 </div>
                 <div class="pay-box">
                     <div class="content">
@@ -159,7 +162,7 @@
 </template>
 
 <script>
-import { chartData,picData,channelList,enterDate,outDate } from '../../config/api'
+import { chartData,picData,channelList,xfMoneySum,enterDate,outDate } from '../../config/api'
 import G2 from '@antv/g2';
 var echarts = require('echarts');
 export default {
@@ -291,6 +294,9 @@ export default {
                     }
                 ]
             },
+            balance: '',
+            freezeAmount: '',
+            available: '',
 
             channel:{},              //    所有通道
             enterDate: {},
@@ -602,8 +608,17 @@ export default {
         changeOutDate() {
             this.getOutDate()
         },
+        //先锋账户余额
+        getXfData() {
+            xfMoneySum().then(res => {
+                this.balance =  res.data.balance/100
+                this.freezeAmount =  res.data.freezeAmount/100
+                this.available =  res.data.available/100
+            })
+        }
     },
     mounted() {
+        this.getXfData()
         this.getEnterDate()
         this.getOutDate()
         this.getChannelList()
@@ -627,6 +642,11 @@ export default {
             margin-bottom: 10px
             .title 
                 font-size: 15px
+                .xf-title
+                    margin-left: 20px
+                    b
+                        color: red
+                        font-size: 18px
             .pay-box
                 display: flex
                 margin-top: 10px
