@@ -17,6 +17,7 @@
                                 <div class="table">
                                     <el-table
                                         :data="tableData1"
+                                        size="small"
                                         border
                                         >
                                         <el-table-column
@@ -65,6 +66,7 @@
                                     <el-table
                                         :data="tableData2"
                                         border
+                                        size="small"
                                         >
                                         <el-table-column
                                             type="index"
@@ -115,6 +117,7 @@
                                     <el-table
                                         :data="tableData"
                                         border
+                                        size="small"
                                         style="width: 100%">
                                         <el-table-column
                                             type="index"
@@ -360,7 +363,7 @@ export default {
         width: 1135px
         .title 
             text-align: left
-            font-size: 24px
+            font-size: 20px
             font-weight: bold
             margin-left: 30px
             padding-bottom: 30px
@@ -375,5 +378,6 @@ export default {
         .block
             padding: 30px 0
             text-align: center 
-    
+    h2
+        font-size: 16px
 </style>

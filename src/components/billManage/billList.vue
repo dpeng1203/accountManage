@@ -36,8 +36,6 @@
                 <div class="search-name">系统订单号</div>
                 <el-input class="inline-input" v-model="data.sys_order_id" placeholder="请输入系统订单号" clearable></el-input>
             </div>
-        </div>
-        <div class="search">
             <div class="search-ct">
                 <div class="search-name">支付类型</div>
                 <el-select v-model="data.pay_type" placeholder="请选择" class="pay-state">
@@ -49,6 +47,9 @@
                     </el-option>
                 </el-select>
             </div>
+        </div>
+        <div class="search">
+            
             <div class="search-ct">
                 <div class="search-name">选择日期范围</div>
                 <el-date-picker
@@ -80,6 +81,7 @@
             <el-table
                 :data="tableData"
                 border
+                size="small"
                 style="width: 100%"
                 :row-class-name="tableRowClassName">
                 <el-table-column
@@ -89,37 +91,42 @@
                 <el-table-column
                     prop="mch_id"
                     label="商户号"
-                    width="80">
+                    width="70">
                 </el-table-column>
                 <el-table-column
                     prop="mch_name"
                     label="商户名称"
-                    width="140">
+                    show-overflow-tooltip
+                    width="120">
                 </el-table-column>
                 <el-table-column
                     prop="mch_order_id"
                     label="商户订单号"
-                    width="150">
+                    show-overflow-tooltip
+                    width="120">
                 </el-table-column>
                 <el-table-column
                     prop="sys_order_id"
+                    show-overflow-tooltip
                     label="系统订单号"
-                    width="170">
+                    width="120">
                 </el-table-column>
                 <el-table-column
                     prop="super_order_id"
                     label="上游订单号"
-                    width="170">
+                    show-overflow-tooltip
+                    width="120">
                 </el-table-column>
                 <el-table-column
                     prop="pay_type"
                     label="支付类型"
-                    width="100">
+                    width="80">
                 </el-table-column>
                 <el-table-column
                     prop="channel"
                     label="通道"
-                    width="100">
+                    show-overflow-tooltip
+                    width="80">
                 </el-table-column>
                 <el-table-column
                     prop="money"
@@ -134,7 +141,7 @@
                 <el-table-column
                     prop="create_time"
                     label="创建时间"
-                    width="170">
+                    width="150">
                 </el-table-column>
                 <el-table-column
                     prop="state"
@@ -148,13 +155,13 @@
                 </el-table-column>
                 <el-table-column
                 label="操作"
-               
+
                 >
                 <template slot-scope="scope">
                     <el-button @click="handleClick(scope.row)" type="text" size="small">详情</el-button>
-                    <el-button @click="handleClickReissue(scope.row)" type="success" size="small" v-if="scope.row.state == '待支付' || scope.row.state == '超时关闭'">补单</el-button>
-                    <el-button @click="handleClickRollback(scope.row)" type="primary" size="small" v-if="scope.row.super_order_id && scope.row.super_order_id.indexOf('unknown') === 0">回滚</el-button>
-                    <el-button @click="handleClickNotify(scope.row)" type="warning" size="small">回调</el-button>
+                    <el-button @click="handleClickReissue(scope.row)" type="success" size="mini" v-if="scope.row.state == '待支付' || scope.row.state == '超时关闭'">补单</el-button>
+                    <el-button @click="handleClickRollback(scope.row)" type="primary" size="mini" v-if="scope.row.super_order_id && scope.row.super_order_id.indexOf('unknown') === 0">回滚</el-button>
+                    <el-button @click="handleClickNotify(scope.row)" type="warning" size="mini">回调</el-button>
                 </template>
                 </el-table-column>
             </el-table>
@@ -534,7 +541,7 @@ export default {
     color: #3D4060;
     padding-left: 30px
     .title 
-        font-size: 24px
+        font-size: 20px
         font-weight: bold
     .num-wrapper
         margin-top: 30px
@@ -548,12 +555,11 @@ export default {
                 color: red
     .search
         display: flex
-        margin-top: 20px
+        margin-top: 10px
         .search-ct
-            margin-left: 60px
+            margin-left: 20px
             .search-name
                 font-size: 12px
-                line-height: 18.2px
                 padding-bottom: 10px
             input
                 margin-top: 10px
@@ -566,9 +572,9 @@ export default {
                 font-size: 14px
                 background: #fff
             .inline-input
-                width: 220px
+                width: 180px
             .pay-state
-                width: 220px
+                width: 180px
             .rapid-btn
                 display: inline-block
                 width: 40px
@@ -597,7 +603,7 @@ export default {
            
     .table
         margin-top: 40px
-        width: 1660px
+        width: 1420px
         .block
             padding: 30px 0
             text-align: center 

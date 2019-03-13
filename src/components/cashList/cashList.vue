@@ -19,6 +19,7 @@
         <div class="table">
             <el-table
                 :data="tableData"
+                size="small"
                 border
                 style="width: 100%">
                 <el-table-column
@@ -33,23 +34,27 @@
                 </el-table-column>
                 <el-table-column
                     prop="name"
+                     show-overflow-tooltip
                     label="姓名"
                     width="80">
                 </el-table-column>
                 <el-table-column
                     prop="mch_name"
                     label="商户全称"
+                     show-overflow-tooltip
                     width="100">
                 </el-table-column>
                 <el-table-column
                     prop="open_bank"
                     label="银行卡类型"
+                     show-overflow-tooltip
                     width="100">
                 </el-table-column>
                 <el-table-column
                     prop="bankcard_number"
+                     show-overflow-tooltip
                     label="银行卡号"
-                    width="180">
+                    width="150">
                 </el-table-column>
                 <el-table-column
                     prop="money"
@@ -64,17 +69,18 @@
                 <el-table-column
                     prop="msg"
                     label="备注"
+                     show-overflow-tooltip
                     width="100">
                 </el-table-column>
                 <el-table-column
                     prop="state"
                     label="提现状态"
-                    width="100">
+                    width="90">
                 </el-table-column>
                 <el-table-column
                     prop="create_time"
                     label="创建时间"
-                    width="170">
+                    width="150">
                 </el-table-column>
                 <el-table-column
                 label="操作"
@@ -307,22 +313,22 @@ export default {
     color: #3D4060;
     padding-left: 30px
     .title 
-        font-size: 24px
+        font-size: 20px
         font-weight: bold
     .search
         display: flex
-        margin-top: 20px
+        margin-top: 10px
         .search-ct
-            margin-left: 60px
+            margin-left: 20px
             .search-name
-                font-size: 14px
+                font-size: 12px
                 line-height: 18.2px
                 padding-bottom: 10px
             .inline-input
                 width: 200px
             .search-btn
                 display: inline-block
-                width: 100px
+                width: 80px
                 height: 35px
                 margin-top: 60px
                 line-height: 35px
@@ -336,7 +342,7 @@ export default {
             margin-left: 0
     .table
         margin-top: 40px
-        width: 1250px
+        width: 1200px
         .block
             padding: 30px 0
             text-align: center 

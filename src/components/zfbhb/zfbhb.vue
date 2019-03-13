@@ -18,6 +18,7 @@
         <div class="table">
             <el-table
                 :data="tableData"
+                size="small"
                 border
                 style="width: 100%">
                 <el-table-column
@@ -224,20 +225,19 @@ export default {
     color: #3D4060;
     padding-left: 30px
     .title 
-        font-size: 24px
+        font-size: 20px
         font-weight: bold
     .search
         display: flex
-        margin-top: 20px
+        margin-top: 10px
         .search-ct
-            margin-left: 60px
+            margin-left: 20px
             font-size: 14px
             .search-name
-                font-size: 14px
-                line-height: 18.2px
+                font-size: 12px
                 padding-bottom: 10px
             .inline-input
-                width: 220px
+                width: 180px
             .time
                 width: 50px
             .search-btn

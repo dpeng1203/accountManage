@@ -84,7 +84,7 @@ export default {
 .add-peopel
     color: #3D4060;
     .title 
-        font-size: 24px
+        font-size: 20px
         font-weight: bold
         margin-left: 25px
         img
@@ -99,6 +99,7 @@ export default {
                 display: inline-block
                 width: 180px
                 font-weight: bold
+                text-align: center
             input
                 border: 1px solid #B1B3C1;
                 border-radius: 2px;

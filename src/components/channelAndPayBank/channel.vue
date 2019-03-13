@@ -7,6 +7,7 @@
             <el-table
                 :data="tableData"
                 border
+                size="small"
                 style="width: 100%">
                 <el-table-column
                     type="index"
@@ -36,7 +37,7 @@
                 label="操作"
                 >
                 <template slot-scope="scope">
-                    <el-button @click="handleClick(scope.row)" type="danger" size="small">{{scope.row.state == '开启' ? '关闭' : '开启'}}</el-button>
+                    <el-button @click="handleClick(scope.row)" type="danger" size="mini">{{scope.row.state == '开启' ? '关闭' : '开启'}}</el-button>
                 </template>
                 </el-table-column>
             </el-table>
@@ -142,7 +143,7 @@ export default {
     color: #3D4060;
     padding-left: 30px
     .title 
-        font-size: 24px
+        font-size: 20px
         font-weight: bold
     .table
         margin-top: 40px

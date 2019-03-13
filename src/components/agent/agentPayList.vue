@@ -31,6 +31,7 @@
             <el-table
                 :data="tableData"
                 border
+                size="small"
                 :row-class-name="tableRowClassName"
                 style="width: 100%">
                 <el-table-column
@@ -45,6 +46,7 @@
                 <el-table-column
                     prop="mch_name"
                     label="代理商名称"
+                    show-overflow-tooltip
                     width="180">
                 </el-table-column>
                 <el-table-column
@@ -55,6 +57,7 @@
                 <el-table-column
                     prop="sub_name"
                     label="子商户名称"
+                    show-overflow-tooltip
                     width="180">
                 </el-table-column>
                 <el-table-column
@@ -239,19 +242,18 @@ export default {
     color: #3D4060;
     padding-left: 30px
     .title 
-        font-size: 24px
+        font-size: 20px
         font-weight: bold
     .search
         display: flex
-        margin-top: 20px
+        margin-top: 10px
         .search-ct
-            margin-left: 60px
+            margin-left: 20px
             .search-name
-                font-size: 14px
-                line-height: 18.2px
+                font-size: 12px
                 padding-bottom: 10px
             .inline-input
-                width: 220px
+                width: 180px
         .search-btn
             display: inline-block
             width: 80px
@@ -278,7 +280,7 @@ export default {
         margin-top: 30px 
     .table
         margin-top: 40px
-        max-width: 1100px
+        width: 1100px
         .block
             padding: 30px 0
             text-align: center 

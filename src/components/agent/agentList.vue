@@ -31,6 +31,7 @@
             <el-table
                 :data="tableData"
                 border
+                size="small"
                 :row-class-name="tableRowClassName"
                 style="width: 100%">
                 <el-table-column
@@ -40,11 +41,12 @@
                 <el-table-column
                     prop="mch_id"
                     label="代理商商户号"
-                    width="110">
+                    width="100">
                 </el-table-column>
                 <el-table-column
                     prop="mch_name"
                     label="代理商名称"
+                    show-overflow-tooltip
                     width="120">
                 </el-table-column>
                 <el-table-column
@@ -55,33 +57,34 @@
                 <el-table-column
                     prop="sub_name"
                     label="子商户名称"
+                    show-overflow-tooltip
                     width="120">
                 </el-table-column>
                 <!-- 支付列表 -->
                 <el-table-column
                     prop="sup_wx_rate"
                     label="代理商微信费率"
-                    width="120">
+                    width="110">
                 </el-table-column>
                 <el-table-column
                     prop="sub_wx_rate"
                     label="子账户微信费率"
-                    width="120">
+                    width="110">
                 </el-table-column>
                 <el-table-column
                     prop="wx_rate"
                     label="微信费率差"
-                    width="100">
+                    width="90">
                 </el-table-column>
                 <el-table-column
                     prop="sup_alipay_rate"
                     label="代理商支付宝费率"
-                    width="140">
+                    width="120">
                 </el-table-column>
                 <el-table-column
                     prop="sub_alipay_rate"
                     label="子账户支付宝费率"
-                    width="140">
+                    width="130">
                 </el-table-column>
                 <el-table-column
                     prop="alipay_rate"
@@ -258,19 +261,18 @@ export default {
     color: #3D4060;
     padding-left: 30px
     .title 
-        font-size: 24px
+        font-size: 20px
         font-weight: bold
     .search
         display: flex
         margin-top: 20px
         .search-ct
-            margin-left: 60px
+            margin-left: 20px
             .search-name
-                font-size: 14px
-                line-height: 18.2px
+                font-size: 12px
                 padding-bottom: 10px
             .inline-input
-                width: 220px
+                width: 180px
         .search-btn
             display: inline-block
             width: 80px
@@ -297,7 +299,7 @@ export default {
         margin-top: 30px 
     .table
         margin-top: 40px
-        width: 1320px
+        width: 1250px
         .block
             padding: 30px 0
             text-align: center 

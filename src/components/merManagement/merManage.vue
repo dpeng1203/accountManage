@@ -30,8 +30,6 @@
                 <div class="search-name">商户号</div>
                 <el-input class="inline-input" v-model="data.mch_id" placeholder="请输入内容" clearable></el-input>
             </div>
-        </div>
-        <div class="search">
             <div class="search-ct">
                 <div class="search-name">商户名称</div>
                 <el-input class="inline-input" v-model="data.mch_name" placeholder="请输入内容" clearable></el-input>
@@ -42,12 +40,16 @@
                 <div class="search-btn" @click="searchBtn">搜索</div>
             </div>
         </div>
+        <div class="search">
+            
+        </div>
 
 
         <div class="table">
             <el-table
                 :data="tableData"
                 border
+                size="small"
                 style="width: 100%">
                 <el-table-column
                     type="index"
@@ -56,42 +58,44 @@
                 <el-table-column
                     prop="mch_id"
                     label="商户号"
-                    width="80">
+                    width="60">
                 </el-table-column>
                 <el-table-column
                     prop="mch_name"
                     label="商户名称"
-                    width="170">
+                    show-overflow-tooltip
+                    width="100">
                 </el-table-column>
                 <el-table-column
                     prop="phone"
                     label="注册手机号"
-                    width="130">
+                    width="100">
                 </el-table-column>
                 <el-table-column
                     prop="money"
                     label="账户余额"
-                    width="100">
+                    width="90">
                 </el-table-column>
                  <el-table-column
                     prop="reservoir"
                     label="代付余额"
-                    width="100">
+                    width="90">
                 </el-table-column>
                 <el-table-column
                     prop="audit_state"
                     label="审核状态"
-                    width="100">
+                    width="80">
                 </el-table-column>
                 <el-table-column
                     prop="mch_state"
                     label="账户状态"
-                    width="100">
+                    width="80">
                 </el-table-column>
                 <el-table-column
                     prop="channel_name"
                     label="通道"
-                    width="100">
+                    show-overflow-tooltip
+                    width="80">
                 </el-table-column>
                 <el-table-column
                 label="操作"
@@ -103,14 +107,14 @@
                     <el-button @click="handleClickResetPw(scope.row)" type="warning" size="small">重置密码</el-button>
                     <el-button @click="handleClickVecharge(scope.row)" type="success" size="small">代付充值</el-button>
                     <el-button @click="handleClickPayRate(scope.row)" type="text" size="small">设置代付费率</el-button> -->
-                    <el-button-group>
-                        <el-button @click="handleClick(scope.row)" type="primary" size="small">详情</el-button>
-                        <el-button @click="handleClickCutChannel(scope.row)" type="primary" size="small">切换通道</el-button>
-                        <el-button @click="handleClickVecharge(scope.row)" type="success" size="small">代付充值</el-button>
-                        <el-button @click="handleClickPayRate(scope.row)" type="success" size="small">设置代付费率</el-button>
-                        <el-button @click="handleTable(scope.row)" type="success" size="small">充值记录</el-button>
-                        <el-button @click="handleClickResetPw(scope.row)" type="danger" size="small">重置密码</el-button>
-                        <el-button @click="handleClickCutState(scope.row)" type="danger" size="small">{{scope.row.mch_state == '激活' ? '冻结' : '激活'}}</el-button>
+                    <el-button-group >
+                        <el-button @click="handleClick(scope.row)" type="primary" size="mini">详情</el-button>
+                        <el-button @click="handleClickCutChannel(scope.row)" type="primary" size="mini">切换通道</el-button>
+                        <el-button @click="handleClickVecharge(scope.row)" type="success" size="mini">代付充值</el-button>
+                        <el-button @click="handleClickPayRate(scope.row)" type="success" size="mini">设置代付费率</el-button>
+                        <el-button @click="handleTable(scope.row)" type="success" size="mini">充值记录</el-button>
+                        <el-button @click="handleClickResetPw(scope.row)" type="danger" size="mini">重置密码</el-button>
+                        <el-button @click="handleClickCutState(scope.row)" type="danger" size="mini">{{scope.row.mch_state == '激活' ? '冻结' : '激活'}}</el-button>
                     </el-button-group>
                 </template>
                 </el-table-column>
@@ -503,19 +507,18 @@ export default {
     color: #3D4060;
     padding-left: 30px
     .title 
-        font-size: 24px
+        font-size: 20px
         font-weight: bold
     .search
         display: flex
-        margin-top: 20px
+        margin-top: 10px
         .search-ct
-            margin-left: 60px
+            margin-left: 20px
             .search-name
-                font-size: 14px
-                line-height: 18.2px
+                font-size: 13px
                 padding-bottom: 10px
             .inline-input
-                width: 220px
+                width: 180px
             .search-btn
                 display: inline-block
                 width: 100px
@@ -527,12 +530,12 @@ export default {
                 background: #00BFA6;
                 border-radius: 25px;
                 font-size: 14px
-                margin: 0 0 0 60px
+                margin: 0 0 0 30px
         .search-ct:first-child
             margin-left: 0
     .table
         margin-top: 40px
-        width: 1500px
+        width: 1300px
         .block
             padding: 30px 0
             text-align: center 

@@ -83,6 +83,7 @@
             <el-table
                 :data="tableData"
                 border
+                size="small"
                 style="width: 100%"
                 >
                 <el-table-column
@@ -97,17 +98,19 @@
                 <el-table-column
                     prop="acc_name"
                     label="收款人姓名"
-                    width="100">
+                    width="90">
                 </el-table-column>
                 <el-table-column
                     prop="mch_order_id"
                     label="商户订单号"
-                    width="160">
+                    show-overflow-tooltip
+                    width="150">
                 </el-table-column>
                 <el-table-column
                     prop="sys_order_id"
+                    show-overflow-tooltip
                     label="系统订单号"
-                    width="150">
+                    width="130">
                 </el-table-column>
                 <!-- <el-table-column
                     prop="super_order_id"
@@ -117,17 +120,18 @@
                 <el-table-column
                     prop="pay_type"
                     label="代付类型"
-                    width="100">
+                    width="90">
                 </el-table-column>
                 <el-table-column
                     prop="charge_type"
                     label="结算类型"
-                    width="100">
+                    width="90">
                 </el-table-column>
                 <el-table-column
                     prop="bank_payment_id"
                     label="通道"
-                    width="100">
+                    show-overflow-tooltip
+                    width="90">
                 </el-table-column>
                 <el-table-column
                     prop="money"
@@ -142,12 +146,12 @@
                 <el-table-column
                     prop="create_time"
                     label="创建时间"
-                    width="170">
+                    width="150">
                 </el-table-column>
                 <el-table-column
                     prop="status"
                     label="状态"
-                    width="100">
+                    width="90">
                 </el-table-column>
                 <el-table-column
                 label="操作"
@@ -466,7 +470,7 @@ export default {
     color: #3D4060;
     padding-left: 30px
     .title 
-        font-size: 24px
+        font-size: 20px
         font-weight: bold
     .num-wrapper
         margin-top: 30px
@@ -480,9 +484,9 @@ export default {
                 color: red
     .search
         display: flex
-        margin-top: 20px
+        margin-top: 10px
         .search-ct
-            margin-left: 60px
+            margin-left: 20px
             .search-name
                 font-size: 12px
                 line-height: 18.2px
@@ -498,9 +502,9 @@ export default {
                 font-size: 14px
                 background: #fff
             .inline-input
-                width: 200px
+                width: 180px
             .pay-state
-                width: 200px
+                width: 180px
             .rapid-btn
                 display: inline-block
                 width: 40px
@@ -529,7 +533,7 @@ export default {
            
     .table
         margin-top: 40px
-        width: 1380px
+        width: 1250px
         .block
             padding: 30px 0
             text-align: center 

@@ -11,7 +11,7 @@
             </div>
             <div class="item">
                 <span class="name">费率（%）</span>
-                <input type="text" placeholder="请输入地推端账号" v-model="data.rate">
+                <input type="text" placeholder="请输入费率" v-model="data.rate">
             </div>
         </div>
         <div class="btn" @click="addSysAppBtn">保存</div>
@@ -50,7 +50,7 @@ export default {
 .add-peopel
     color: #3D4060;
     .title 
-        font-size: 24px
+        font-size: 20px
         font-weight: bold
         margin-left: 25px
         img
@@ -65,6 +65,7 @@ export default {
                 display: inline-block
                 width: 180px
                 font-weight: bold
+                text-align: center
             input
                 border: 1px solid #B1B3C1;
                 border-radius: 2px;
