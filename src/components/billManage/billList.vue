@@ -159,9 +159,9 @@
                 >
                 <template slot-scope="scope">
                     <el-button @click="handleClick(scope.row)" type="text" size="small">详情</el-button>
-                    <el-button @click="handleClickReissue(scope.row)" type="success" size="mini" v-if="scope.row.state == '待支付' || scope.row.state == '超时关闭'">补单</el-button>
-                    <el-button @click="handleClickRollback(scope.row)" type="primary" size="mini" v-if="scope.row.super_order_id && scope.row.super_order_id.indexOf('unknown') === 0">回滚</el-button>
-                    <el-button @click="handleClickNotify(scope.row)" type="warning" size="mini">回调</el-button>
+                    <el-button @click="handleClickReissue(scope.row)" type="text" size="mini" v-if="scope.row.state == '待支付' || scope.row.state == '超时关闭'">补单</el-button>
+                    <el-button @click="handleClickRollback(scope.row)" type="text" size="mini" v-if="scope.row.super_order_id && scope.row.super_order_id.indexOf('unknown') === 0">回滚</el-button>
+                    <el-button @click="handleClickNotify(scope.row)" type="text" size="mini">回调</el-button>
                 </template>
                 </el-table-column>
             </el-table>

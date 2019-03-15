@@ -8,7 +8,7 @@
             <div class="tabs">
                 <el-tabs v-model="activeName2" type="card" @tab-click="handleClick">
                     <el-tab-pane label="基础信息" name="first">
-                        <merInfo :mch_id = 'mch_id' /> 
+                        <merInfo :mch_id = 'mch_id' :mch = 'mch'/> 
                     </el-tab-pane>
                     <el-tab-pane label="费率信息" name="second">
                         <div class="basic-wrapper">
@@ -113,6 +113,7 @@
                         <div class="basic-wrapper">
                             <div class="basic-info">
                                 <h2>提现列表</h2>
+                                
                                 <div class="table">
                                     <el-table
                                         :data="tableData"
@@ -174,6 +175,35 @@
                             </div>
                         </div>
                     </el-tab-pane>
+                    <el-tab-pane label="白名单" name="fourth">
+                        <div class="basic-wrapper">
+                            <div class="basic-info">
+                                <h2>白名单列表</h2>
+                                <div class="table1">
+                                    <el-table
+                                        :data="tableData3"
+                                        border
+                                        size="small"
+                                        style="width: 100%">
+                                        <el-table-column
+                                            type="index"
+                                            width="50">
+                                        </el-table-column>
+                                        <el-table-column property="ip" label="白名单IP" width="250"></el-table-column>
+                                        <el-table-column
+                                            label="操作"
+                                        >
+                                        <template slot-scope="scope">
+                                            <el-button @click="handleDelBlock(scope.row)" type="text" size="small">删除</el-button>
+                                        </template>
+                                        </el-table-column>
+                                       
+                                    </el-table>
+                                </div>
+                                <span class="add-block" @click="handleAddBlock">新增</span>
+                            </div>
+                        </div>
+                    </el-tab-pane>
                 </el-tabs>
             </div>
         </div>
@@ -183,7 +213,7 @@
 <script>
 import merInfo from './merchant'
 import hostName from '../../config/hostName'
-import { changeMerDetail,merAppRate,delAppRate,zdyRate,auditList,getPayRate,payRate } from '../../config/api'
+import { changeMerDetail,merAppRate,delAppRate,zdyRate,auditList,getPayRate,payRate,block,addBlock,delBlock } from '../../config/api'
 export default {
     data() {
         return{
@@ -192,6 +222,7 @@ export default {
             activeName2: 'first',
             tableData1: [],
             tableData2: [],
+            tableData3: [],
             currentPage: 1,
             data: {
                 app_name: null,
@@ -290,6 +321,65 @@ export default {
                 })
             })
         },
+        //获得白名单列表
+        getBlock() {
+            let data = {
+                mch_id: this.mch_id,
+                offset: 0,
+                limit: 100
+            }
+            block(data).then(res => {
+                this.tableData3 = res.data.data_list
+            })
+        },
+        //新增白名单
+        handleAddBlock() {
+            this.$prompt('请输入白名单ip', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+            }).then(({ value }) => {
+                let data = {
+                    mch_id: this.mch_id,
+                    ip: value
+                }
+                addBlock(data).then( res => {
+                    this.getBlock()
+                    this.$message({
+                        type: 'success',
+                        message: '新增成功！ '
+                    });
+                })
+                
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '取消输入'
+                });       
+            });
+        },
+        // 删除报名单
+        handleDelBlock(row) {
+            this.$confirm('确定删除吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                delBlock(row.id).then(res => {
+                    this.getBlock()
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                    });
+                })
+                
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
+            });
+            
+        },
         //切换tab
         handleClick(tab, event) {
             if(tab.index == 1) {
@@ -298,6 +388,9 @@ export default {
             }
             if(tab.index == 2) {
                 this.getList()
+            }
+            if(tab.index == 3) {
+                this.getBlock()
             }
         },
         //  回复费率
@@ -380,4 +473,20 @@ export default {
             text-align: center 
     h2
         font-size: 16px
+    .table1
+        width: 550px
+        margin-top: 10px
+    .add-block
+        display: inline-block
+        font-size: 14px
+        background: #00BFA6
+        border-radius: 15px
+        color: #fff
+        width: 80px    
+        height: 30px 
+        line-height: 30px
+        margin-left: 300px 
+        margin-top: 20px
+        text-align: center
+        cursor: pointer
 </style>

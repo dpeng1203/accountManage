@@ -3,6 +3,9 @@ import { myPost,myGet,myDelete,myPut } from './axioxLoading'
 //  登录
 export const login = p => myPost('/login/phone', p);
 
+//获取code
+export const code = p => myPost('/login/phone/verify_code', p);
+
 // 用户信息
 // export const accountList = p => myGet('/admin/user/list',{params: p})
 
@@ -197,6 +200,15 @@ export const zfbhb = p => myGet('/alipay/h5/property',{params: p})
 //更新支付宝红包账户状态
 
 export const changeZfbhb = (p,n) => myPut('/alipay/h5/property/' + p, n);
+
+//白名单列表
+export const block = p => myGet('/ip',{params: p})
+
+//新增白名单
+export const addBlock = p => myPost('/ip', p);
+
+//删除白名单
+export const delBlock = p => myDelete('/ip/'+ p);
 
 
 

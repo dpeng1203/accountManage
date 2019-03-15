@@ -1,13 +1,14 @@
 <template>
         
     <el-menu
+        mode="horizontal"
         :default-active="$route.path"
         class="el-menu-vertical-demo"
         @open="handleOpen"
         @close="handleClose"
         background-color="#34395D"
         text-color="#fff"
-        :collapse="isCollapse"
+        
         router
         unique-opened
         active-text-color="#00B7AD">
@@ -25,11 +26,9 @@
                 <span>交易管理</span>
             </template>
             <el-menu-item index="/home/billList">
-                <i class="el-icon-goods"></i>
                 <span slot="title">充值交易</span>
             </el-menu-item>
             <el-menu-item index="/home/payList">
-                <i class="el-icon-goods"></i>
                 <span slot="title">代付交易</span>
             </el-menu-item>
         </el-submenu>
@@ -123,10 +122,10 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-    .el-menu-vertical-demo:not(.el-menu--collapse) 
-        width: 220px;
-        min-height: calc(100vh - 111px)
-        flex-shrink: 0
+    // .el-menu-vertical-demo:not(.el-menu--collapse) 
+    //     width: 220px;
+    //     min-height: calc(100vh - 111px)
+    //     flex-shrink: 0   
 </style>
 
 

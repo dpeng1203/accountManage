@@ -1,87 +1,105 @@
 <template>
     <div class="login">
-        <div class="img-wrapper">
-            <img src="../assets/img/login.png" alt="">    
-        </div>    
+           
         <div class="wrapper">
             <div class="title">Alian后台管理系统</div>
-            <div><input type="text" placeholder="账号" v-model="account"></div>
-            <div class="input-wrap" v-if="eyeOpen">
-                <input type="password" placeholder="密码" v-model="pw" @keyup.enter="login">
-                <img src="../assets/img/eye_close.png" alt=""  @click="showPw" > 
+            
+            <div>
+                <input type="text" placeholder="手机号" v-model="account">
             </div>
-            <div class="input-wrap" v-if="!eyeOpen">
-                <input type="text" placeholder="密码" v-model="pw" @keyup.enter="login">
-                <img src="../assets/img/eye_open.png" alt="" @click="showPw" > 
+            <div v-if="!showMes">
+                <div class="input-wrap" v-if="eyeOpen">
+                    <input type="password" placeholder="密码" v-model="pw" @keyup.enter="login">
+                    <img src="../assets/img/eye_close.png" alt=""  @click="showPw" > 
+                </div>
+                <div class="input-wrap" v-if="!eyeOpen">
+                    <input type="text" placeholder="密码" v-model="pw" @keyup.enter="login">
+                    <img src="../assets/img/eye_open.png" alt="" @click="showPw" > 
+                </div>
             </div>
-
-            <!-- <div class="slide">
-                <slide-verify 
-                    :l="42"
-                    :r="10"
-                    :w="310"
-                    :h="155"
-                    @success="onSuccess"
-                    @fail="onFail"
-                    @refresh="onRefresh"
-                >
-                </slide-verify>
-            </div> -->
+            <div class="mes-login" v-if="showMes"> 
+                <input type="text" placeholder="短信验证码" v-model="code" class="mes-input">
+                <span v-show="show" @click="getCode" class="get-code">获取验证码</span>
+                <span v-show="!show" class="count">{{count}} s</span>
+            </div>
+            <div class="btn" @click="showMes = !showMes" style="margin-top: 40px">切换登录方式</div>
             <div class="btn" @click="login">登录</div>
         </div>
     </div>    
 </template>
 
 <script>
-import SlideVerify from 'vue-monoplasty-slide-verify'
-import {login} from '../config/api'
+import {login,code} from '../config/api'
 export default {
     name: 'adminLogin',
     data() {
         return{ 
+            show: true,      //60秒倒计时
+            count: '',
+            timer: null,
+            showMes: true,     //登录方式
             eyeOpen: true,
             account: '',
             pw: '',
-            slideShow: false
+            code: ''         //短信码
         }
     },
-    components: {
-        SlideVerify
-    },
     methods: {
+        getCode() {
+            if(this.account == '') {
+                this.$message.error('请输入手机号')
+                return false
+            }
+            const TIME_COUNT = 60;
+            if (!this.timer) {
+                this.count = TIME_COUNT;
+                this.show = false;
+                let data = {
+                    phone: this.account
+                }
+                code(data).then( res => {
+                    this.$message.success('请查收短信！')
+                })
+                this.timer = setInterval(() => {
+                if (this.count > 0 && this.count <= TIME_COUNT) {
+                    this.count--;
+                    } else {
+                    this.show = true;
+                    clearInterval(this.timer);
+                    this.timer = null;
+                    }
+                }, 1000)
+            }
+            
+        },
         showPw() {
             this.eyeOpen = !this.eyeOpen
-        },
-        onSuccess(){
-            if(this.account == '') {
-                this.$message.error('请输入账号')
-                return false
-            }
-            if(this.pw == '') {
-                this.$message.error('请输入密码')
-                return false
-            }
-            this.login()
-        },
-        onFail(){
-
-        },
-        onRefresh(){
-
         },
         login() {
             localStorage.clear()
             if(this.account == '') {
-                this.$message.error('请输入账号')
+                this.$message.error('请输入手机号')
                 return false
             }
-            if(this.pw == '') {
-                this.$message.error('请输入密码')
-                return false
-            }
-            let data = {
-                phone: this.account,
-                password: this.pw
+            let data = {}
+            if(this.showMes) {
+                if(this.code== '') {
+                    this.$message.error('请输入短信验证码！')
+                    return
+                }
+                data = {
+                    phone: this.account,
+                    code: this.code
+                }
+            }else{
+                if(this.pw == '') {
+                    this.$message.error('请输入密码!')
+                    return false
+                }
+                data = {
+                    phone: this.account,
+                    password: this.pw
+                }
             }
             login(data).then((res) => {
                 console.log(res)
@@ -106,18 +124,20 @@ export default {
 
 <style lang="sass" scoped>
 .login
-    background: #00BFA6
-    min-width: 1500px
+    width: 100%;
     height: 100vh
-    display: flex
-    align-items: center
-    .img-wrapper
-        flex: 1
-        text-align: center
+    background-image: url(../assets/img/background.jpg)
+    background-size: 100% 100%;
+    position: relative;
+    
     .wrapper
+        position: absolute
+        top: 50%
+        left: 50%
+        margin-top: -190px
+        margin-left: -185px
         width: 370px
-        background: #fff
-        margin-right: 250px
+        background: rgba(255,255,255, 0.2)
         border-radius: 5px
         padding: 40px 30px
         text-align: center
@@ -127,7 +147,7 @@ export default {
             padding-bottom: 10px
         input
             border: 1px solid #B1B3C1;
-            border-radius: 2px;
+            border-radius: 5px;
             font-size: 16px
             width: 100%
             height: 40px
@@ -142,15 +162,29 @@ export default {
                 top: 32px
                 width: 20px
                 height: 20px
-        .slide
-            margin-top: 10px
+        .mes-login
+            margin-top: 20px
+            .mes-input
+                width: 70%
+                margin-top: 0px
+            span
+                display: inline-block
+                font-size: 14px
+                border: 1px solid #B1B3C1;
+                width: 27%
+                line-height: 38px
+                margin-top: 0px
+                border-radius: 5px;
+            .get-code
+                cursor: pointer
         .btn
-            margin-top: 40px
+            margin-top: 10px
             background: #00BFA6
             border: 1px solid #B1B3C1;
-            border-radius: 2px;
+            border-radius: 5px;
             color: #fff
             height: 40px
             font-size: 16px
             line-height: 40px
+            cursor: pointer
 </style>

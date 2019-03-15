@@ -533,7 +533,7 @@ export default {
            
     .table
         margin-top: 40px
-        width: 1250px
+        width: 1280px
         .block
             padding: 30px 0
             text-align: center 

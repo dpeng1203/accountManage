@@ -102,16 +102,19 @@
         <div class="btn" v-if="editorState == 1" @click="editorState = 0">取消</div>
         <div class="btn" @click="succ" v-if="list.state == 0">审核通过</div>
         <div class="btn err" @click="fail" v-if="list.state == 0">审核失败</div>
+        <div class="btn" @click="handleClickResetPw" >重置密码</div>
+        <div class="btn" @click="handleClickCutState" >{{mch.mch_state == '激活' ? '冻结' : '激活'}}</div>
     </div>
 </template>
 
 <script>
 import hostName from '../../config/hostName'
-import { changeMerDetail,merInfoList,auditPass } from '../../config/api'
+import { changeMerDetail,merInfoList,auditPass,resetMchPW,cutMchState } from '../../config/api'
 export default {
     name: 'merchant',
     props: {
-        mch_id: [Number,String]
+        mch_id: [Number,String],
+        mch: {type: Object,required: true}
     },
     data() {
         return{
@@ -132,6 +135,60 @@ export default {
                
             })
         },
+
+        //  重置密码
+        handleClickResetPw() {
+            this.$prompt('请输入新密码', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+            }).then(({ value }) => {
+                let data ={
+                    mch_id: this.mch_id,
+                    password: value
+                }
+                resetMchPW(data).then( res => {
+                    this.$message({
+                        type: 'success',
+                        message: '设置成功！'
+                    });
+                })
+                
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '取消输入'
+                });       
+            });
+        },
+
+        // 切换商户状态
+        handleClickCutState() {
+            this.$confirm('确定切换通道状态?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                let data = {
+                    mch_id: this.mch_id,
+                    open: this.mch.mch_state == '激活' ? false : true
+                }
+                console.log(data)
+                cutMchState(data).then( res => {
+                    this.$message({
+                        type: 'success',
+                        message: '切换成功!'
+                    });
+                    this.$router.push('/home/merManage')
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消'
+                });          
+            });
+        },
+
+
         //编辑
         editorInfo() {
             this.editorState = 1
@@ -257,7 +314,7 @@ export default {
         background: #00BFA6
         border-radius: 20px
         color: #fff
-        width: 150px    
+        width: 100px    
         height: 40px 
         line-height: 40px
         margin-left: 30px 

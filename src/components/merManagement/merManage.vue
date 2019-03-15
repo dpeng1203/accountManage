@@ -64,58 +64,48 @@
                     prop="mch_name"
                     label="商户名称"
                     show-overflow-tooltip
-                    width="100">
+                    width="150">
                 </el-table-column>
                 <el-table-column
                     prop="phone"
                     label="注册手机号"
-                    width="100">
+                    width="120">
                 </el-table-column>
                 <el-table-column
                     prop="money"
                     label="账户余额"
-                    width="90">
+                    width="100">
                 </el-table-column>
                  <el-table-column
                     prop="reservoir"
                     label="代付余额"
-                    width="90">
+                    width="100">
                 </el-table-column>
                 <el-table-column
                     prop="audit_state"
                     label="审核状态"
-                    width="80">
+                    width="100">
                 </el-table-column>
                 <el-table-column
                     prop="mch_state"
                     label="账户状态"
-                    width="80">
+                    width="100">
                 </el-table-column>
                 <el-table-column
                     prop="channel_name"
                     label="通道"
                     show-overflow-tooltip
-                    width="80">
+                    width="130">
                 </el-table-column>
                 <el-table-column
                 label="操作"
                 >
                 <template slot-scope="scope">
-                    <!-- <el-button @click="handleClick(scope.row)" type="text" size="small">详情</el-button>
-                    <el-button @click="handleClickCutState(scope.row)" type="danger" size="small">{{scope.row.mch_state == '激活' ? '冻结' : '激活'}}</el-button>
-                    <el-button @click="handleClickCutChannel(scope.row)" type="text" size="small">切换通道</el-button>
-                    <el-button @click="handleClickResetPw(scope.row)" type="warning" size="small">重置密码</el-button>
-                    <el-button @click="handleClickVecharge(scope.row)" type="success" size="small">代付充值</el-button>
-                    <el-button @click="handleClickPayRate(scope.row)" type="text" size="small">设置代付费率</el-button> -->
-                    <el-button-group >
-                        <el-button @click="handleClick(scope.row)" type="primary" size="mini">详情</el-button>
-                        <el-button @click="handleClickCutChannel(scope.row)" type="primary" size="mini">切换通道</el-button>
-                        <el-button @click="handleClickVecharge(scope.row)" type="success" size="mini">代付充值</el-button>
-                        <el-button @click="handleClickPayRate(scope.row)" type="success" size="mini">设置代付费率</el-button>
-                        <el-button @click="handleTable(scope.row)" type="success" size="mini">充值记录</el-button>
-                        <el-button @click="handleClickResetPw(scope.row)" type="danger" size="mini">重置密码</el-button>
-                        <el-button @click="handleClickCutState(scope.row)" type="danger" size="mini">{{scope.row.mch_state == '激活' ? '冻结' : '激活'}}</el-button>
-                    </el-button-group>
+                    <el-button @click="handleClick(scope.row)" type="text" size="mini">详情</el-button>
+                    <el-button @click="handleClickCutChannel(scope.row)" type="text" size="mini">切换通道</el-button>
+                    <el-button @click="handleClickVecharge(scope.row)" type="text" size="mini">代付充值</el-button>
+                    <el-button @click="handleTable(scope.row)" type="text" size="mini">充值记录</el-button>
+                    <!-- <el-button @click="handleClickCutState(scope.row)" type="text" size="mini">{{scope.row.mch_state == '激活' ? '冻结' : '激活'}}</el-button> -->
                 </template>
                 </el-table-column>
             </el-table>
@@ -183,7 +173,6 @@
                 <el-table-column property="type" label="类型" width="130"></el-table-column>
                 <el-table-column property="status" label="状态" width="100"></el-table-column>
                 <el-table-column property="create_time" label="创建时间"></el-table-column>
-                
             </el-table>
             <div class="block" style="text-align: center">
                 <el-pagination layout="prev, pager, next" 
@@ -193,6 +182,7 @@
                 ></el-pagination>
             </div>
         </el-dialog>
+
     </div>
 </template>
 
@@ -351,30 +341,6 @@ export default {
                 });          
             });
         },
-        //  重置密码
-        handleClickResetPw(row) {
-            this.$prompt('请输入新密码', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-            }).then(({ value }) => {
-                let data ={
-                    mch_id: row.mch_id,
-                    password: value
-                }
-                resetMchPW(data).then( res => {
-                    this.$message({
-                        type: 'success',
-                        message: '设置成功！'
-                    });
-                })
-                
-            }).catch(() => {
-            this.$message({
-                type: 'info',
-                message: '取消输入'
-            });       
-            });
-        },
         searchBtn() {
             this.data.offset = 0
             this.getList()
@@ -453,7 +419,6 @@ export default {
                 })
             })
         },
-
         handleClick(row) {
             this.$router.push({path: '/home/merDetail',query: {mch: row}})
         },
