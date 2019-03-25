@@ -1,12 +1,12 @@
 <template>
     <div class="mer-manage">
         <div class="title">
-            <span>支付代理商</span>
+            <span>支付宝转银行卡</span>
         </div>  
         <div class="search">
-            <!-- <div class="search-ct">
-                <div class="search-name">支付类型</div>
-                <el-select v-model="data.type" placeholder="请选择" class="pay-state">
+            <div class="search-ct">
+                <div class="search-name">状态</div>
+                <el-select v-model="data.enable" placeholder="请选择" class="inline-input">
                     <el-option
                     v-for="item in options1"
                     :key="item.value"
@@ -14,90 +14,65 @@
                     :value="item.value">
                     </el-option>
                 </el-select>
-            </div> -->
-            <div class="search-ct">
-                <div class="search-name">代理商商户号</div>
-                <el-input class="inline-input" v-model="data.mch_id" placeholder="请输入代理商商户号" clearable></el-input>
             </div>
             <div class="search-ct">
-                <div class="search-name">子商户号</div>
-                <el-input class="inline-input" v-model="data.sub_id" placeholder="请输入子商户号" clearable></el-input>
+                <div class="search-name">姓名</div>
+                <el-input class="inline-input" v-model="data.name" placeholder="请输入姓名" clearable></el-input>
+            </div>
+            <div class="search-ct">
+                <div class="search-name">卡号</div>
+                <el-input class="inline-input" v-model="data.card" placeholder="请输入卡号" clearable></el-input>
             </div>
             <div class="search-btn" @click="searchBtn">搜索</div>
             <div class="search-btn" @click="addAgentBox = true">新增</div>
         </div>
-        <!-- <div class="add-btn" @click="addBtn">新增</div> -->
         <div class="table">
             <el-table
                 :data="tableData"
                 border
                 size="small"
-                :row-class-name="tableRowClassName"
                 style="width: 100%">
                 <el-table-column
                     type="index"
                     width="50">
                 </el-table-column>
                 <el-table-column
-                    prop="mch_id"
-                    label="代理商商户号"
-                    width="100">
-                </el-table-column>
-                <el-table-column
-                    prop="mch_name"
-                    label="代理商名称"
-                    show-overflow-tooltip
-                    width="120">
-                </el-table-column>
-                <el-table-column
-                    prop="sub_id"
-                    label="子账号"
-                    width="80">
-                </el-table-column>
-                <el-table-column
-                    prop="sub_name"
-                    label="子商户名称"
-                    show-overflow-tooltip
-                    width="120">
-                </el-table-column>
-                <!-- 支付列表 -->
-                <el-table-column
-                    prop="sup_wx_rate"
-                    label="代理商微信费率"
+                    prop="name"
+                    label="姓名"
                     width="110">
                 </el-table-column>
                 <el-table-column
-                    prop="sub_wx_rate"
-                    label="子账户微信费率"
-                    width="110">
+                    prop="bank_name"
+                    label="银行名称"
+                    show-overflow-tooltip
+                    width="180">
                 </el-table-column>
                 <el-table-column
-                    prop="wx_rate"
-                    label="微信费率差"
-                    width="90">
+                    prop="card"
+                    label="卡号"
+                    width="180">
                 </el-table-column>
                 <el-table-column
-                    prop="sup_alipay_rate"
-                    label="代理商支付宝费率"
-                    width="120">
+                    prop="bank_mark"
+                    label="银行标识符"
+                    show-overflow-tooltip
+                    width="150">
                 </el-table-column>
                 <el-table-column
-                    prop="sub_alipay_rate"
-                    label="子账户支付宝费率"
-                    width="130">
+                    prop="create_time"
+                    label="创建时间"
+                    width="160">
                 </el-table-column>
                 <el-table-column
-                    prop="alipay_rate"
-                    label="支付宝费率差"
+                    prop="enable"
+                    label="状态"
                     width="110">
                 </el-table-column>
                 <el-table-column
                 label="操作"
-                
                 >
                 <template slot-scope="scope">
                     <el-button @click="handleClick(scope.row)" type="warning" size="small">删除</el-button>
-                    <!-- <el-button @click="handleCheckChild(scope.row)" type="success" size="small">子账户</el-button> -->
                 </template>
                 </el-table-column>
             </el-table>
@@ -117,17 +92,20 @@
 
         <el-dialog title="添加子账户" :visible.sync="addAgentBox">
             <el-form :model="form">
-                <!-- <el-form-item label="支付类型" :label-width="formLabelWidth">
-                    <el-select v-model="form.type" placeholder="请选择支付类型" style="width: 220px">
-                        <el-option label="支付" value="1"></el-option>
-                        <el-option label="代付" value="2"></el-option>
-                    </el-select>
-                </el-form-item> -->
-                 <el-form-item label="代理商商户号" :label-width="formLabelWidth">
-                    <el-input v-model="form.mch_id" autocomplete="off" style="width: 220px"></el-input>
+                 <el-form-item label="姓名：" :label-width="formLabelWidth">
+                    <el-input v-model="form.name" autocomplete="off" style="width: 220px"></el-input>
                 </el-form-item>
-                 <el-form-item label="子商户号" :label-width="formLabelWidth">
-                    <el-input v-model="form.sub_id" autocomplete="off" style="width: 220px"></el-input>
+                 <el-form-item label="卡号：" :label-width="formLabelWidth">
+                    <el-input v-model="form.card" autocomplete="off" style="width: 220px"></el-input>
+                </el-form-item>
+                <el-form-item label="银行标识符：" :label-width="formLabelWidth">
+                    <el-input v-model="form.bank_mark" autocomplete="off" style="width: 220px"></el-input>
+                </el-form-item>
+                 <el-form-item label="银行名称：" :label-width="formLabelWidth">
+                    <el-input v-model="form.bank_name" autocomplete="off" style="width: 220px"></el-input>
+                </el-form-item>
+                <el-form-item label="地址代码：" :label-width="formLabelWidth">
+                    <el-input v-model="form.address" autocomplete="off" style="width: 220px"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -140,7 +118,7 @@
 
 <script>
 import changeData from '../../config/formatData'
-import { agentList,lineAgent,delChildAgent } from '../../config/api'
+import { zfbToBank,addZfbToBank,delZfbToBank } from '../../config/api'
 export default {
     name: 'accountManage',
     data() {
@@ -150,52 +128,48 @@ export default {
             total: 0,
             addAgentBox: false,
             formLabelWidth: '120px',
-            // options1: [
-            //     {
-            //         value: "1",
-            //         label: '支付'
-            //     }, {
-            //         value: "2",
-            //         label: '代付'
-            //     }
-            // ],
+            options1: [
+                {
+                    value: "true",
+                    label: '可用'
+                }, {
+                    value: "false",
+                    label: '不可用'
+                }
+            ],
             form: {
-                type: "1",
-                mch_id: '',
-                sub_id: ''
+                name: '',
+                card: '',
+                bank_mark: '',
+                bank_name: '',
+                address: ''
             },
             data: {
-                type: 1,
-                mch_id: '',
-                sub_id: '',
+                enable: null,
+                name: '',
+                card: '',
                 offset: 0,
                 limit: 10
             }
         }
     },
     methods: {
-        tableRowClassName({row,rowIndex}) {
-            if(row.sup_wx_rate > row.sub_wx_rate || row.sup_alipay_rate > row.sub_alipay_rate) {
-                return 'success'
-            }
-            return ''
-        },
         getList() {
             for( var key in this.data) {
                 if(this.data[key] === '') {
                     delete this.data[key]
                 }
             }
-            agentList(this.data).then((res) => {
+            zfbToBank(this.data).then((res) => {
                 this.total = res.data.total_count
                 this.tableData = res.data.data_list
                 this.tableData.forEach( ele => {
-                    ele.sup_wx_rate = ele.sup_wx_rate/100 + '%'
-                    ele.sub_wx_rate = ele.sub_wx_rate/100 + '%'
-                    ele.wx_rate = ele.wx_rate/100 + '%'
-                    ele.sup_alipay_rate = ele.sup_alipay_rate/100 + '%'
-                    ele.sub_alipay_rate = ele.sub_alipay_rate/100 + '%'
-                    ele.alipay_rate = ele.alipay_rate/100 + '%'
+                    ele.create_time = changeData(ele.create_time) 
+                    if(ele.enable) {
+                        ele.enable = '可用'
+                    }else{
+                        ele.enable = '不可用'
+                    }
                 })
             })
         },
@@ -205,13 +179,15 @@ export default {
         },
         //删除
         handleClick(row) {
-            
             this.$confirm('确定删除?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                delChildAgent(row.id).then( res => {
+                let data = {
+                    card: row.card
+                }
+                delZfbToBank(data).then( res => {
                     this.$message({
                         type: 'success',
                         message: '删除成功!'
@@ -226,10 +202,6 @@ export default {
             });
             
         },
-        //查看子账户
-        // handleCheckChild(row) {
-        //     this.$router.push({path: '/home/childAgent',query: {id: row.mch_id}})
-        // },
         handleSizeChange(val) {
             this.data.limit = val
             this.getList()
@@ -239,11 +211,34 @@ export default {
             this.getList()
         },
         addAgent() {
-            lineAgent(this.form).then( res => {
+            if(this.form.name === '') {
+                this.$message.error('请填写姓名！')
+                return
+            }
+            if(this.form.card === '') {
+                this.$message.error('请填写卡号！')
+                return
+            }
+            if(this.form.bank_mark === '') {
+                this.$message.error('请填写银行标识符！')
+                return
+            }
+            if(this.form.bank_name === '') {
+                this.$message.error('请填写银行名称！')
+                return
+            }
+            if(this.form.address === '') {
+                this.$message.error('请填写地址代码！')
+                return
+            }
+            addZfbToBank(this.form).then( res => {
                 this.$message.success('成功！！')
                 this.addAgentBox = false
-                this.form.mch_id = ''
-                this.form.sub_id = ''
+                this.form.name = ''
+                this.form.card = ''
+                this.form.bank_mark = ''
+                this.form.bank_name = ''
+                this.form.address = ''
                 this.searchBtn()
             })
             
@@ -299,7 +294,7 @@ export default {
         margin-top: 30px 
     .table
         margin-top: 40px
-        width: 1250px
+        width: 1120px
         .block
             padding: 30px 0
             text-align: center 

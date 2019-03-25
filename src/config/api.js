@@ -210,6 +210,14 @@ export const addBlock = p => myPost('/ip', p);
 //删除白名单
 export const delBlock = p => myDelete('/ip/'+ p);
 
+//支付宝转银行卡
+export const zfbToBank = p => myGet('/alipay/card/list',{params: p})
+
+//新增收款卡
+export const addZfbToBank = p => myPost('/alipay/card', p);
+
+//删除卡
+export const delZfbToBank = p => myDelete('/alipay/card',{params: p});
 
 
 

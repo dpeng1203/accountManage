@@ -88,6 +88,10 @@
             <i class="el-icon-menu"></i>
             <span slot="title">支付宝H5</span>
         </el-menu-item>
+        <el-menu-item index="/home/zfbToBank">
+            <i class="el-icon-printer"></i>
+            <span slot="title">支付宝转银行卡</span>
+        </el-menu-item>
     </el-menu>
            
 </template>

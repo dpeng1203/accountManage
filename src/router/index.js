@@ -50,6 +50,7 @@ const addmiss = resolve => require(['../components/callback/addmiss'], resolve);
 
 //支付宝红包
 const zfbhb = resolve => require(['../components/zfbhb/zfbhb'], resolve);
+const zfbToBank = resolve => require(['../components/zfbhb/zfbToBank'], resolve);
 
 Vue.use(Router)
 
@@ -104,6 +105,7 @@ export default new Router({
 
         //支付宝红包
         {path: 'zfbhb', name: 'zfbhb', component: zfbhb},
+        {path: 'zfbToBank', name: 'zfbToBank', component: zfbToBank},
       ]
     },
     {
