@@ -69,6 +69,11 @@
                     width="110">
                 </el-table-column>
                 <el-table-column
+                    prop="received"
+                    label="今日收款（元）"
+                    width="110">
+                </el-table-column>
+                <el-table-column
                 label="操作"
                 >
                 <template slot-scope="scope">
@@ -90,22 +95,22 @@
         </div>
 
 
-        <el-dialog title="添加子账户" :visible.sync="addAgentBox">
+        <el-dialog title="新增收款账户" :visible.sync="addAgentBox">
             <el-form :model="form">
                  <el-form-item label="姓名：" :label-width="formLabelWidth">
-                    <el-input v-model="form.name" autocomplete="off" style="width: 220px"></el-input>
+                    <el-input v-model="form.name" autocomplete="off" style="width: 220px" placeholder="请输入姓名"></el-input>
                 </el-form-item>
                  <el-form-item label="卡号：" :label-width="formLabelWidth">
-                    <el-input v-model="form.card" autocomplete="off" style="width: 220px"></el-input>
-                </el-form-item>
-                <el-form-item label="银行标识符：" :label-width="formLabelWidth">
-                    <el-input v-model="form.bank_mark" autocomplete="off" style="width: 220px"></el-input>
+                    <el-input v-model="form.card" autocomplete="off" style="width: 220px" placeholder="请输入卡号"></el-input>
                 </el-form-item>
                  <el-form-item label="银行名称：" :label-width="formLabelWidth">
-                    <el-input v-model="form.bank_name" autocomplete="off" style="width: 220px"></el-input>
+                    <el-input v-model="form.bank_name" autocomplete="off" style="width: 220px" placeholder="请输入银行名称"></el-input>
                 </el-form-item>
-                <el-form-item label="地址代码：" :label-width="formLabelWidth">
-                    <el-input v-model="form.address" autocomplete="off" style="width: 220px"></el-input>
+                <el-form-item label="银行简称：" :label-width="formLabelWidth">
+                    <el-input v-model="form.bank_mark" autocomplete="off" style="width: 220px" placeholder="请输入银行简称"></el-input>
+                </el-form-item>
+                <el-form-item label="监听地址：" :label-width="formLabelWidth">
+                    <el-input v-model="form.address" autocomplete="off" style="width: 220px" placeholder="请输入监听地址"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -170,6 +175,7 @@ export default {
                     }else{
                         ele.enable = '不可用'
                     }
+                    // ele.received = ele.received/100
                 })
             })
         },
@@ -219,16 +225,16 @@ export default {
                 this.$message.error('请填写卡号！')
                 return
             }
-            if(this.form.bank_mark === '') {
-                this.$message.error('请填写银行标识符！')
-                return
-            }
             if(this.form.bank_name === '') {
                 this.$message.error('请填写银行名称！')
                 return
             }
+            if(this.form.bank_mark === '') {
+                this.$message.error('请填写银行简称！')
+                return
+            }
             if(this.form.address === '') {
-                this.$message.error('请填写地址代码！')
+                this.$message.error('请填写监听地址！')
                 return
             }
             addZfbToBank(this.form).then( res => {
@@ -294,7 +300,7 @@ export default {
         margin-top: 30px 
     .table
         margin-top: 40px
-        width: 1120px
+        width: 1220px
         .block
             padding: 30px 0
             text-align: center 
